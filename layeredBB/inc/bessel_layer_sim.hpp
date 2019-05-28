@@ -4,8 +4,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-int bessel_layer_simulation(const double &x, const double &y,
-                            const double &s, const double &t,
-                            Rcpp::NumericVector &a);
+List bessel_layer_simulation(const double &x, const double &y,
+                             const double &s, const double &t,
+                             Rcpp::NumericVector &a);
 
 #endif

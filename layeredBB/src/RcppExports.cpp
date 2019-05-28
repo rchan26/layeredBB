@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // bessel_layer_simulation
-int bessel_layer_simulation(const double& x, const double& y, const double& s, const double& t, Rcpp::NumericVector& a);
+List bessel_layer_simulation(const double& x, const double& y, const double& s, const double& t, Rcpp::NumericVector& a);
 RcppExport SEXP _layeredBB_bessel_layer_simulation(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP aSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -17,6 +17,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type a(aSEXP);
     rcpp_result_gen = Rcpp::wrap(bessel_layer_simulation(x, y, s, t, a));
+    return rcpp_result_gen;
+END_RCPP
+}
+// return_list
+List return_list(const double& x, const double& y, Rcpp::NumericVector& a, Rcpp::NumericVector b);
+RcppExport SEXP _layeredBB_return_list(SEXP xSEXP, SEXP ySEXP, SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const double& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(return_list(x, y, a, b));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -438,6 +452,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_layeredBB_bessel_layer_simulation", (DL_FUNC) &_layeredBB_bessel_layer_simulation, 5},
+    {"_layeredBB_return_list", (DL_FUNC) &_layeredBB_return_list, 4},
     {"_layeredBB_M_function", (DL_FUNC) &_layeredBB_M_function, 5},
     {"_layeredBB_min_sampler", (DL_FUNC) &_layeredBB_min_sampler, 6},
     {"_layeredBB_min_Bessel_bridge_sampler", (DL_FUNC) &_layeredBB_min_Bessel_bridge_sampler, 7},
