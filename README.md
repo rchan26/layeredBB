@@ -8,7 +8,11 @@ R CMD INSTALL layeredBB_1.0.tar.gz
 #### In R/RStudio:
 ```
 library(devtools)
-devtools::install('layeredBB_1.0.tar.gz')
+library(Rcpp)
+Rcpp::compileAttributes('layeredBB')
+devtools::build('layeredBB')
+devtools::install('layeredBB')
+library(layeredBB)
 ```
 
 # Steps to create a package again on the command line
