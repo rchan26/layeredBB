@@ -1,8 +1,7 @@
 #ifndef COINS_CAUCHY
 #define COINS_CAUCHY
 
-#include <random>
-
+#include <Rcpp.h>
 using namespace Rcpp;
 
 // forward declaration for taking products of vector elements

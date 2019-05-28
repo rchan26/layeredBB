@@ -1,4 +1,9 @@
 #include "../inc/layered_brownian_bridge.hpp"
+#include "../inc/brownian_bridge_min.hpp"
+#include "../inc/inverse_gauss.hpp"
+#include "../inc/cauchy_sums.hpp"
+#include "../inc/coins_cauchy.hpp"
+#include "../inc/bessel_layer_sim.hpp"
 
 using namespace Rcpp;
 

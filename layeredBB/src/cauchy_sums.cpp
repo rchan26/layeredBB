@@ -1,5 +1,7 @@
-#include <Rcpp.h>
 #include "../inc/cauchy_sums.hpp"
+#include <Rcpp.h>
+#include <cmath>
+#include <algorithm>
 
 using namespace Rcpp;
 
@@ -92,8 +94,8 @@ Rcpp::NumericVector calc_SdeltaK_1_intervals(const int &k, const double &x, cons
 
 // [[Rcpp::export]]
 Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k, const double &x, const double &y,
-                                               const double &s, const double &t,
-                                               const double &min, const double &v)
+                                             const double &s, const double &t,
+                                             const double &min, const double &v)
 {
     // function calculates (S_{2k+1}^{delta,2}, S_{2k}^{delta,2}) for a given k
     // checking k is large enough for this to be valid
@@ -114,15 +116,15 @@ Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k, const double &x, cons
 
 // [[Rcpp::export]]
 Rcpp::NumericVector calc_SdeltaK_intervals(const int &k, const double &x, const double &y,
-                                             const double &s, const double &t,
-                                             const double &min, const double &v)
+                                           const double &s, const double &t,
+                                           const double &min, const double &v)
 {
     if (std::min(x,y) > min) {
         return calc_SdeltaK_1_intervals(k,x,y,s,t,min,v);
     } else if (std::min(x,y) == min) {
         return calc_SdeltaK_2_intervals(k,x,y,s,t,min,v);
     } else {
-        Rcout << "min(x,y) < min: given minimum point is not the minimum of the BB.";
+        stop("error: min(x,y) < min: given minimum point is not the minimum of the BB.");
     }
 }
 

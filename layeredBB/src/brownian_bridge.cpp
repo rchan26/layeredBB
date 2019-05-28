@@ -1,6 +1,9 @@
-#include <Rcpp.h>
 #include "../inc/brownian_bridge_min.hpp"
 #include "../inc/inverse_gauss.hpp"
+
+#include <Rcpp.h>
+#include <random>
+#include <cmath>
 
 using namespace Rcpp;
 

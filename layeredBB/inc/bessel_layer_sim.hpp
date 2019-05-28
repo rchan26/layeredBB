@@ -1,10 +1,7 @@
 #ifndef BESSEL_LAYER_SIM
 #define BESSEL_LAYER_SIM
 
-#include <vector>
-#include <algorithm>
-#include <random>
-
+#include <Rcpp.h>
 using namespace Rcpp;
 
 int bessel_layer_simulation(const double &x, const double &y,

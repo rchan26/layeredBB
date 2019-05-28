@@ -1,5 +1,7 @@
-#include <Rcpp.h>
 #include "../inc/inverse_gauss.hpp"
+#include <Rcpp.h>
+#include <random>
+#include <cmath>
 
 using namespace Rcpp;
 

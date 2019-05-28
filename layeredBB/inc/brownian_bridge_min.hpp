@@ -1,9 +1,7 @@
 #ifndef BROWNIAN_BRIDGE_MIN
 #define BROWNIAN_BRIDGE_MIN
 
-#include <random>
-#include <cmath>
-
+#include <Rcpp.h>
 using namespace Rcpp;
 
 // forward declaration for M_function that's used in min_sampler

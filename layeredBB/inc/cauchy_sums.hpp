@@ -1,9 +1,7 @@
 #ifndef CAUCHY_SUMS
 #define CAUCHY_SUMS
 
-#include <cmath>
-#include <algorithm>
-
+#include <Rcpp.h>
 using namespace Rcpp;
 
 // forward declaration for functions needed to calculate the Cauchy sums

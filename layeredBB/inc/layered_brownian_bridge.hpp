@@ -1,12 +1,7 @@
 #ifndef LAYERED_BROWNIAN_BRIDGE
 #define LAYERED_BROWNIAN_BRIDGE
 
-#include "brownian_bridge_min.hpp"
-#include "inverse_gauss.hpp"
-#include "cauchy_sums.hpp"
-#include "coins_cauchy.hpp"
-#include "bessel_layer_sim.hpp"
-
+#include <Rcpp.h>
 using namespace Rcpp;
 
 // forward declaration for function that finds the maximum value in a vector

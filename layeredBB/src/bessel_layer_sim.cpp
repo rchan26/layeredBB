@@ -1,11 +1,15 @@
 #include "../inc/bessel_layer_sim.hpp"
 #include "../inc/cauchy_sums.hpp"
 #include "../inc/coins_cauchy.hpp"
+#include <vector>
+#include <algorithm>
+#include <random>
 
 using namespace Rcpp;
 
 // [[Rcpp::plugins("cpp17")]]
 
+// [[Rcpp::export]]
 int bessel_layer_simulation(const double &x, const double &y,
                             const double &s, const double &t,
                             Rcpp::NumericVector &a)
@@ -24,14 +28,17 @@ int bessel_layer_simulation(const double &x, const double &y,
         
         // if false, l = l+1
         l += 1;
-        // need to check that we are not at the end of the sequence a
-        // in this case, we extend the sequence of a, and try carry on to find a layer
+        // need to check that we are not at the end of the sequence (a)
+        // in this case, we extend the sequence of (a), and try carry on to find a layer
         if (l >= a.size()) {
-            double last = a.back();
-            auto size = a.size();
-            for (int i = 0; i < size; ++i) {
-                a.push_back(a[i] + last);
-            }
+          // find the size of the vector (a) and set it to (size)
+          auto size = a.size();
+          // find the last element of the vector (a) and set it to (last)
+          // since indices start from 0 in C++, this is the (size-1)-th element
+          double last = a[(size-1)];
+          for (int i = 0; i < size; ++i) {
+              a.push_back(a[i] + last);
+          }
         }
     }
 }
