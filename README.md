@@ -1,6 +1,4 @@
-# bessel_layers_rcpp
-
-## Steps to install the package
+# Steps to install the package
 
 #### On the command line (move to directory containing the package):
 ```
@@ -13,7 +11,7 @@ library(devtools)
 devtools::install('layeredBB_1.0.tar.gz')
 ```
 
-## Steps to create a package again on the command line
+# Steps to create a package again on the command line
 
 ### Step One: create a placeholder package for Rcpp
 ```
