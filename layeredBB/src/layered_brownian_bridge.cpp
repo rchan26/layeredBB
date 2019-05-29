@@ -44,7 +44,6 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x, const double &y,
   // layered Brownian bridge sampler
   // simulate from uniform random variable
   double u = Rcpp::runif(1, 0.0, 1.0)[0];
-  int count = 1;
   // we minus 1 from the Bessel layer (l), since indicies start from 0 in C++ but start from 1 in R
   l -= 1;
   
