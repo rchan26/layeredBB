@@ -22,7 +22,7 @@ double min_Bessel_bridge_sampler(const double &x, const double &y,
 Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double &y,
                                                    const double &s, const double &t,
                                                    const double &min, const double &tau,
-                                                   Rcpp::NumericVector &times);
+                                                   Rcpp::NumericVector times);
 
 Rcpp::NumericVector max_sampler(const double &x, const double &y,
                                 const double &s, const double &t,
@@ -36,6 +36,6 @@ double max_Bessel_bridge_sampler(const double &x, const double &y,
 Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x, const double &y,
                                                    const double &s, const double &t,
                                                    const double &max, const double &tau,
-                                                   Rcpp::NumericVector &times);
+                                                   Rcpp::NumericVector times);
 
 #endif

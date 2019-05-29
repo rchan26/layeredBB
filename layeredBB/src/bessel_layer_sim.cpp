@@ -22,7 +22,8 @@ List bessel_layer_simulation(const double &x, const double &y,
     if (!(x==y && a.at(l)==0)) {
       if (gamma_coin(x,y,s,t,std::min(x,y)-a.at(l),std::max(x,y)+a.at(l),0)) {
         // if true, then return current Bessel layer (l) and current vector (a) as a list
-        return List::create(_["a"] = a, _["l"] = l);
+        // we return (l+1), since indicies start from 0 in C++ but start from 1 in R
+        return List::create(_["a"] = a, _["l"] = l+1);
       }
     }
     

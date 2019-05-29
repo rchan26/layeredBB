@@ -52,7 +52,7 @@ Rcpp::NumericVector min_sampler(const double &x, const double &y,
   // set tau (time of simualted minimum)
   double tau = ((s*V)+t)/(1.0+V);
   // setting simulated minimum and tau in array
-  Rcpp::NumericVector simulated_min = Rcpp::NumericVector::create(min, tau);
+  Rcpp::NumericVector simulated_min = Rcpp::NumericVector::create(Named("min", min), Named("tau", tau));
 
   return simulated_min;
 }
@@ -102,13 +102,13 @@ double min_Bessel_bridge_sampler(const double &x, const double &y,
 Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double &y,
                                                    const double &s, const double &t,
                                                    const double &min, const double &tau,
-                                                   Rcpp::NumericVector &times)
+                                                   Rcpp::NumericVector times)
 {
   // function simulates a Bessel bridge sample path with minimum (min) at time (tau)
   // (times) get altered in this function to match the indices of the simulated path
   // i.e. after using the function, simulated_bb[i] is the path at times[i]
   // this is because (times) may not include the times (s), (t), (tau)
-
+  
   // collect all times into one vector
   times.insert(times.end(), s);
   times.insert(times.end(), t);
@@ -125,9 +125,13 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double
     simulated_bb[i] = min_Bessel_bridge_sampler(x, y, s, t, min, tau, times[i]);
   }
   
+  // creating matrix to store the path and the corresponding times
   Rcpp::NumericMatrix bb(2, simulated_bb.size());
   bb(0, _) = simulated_bb;
   bb(1, _) = times;
+  
+  // setting rownames
+  rownames(bb) = CharacterVector::create("X", "time");
   
   return bb;
 }
@@ -145,7 +149,7 @@ Rcpp::NumericVector max_sampler(const double &x, const double &y,
   Rcpp::NumericVector sim_min = min_sampler(-x, -y, s, t, -up_bound, -low_bound);
 
   // reflect on x-axis
-  return Rcpp::NumericVector::create(-sim_min[0], sim_min[1]);
+  return Rcpp::NumericVector::create(Named("max", -sim_min["min"]), Named("tau", sim_min["tau"]));
 }
 
 // [[Rcpp::export]]
@@ -167,7 +171,7 @@ double max_Bessel_bridge_sampler(const double &x, const double &y,
 Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x, const double &y,
                                                    const double &s, const double &t,
                                                    const double &max, const double &tau,
-                                                   Rcpp::NumericVector &times)
+                                                   Rcpp::NumericVector times)
 {
   // function simulates a Bessel bridge sample path with maximum (max) at time (tau)
   // (times) get altered in this function to match the indices of the simulated path

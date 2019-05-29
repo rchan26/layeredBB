@@ -5,10 +5,6 @@ bessel_layer_simulation <- function(x, y, s, t, a) {
     .Call(`_layeredBB_bessel_layer_simulation`, x, y, s, t, a)
 }
 
-return_list <- function(x, y, a, b) {
-    .Call(`_layeredBB_return_list`, x, y, a, b)
-}
-
 M_function <- function(a, x, y, s, t) {
     .Call(`_layeredBB_M_function`, a, x, y, s, t)
 }
