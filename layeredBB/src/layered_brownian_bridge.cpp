@@ -12,27 +12,27 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 double find_max(const Rcpp::NumericVector vect) 
 {
-	// finds the maximum value in a vector
-    double current_max = vect.at(0); // first element
-    for (const auto &element: vect) {
-        if (element > current_max) {
-            current_max = element;
-        }
+  // finds the maximum value in a vector
+  double current_max = vect.at(0); // first element
+  for (const auto &element: vect) {
+    if (element > current_max) {
+      current_max = element;
     }
-    return current_max;
+  }
+  return current_max;
 }
 
 // [[Rcpp::export]]
 double find_min(const Rcpp::NumericVector vect)
 {
-	// finds the minimum value in a vector
-    double current_min = vect.at(0); // first element
-    for (const auto &element: vect) {
-        if (element < current_min) {
-            current_min = element;
-        }
+  // finds the minimum value in a vector
+  double current_min = vect.at(0); // first element
+  for (const auto &element: vect) {
+    if (element < current_min) {
+      current_min = element;
     }
-    return current_min;
+  }
+  return current_min;
 }
 
 // [[Rcpp::export]]
@@ -144,7 +144,7 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x, const double &y,
     // checking if BB remains in [l1, v1]
     double starting_index_1 = sqrt((t-s)+fabs(v1-l1)*fabs(v1-l1))/(2*fabs(v1-l1));
     int j = ceil(starting_index_1);
-
+    
     Rcpp::NumericVector x_values, y_values, s_values, t_values;
     for (int i=0; i < (simulated_BB.ncol()-1); ++i) {
       x_values.push_back(simulated_BB(0, i));
