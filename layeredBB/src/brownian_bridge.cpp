@@ -33,7 +33,7 @@ Rcpp::NumericVector min_sampler(const double &x, const double &y,
   double u2 = Rcpp::runif(1, 0.0, 1.0)[0];
   
   // set simulated minimum value
-  double min = x - (0.5*(sqrt((y-x)*(y-x) - 2.0*(t-s)*log(u1)) - y + x));
+  double min = x - (0.5*(sqrt((y-x)*(y-x)-2.0*(t-s)*log(u1)) - y + x));
   
   // condition for setting V
   double condition = (x-min)/(x+y-(2.0*min));
@@ -46,14 +46,14 @@ Rcpp::NumericVector min_sampler(const double &x, const double &y,
   } else {
     mu = (x-min)/(y-min);
     lambda = (x-min)*(x-min)/(t-s);
-    V = 1.0 / inv_gauss_sampler(mu, lambda);
+    V = (1.0 / inv_gauss_sampler(mu, lambda));
   }
   
   // set tau (time of simualted minimum)
   double tau = ((s*V)+t)/(1.0+V);
+  
   // setting simulated minimum and tau in array
   Rcpp::NumericVector simulated_min = Rcpp::NumericVector::create(Named("min", min), Named("tau", tau));
-  
   return simulated_min;
 }
 
@@ -74,6 +74,7 @@ double min_Bessel_bridge_sampler(const double &x, const double &y,
     return min;
   }
   
+  // set variable r
   double r;
   double Wr;
   if (q < tau) {
@@ -92,8 +93,8 @@ double min_Bessel_bridge_sampler(const double &x, const double &y,
   }
   
   // set simulated value
-  double term1 = ((Wr-min)*fabs(tau-q)/(pow(fabs(tau-r), 1.5))) + b[0];
-  double W = min + sqrt(fabs(tau-r)*(term1*term1 + b[1]*b[1] + b[2]*b[2]));
+  double term1 = ((Wr-min)*fabs(tau-q)/(pow(fabs(tau-r), 1.5))) + b.at(0);
+  double W = min + sqrt(fabs(tau-r)*(term1*term1 + b.at(1)*b.at(1) + b.at(2)*b.at(2)));
   
   return W;
 }
@@ -119,12 +120,37 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double
   times.erase(std::unique(times.begin(), times.end()), times.end());
   
   // create vector to store the simulated Bessel bridge path
-  NumericVector simulated_bb(times.size());
-  for (int i = 0; i < times.size(); ++i) {
+  Rcpp::NumericVector simulated_bb(times.size());
+  simulated_bb.at(0) = x;
+  simulated_bb.at(simulated_bb.size()-1) = y;
+
+  // when simulating the path, want to work from left to right when left of the min
+  // and work from right to left when right of the min
+  // this is so we can use the Markov property
+
+  for (int i = 0; times[i] <= tau; ++i) {
     // simulate the point at each time
-    simulated_bb[i] = min_Bessel_bridge_sampler(x, y, s, t, min, tau, times[i]);
+    if (times[i] == s) {
+      simulated_bb[i] = x;
+    } else if (times[i] == tau) {
+      simulated_bb[i] = min;
+    } else {
+      // if left of tau, then we simulate the next point normally, starting from the previous point to the end
+      simulated_bb[i] = min_Bessel_bridge_sampler(simulated_bb[i-1], y, times[i-1], t, min, tau, times[i]);
+    }
   }
   
+  for (int i = times.size()-1; times[i] > tau; --i) {
+    // simulate the point at each time
+    if (times[i] == t) {
+      simulated_bb[i] = y;
+    } else {
+      // reflect it by taking the absolute value of the (time wanted - t)
+      simulated_bb[i] = min_Bessel_bridge_sampler(simulated_bb[i+1], x, fabs(times[i+1]-t), fabs(s-t), 
+                                                  min, fabs(tau-t), fabs(times[i]-t));
+    }
+  }
+
   // creating matrix to store the path and the corresponding times
   Rcpp::NumericMatrix bb(2, simulated_bb.size());
   bb(0, _) = simulated_bb;
