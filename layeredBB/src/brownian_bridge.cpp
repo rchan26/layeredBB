@@ -121,8 +121,6 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double
   
   // create vector to store the simulated Bessel bridge path
   Rcpp::NumericVector simulated_bb(times.size());
-  simulated_bb.at(0) = x;
-  simulated_bb.at(simulated_bb.size()-1) = y;
 
   // when simulating the path, want to work from left to right when left of the min
   // and work from right to left when right of the min
