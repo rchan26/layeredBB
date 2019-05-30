@@ -40,6 +40,8 @@ List bessel_layer_simulation(const double &x, const double &y,
       for (int i = 0; i < size; ++i) {
         a.push_back(a[i] + last);
       }
+      // remove any duplicates
+      a.erase(std::unique(a.begin(), a.end()), a.end());
     }
   }
 }
