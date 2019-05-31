@@ -52,7 +52,7 @@ bool gamma_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVecto
 {
   // check if vector lengths are all the same
   if (x.size()!=y.size() || x.size()!=s.size() || x.size()!=t.size()) {
-    Rcout << "warning in gamma_coin_intervals: vector lengths are not equal \n";
+    stop("error in gamma_coin_intervals: vector lengths are not equal");
   }
   
   // simulating from a uniform distribution
@@ -110,8 +110,8 @@ bool delta_coin(const double &x, const double &y,
       right = right - (sigma(k,x,y,s,t,min,v) - phi(k,x,y,s,t,min,v))/denom;
       left = right - sigma(k+1,x,y,s,t,min,v)/denom;
     } else if (std::min(x,y) == min) {
-      right = right - (psi(k,x,y,s,t,min,v) - chi(k,x,y,s,t,min,v));
-      left = right - psi(k+1,x,y,s,t,min,v);
+      right = right - (psi(k,x,y,s,t,min,v) - chi(k,x,y,s,t,min,v))/fabs(x-y);
+      left = right - psi(k+1,x,y,s,t,min,v)/fabs(x-y);
     }   
   }
   
@@ -129,7 +129,7 @@ bool delta_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVecto
 {
   // check if vector lengths are all the same
   if (x.size()!=y.size() || x.size()!=s.size() || x.size()!=t.size()) {
-    Rcout << "warning in gamma_coin_intervals: vector lengths are not equal \n";
+    stop("error in gamma_coin_intervals: vector lengths are not equal");
   }
   
   // simulating from a uniform distribution
@@ -164,8 +164,8 @@ bool delta_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVecto
         left.at(i) = right.at(i) - sigma(k+1,x.at(i),y.at(i),s.at(i),t.at(i),min,v)/denom.at(i);
       } else if (std::min(x.at(i), y.at(i)) == min) {
         right.at(i) = right.at(i) - (psi(k,x.at(i),y.at(i),s.at(i),t.at(i),min,v) - 
-          chi(k,x.at(i),y.at(i),s.at(i),t.at(i),min,v));
-        left.at(i) = right.at(i) - psi(k+1,x.at(i),y.at(i),s.at(i),t.at(i),min,v);
+          chi(k,x.at(i),y.at(i),s.at(i),t.at(i),min,v))/fabs(x.at(i)-y.at(i));
+        left.at(i) = right.at(i) - psi(k+1,x.at(i),y.at(i),s.at(i),t.at(i),min,v)/fabs(x.at(i)-y.at(i));
       }
       // recalculate products
       left_product = product_vector_elements(left);

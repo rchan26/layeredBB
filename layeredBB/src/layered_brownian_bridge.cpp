@@ -171,7 +171,7 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x, const double &y,
         // checking if BB remains in [l1, v1]
         double starting_index_2 = sqrt((t-s)+fabs(v2-l2)*fabs(v2-l2))/(2*fabs(v2-l2));
         int k = ceil(starting_index_2);
-
+        
         // flip detla coin #2
         if (delta_coin_intervals(-x_values, -y_values, s_values, t_values, -v2, -l2, k)) {
           return simulated_BB;

@@ -44,7 +44,7 @@ double psi(const double &j, const double &x, const double &y,
            const double &s, const double &t,
            const double &min, const double &v)
 {
-  return ((2*fabs(v-min)*j)-std::max(x,y)-min)*exp(-(2.0*fabs(v-min)*j/(t-s))*((fabs(v-min)*j)-(std::max(x,y)-min)));
+  return (((2*fabs(v-min)*j)-(std::max(x,y)-min))*(exp(-(2.0*fabs(v-min)*j/(t-s))*((fabs(v-min)*j)-(std::max(x,y)-min)))));
 }
 
 // [[Rcpp::export]]
@@ -52,7 +52,7 @@ double chi(const double &j, const double &x, const double &y,
            const double &s, const double &t,
            const double &min, const double &v)
 {
-  return ((2*fabs(v-min)*j)+std::max(x,y)-min)*exp(-(2.0*fabs(v-min)*j/(t-s))*((fabs(v-min)*j)+(std::max(x,y)-min)));
+  return (((2*fabs(v-min)*j)+(std::max(x,y)-min))*(exp(-(2.0*fabs(v-min)*j/(t-s))*((fabs(v-min)*j)+(std::max(x,y)-min)))));
 }
 
 // [[Rcpp::export]]
@@ -101,16 +101,16 @@ Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k, const double &x, cons
   // checking k is large enough for this to be valid
   double K = sqrt((t-s)+(fabs(v-min)*fabs(v-min)))/(2*fabs(v-min));
   if (k < K) {
-    Rcout << "given k is too small. \n";
+    stop("error in calc_SdeltaK_2_intervals: given k is too small");
   }
   
   // calculating S_{2k+1}^{delta,2} = 1 - (psi(j)-chi(j)) / abs(x-y)
   double S_2k = 1;
   for (int j=1; j <= k; ++j) {
-    S_2k -= (psi(j,x,y,s,t,min,v) - chi(j,x,y,s,t,min,v));
+    S_2k -= ((psi(j,x,y,s,t,min,v)-chi(j,x,y,s,t,min,v))/fabs(x-y));
   }
-  double S_2k_plus_1 = S_2k - psi(k+1,x,y,s,t,min,v)/fabs(x-y);
-  
+  double S_2k_plus_1 = S_2k - (psi(k+1,x,y,s,t,min,v)/fabs(x-y));
+   
   return Rcpp::NumericVector::create(S_2k_plus_1, S_2k);
 }
 
@@ -124,7 +124,7 @@ Rcpp::NumericVector calc_SdeltaK_intervals(const int &k, const double &x, const 
   } else if (std::min(x,y) == min) {
     return calc_SdeltaK_2_intervals(k,x,y,s,t,min,v);
   } else {
-    stop("error: min(x,y) < min: given minimum point is not the minimum of the BB.");
+    stop("error in calc_SdeltaK_intervals: min(x,y) < min - given minimum point is not the minimum of the BB");
   }
 }
 
