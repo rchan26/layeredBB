@@ -2,7 +2,9 @@
 
 * Run layers_rcpp.R - this downloads layers_rcpp.cpp from this page and runs sourceCpp
 
-Must have Rcpp package and a C++ compiler
+Must have Rcpp package and a C++ compiler. This package uses the C compiler ("cc" or "gcc") and was designed using for Unix/Linux/Mac machines, where it should work without difficulty. With Mac OS X, it is necessary to first install gcc. 
+
+I'm not sure if this package runs on Microsoft Windows.
 
 ## Steps to install the package
 
@@ -21,7 +23,7 @@ devtools::install('layeredBB')
 library(layeredBB)
 ```
 
-# Steps to create a package again on the command line
+## Steps to create a package again on the command line
 
 ### Step One: create a placeholder package for Rcpp
 ```
