@@ -1,4 +1,8 @@
-# To load into R: Run layers_rcpp.R
+# To load into R: run layers_rcpp.R
+
+```
+source('https://raw.githubusercontent.com/rchan26/bessel_layers_rcpp/master/layers_rcpp.R')
+```
 
 This downloads layers_rcpp.cpp from this page and runs sourceCpp.
 
@@ -46,5 +50,3 @@ R CMD build layeredBB/
 ```
 R CMD INSTALL layeredBB_1.0.tar.gz 
 ```
-
-
