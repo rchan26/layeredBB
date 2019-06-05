@@ -7,3 +7,5 @@ download_cpp <- function(url) {
 library(Rcpp)
 url <- "https://raw.githubusercontent.com/rchan26/bessel_layers_rcpp/master/layers_rcpp.cpp"
 sourceCpp(download_cpp(url))
+
+rm(url)
