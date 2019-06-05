@@ -1,6 +1,6 @@
 # To load into R: Run layers_rcpp.R
 
-This downloads layers_rcpp.cpp from this page and runs sourceCpp
+This downloads layers_rcpp.cpp from this page and runs sourceCpp.
 
 Must have Rcpp package and a C++ compiler. This package uses the C compiler ("cc" or "gcc") and was designed using for Unix/Linux/Mac machines, where it should work without difficulty. With Mac OS X, it is necessary to first install gcc. 
 
