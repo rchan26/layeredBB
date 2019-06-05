@@ -10,7 +10,7 @@ Must have Rcpp package and a C++ compiler. This package uses the C compiler ("cc
 
 I'm not sure if this package runs on Microsoft Windows.
 
-## Warning
+## Warning: using with `parallel`
 
 If you want to use this with the `parallel` package, you must download the package and install it. To use it then must call `library(layeredBB)` - see [here](https://stackoverflow.com/questions/6074310/using-rcpp-within-parallel-code-via-snow-to-make-a-cluster).
 
