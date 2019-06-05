@@ -1,14 +1,37 @@
-# To load into R: run layers_rcpp.R
+# To load into R: run `layers_rcpp.R`
 
 ```
 source('https://raw.githubusercontent.com/rchan26/bessel_layers_rcpp/master/layers_rcpp.R')
 ```
 
-This downloads layers_rcpp.cpp from this page and runs sourceCpp.
+This downloads `layers_rcpp.cpp` from this page and runs sourceCpp.
 
-Must have Rcpp package and a C++ compiler. This package uses the C compiler ("cc" or "gcc") and was designed using for Unix/Linux/Mac machines, where it should work without difficulty. With Mac OS X, it is necessary to first install gcc. 
+Must have Rcpp package and a C++ compiler. This package uses the C compiler ("cc" or "gcc") and was designed using for Unix/Linux/Mac machines, where it should work without difficulty. With Mac OS X, it is necessary to first install `gcc`. 
 
 I'm not sure if this package runs on Microsoft Windows.
+
+## Warning
+
+If you want to use this with the `parallel` package, you must download the package and install it. To use it then must call `library(layeredBB)` - see [here](https://stackoverflow.com/questions/6074310/using-rcpp-within-parallel-code-via-snow-to-make-a-cluster).
+
+Here is an example to use in a cluser:
+
+```
+  # load in package
+  library(layeredBB)
+
+  # creating parallel cluster
+  n_cores <- parallel::detectCores()
+  cl <- parallel::makeCluster(n_cores)
+  
+  # export functions from layeredBB into the cluster environment
+  parallel::clusterExport(cl, varlist = ls("package:layeredBB"))
+  
+  ##### do some stuff in cluster ######
+  
+  # stop cluster
+  parallel::stopCluster(cl)
+```
 
 ## Steps to install the package
 
