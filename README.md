@@ -1,4 +1,10 @@
-# Steps to install the package
+# To load into R:
+
+* Run layers_rcpp.R - this downloads layers_rcpp.cpp from this page and runs sourceCpp
+
+Must have Rcpp package and a C++ compiler
+
+## Steps to install the package
 
 #### On the command line (move to directory containing the package):
 ```
