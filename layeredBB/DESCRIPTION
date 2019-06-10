@@ -9,3 +9,4 @@ Description: R access to C++ implementation of layered Brownian Bridge simulatio
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
+RoxygenNote: 6.1.1
