@@ -1,0 +1,3 @@
+useDynLib(layeredBB, .registration=TRUE)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
