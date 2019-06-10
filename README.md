@@ -1,4 +1,4 @@
-# To load into R: run `layers_rcpp.R`
+## To install, use `install_github` from `devtools` package
 
 ```
 devtools::install_github('rchan26/layeredBB')
