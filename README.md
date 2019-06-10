@@ -1,14 +1,12 @@
 # To load into R: run `layers_rcpp.R`
 
 ```
-source('https://raw.githubusercontent.com/rchan26/bessel_layers_rcpp/master/layers_rcpp.R')
+devtools::install_github('rchan26/layeredBB')
 ```
-
-This downloads `layers_rcpp.cpp` from this page and runs sourceCpp.
 
 Must have Rcpp package and a C++ compiler. This package uses the C compiler ("cc" or "gcc") and was designed using for Unix/Linux/Mac machines, where it should work without difficulty. With Mac OS X, it is necessary to first install `gcc`. 
 
-I'm not sure if this package runs on Microsoft Windows.
+I'm not sure if this package runs on Microsoft Windows. 
 
 ## Warning: using with `parallel`
 
@@ -33,7 +31,7 @@ Here is an example to use in a cluser:
   parallel::stopCluster(cl)
 ```
 
-## Steps to install the package
+## Steps to install the package locally
 
 #### On the command line (move to directory containing the package):
 ```
