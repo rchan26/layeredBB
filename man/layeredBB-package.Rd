@@ -3,32 +3,29 @@
 \alias{layeredBB}
 \docType{package}
 \title{
-  A short title line describing what the package does
+  Simulates layered Brownian bridges using C++ and Rcpp
 }
 \description{
-  A more detailed description of what the package does. A length
-  of about one to five lines is recommended.
+  R access to C++ implementation of layered Brownian Bridge simulation and Bessel layer simulation.
 }
 \details{
-  This section should provide a more detailed overview of how to use the
-  package, including the most important functions.
+  This package includes functions to simulated layered Brownian bridges using Bessel layers. See Pollock et al. (2016) and Pollock (2013) for more details on simulating Bessel layers using Cauchy sums. 
 }
 \author{
-Your Name, email optional.
-
-Maintainer: Your Name <your@email.com>
+  Ryan Chan, rchan@turing.ac.uk.
 }
 \references{
-  This optional section can contain literature or other references for
-  background information.
+  M. Pollock. Some Monte Carlo Methods for Jump Diffusions. PhD thesis, University of Warwick, September 2013. 
+  
+  M.Pollock, A.M. Johansen, G.O. Roberts. 2016. On the Exact and epsilon-Strong Simulation of (Jump) Diffusions. Bernoulli. 22(2), pp. 794-856. 
+  
+  Beskos, A., Papaspiliopoulos, O., Roberts, G.O., and Fearnhead, P. 2006. Exact and computationally effcient likelihood-based estimation for discretely observed diffusion processes (with discussion). Journal of Royal Statistical Society, B. 68, pp. 333-382.
 }
 \keyword{ package }
-\seealso{
-  Optional links to other man pages
-}
 \examples{
-  \dontrun{
-     ## Optional simple examples of the most important functions
-     ## These can be in \dontrun{} and \donttest{} blocks.   
-  }
+# simulate Bessel layer
+bes_layer <- bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 1.0, 0.1))
+# simulate layered Brownian bridge
+layered_brownian_bridge(x = 0, y = 0, s = 0, t = 1, a = bes_layer$a, l = bes_layer$l, times = seq(0.2, 0.8, 0.2))
+  
 }

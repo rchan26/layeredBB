@@ -9,6 +9,21 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins("cpp17")]]
 
+
+//' Bessel Layer simulation 
+//'
+//' Simulates a Bessel layer l for a given sequence a
+//'
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start time of Brownian bridge
+//' @param t end time of Brownian bridge
+//' @param a vector/sequence of numbers
+//'
+//' @examples
+//' bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+//'
+//' @export
 // [[Rcpp::export]]
 List bessel_layer_simulation(const double &x, const double &y,
                              const double &s, const double &t,

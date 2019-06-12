@@ -9,12 +9,46 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins("cpp17")]]
 
+//' M_function
+//'
+//' This function is used in the simulation of a minimum point of a Brownian bridge
+//'
+//' @param a real value
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' 
+//' @return real value: M_function evaluated at point a
+//'
+//' @examples
+//' M_function(a = 0, x = 0, y = 0, s = 0, t = 1)
+//'
+//' @export
 // [[Rcpp::export]]
 double M_function(const double &a, const double &x, const double &y, const double &s, const double &t) {
   // M function that is used to simulate a minimum of a Brownian bridge
   return exp(-2.0 * (a-x) * (a-y) / (t-s));
 }
 
+//' Brownian Bridge minimum point sampler
+//'
+//' This function simulates a minimum point of a Brownian bridge
+//'
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param low_bound Lower bound of minimum point (low_bound < up_bound <= min(x,y))
+//' @param up_bound Upper bound of minimum point (low_bound < up_bound <= min(x,y))
+//'
+//' @return vector: the simulated minimum, 'min', and time where minimum occurs, 'tau'
+//'
+//' @examples
+//' # simulate a minimum between 0 and 1 of a Brownian bridge starting at 0 and ending at 0 in time [0,1]
+//' min_sampler(x=0, y=0, s=0, t=1, low_bound = -1, up_bound = 0)
+//'
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector min_sampler(const double &x, const double &y,
                                 const double &s, const double &t,
@@ -57,6 +91,25 @@ Rcpp::NumericVector min_sampler(const double &x, const double &y,
   return simulated_min;
 }
 
+//' Bessel Bridge point sampler given minimum
+//'
+//' This function simulates a point of a Bessel bridge at time q, given minimum occurs at time tuu
+//'
+//' @param x start value of Bessel bridge
+//' @param y end value of Bessel bridge
+//' @param s start value of Bessel bridge
+//' @param t end value of Bessel bridge
+//' @param min minumum point 
+//' @param tau time of minimum point
+//' @param q time of simulation
+//' 
+//' @return simulated point of the Bessel bridge at time q
+//'
+//' @examples
+//' # simulating a point at q=0.2 for a Bessel bridge starting at 0 and ending at 0 in time [0,1] given minimum is at -0.4 at time 0.6
+//' min_Bessel_bridge_sampler(x = 0, y = 0, s = 0, t = 1, min = -0.4, tau = 0.6, q = 0.2)
+//'
+//' @export
 // [[Rcpp::export]]
 double min_Bessel_bridge_sampler(const double &x, const double &y,
                                  const double &s, const double &t,
@@ -99,6 +152,25 @@ double min_Bessel_bridge_sampler(const double &x, const double &y,
   return W;
 }
 
+//' Bessel Bridge path sampler given minimum
+//'
+//' This function simulates a path of a Bessel bridge at given times, given minimum occurs at time tuu
+//'
+//' @param x start value of Bessel bridge
+//' @param y end value of Bessel bridge
+//' @param s start value of Bessel bridge
+//' @param t end value of Bessel bridge
+//' @param min minumum point 
+//' @param tau time of minimum point
+//' @param times vector of real numbers to simulate Bessel bridge
+//'
+//' @return matrix of the simulated Bessel bridge path, first row is points X, second row are corresponding times
+//'
+//' @examples
+//' # simulating a path at times=c(0.2, 0.4, 0.8) for a Bessel bridge starting at 0 and ending at 0 in time [0,1] given minimum is at -0.4 at time 0.6
+//' min_Bessel_bridge_path_sampler(x = 0, y = 0, s = 0, t = 1, min = -0.4, tau = 0.6, times = c(0.2, 0.4, 0.8))
+//'
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double &y,
                                                    const double &s, const double &t,
@@ -160,6 +232,24 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double
   return bb;
 }
 
+//' Brownian Bridge maximum point sampler
+//'
+//' This function simulates a maximum point of a Brownian bridge
+//'
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param low_bound Lower bound of maximum point (max(x,y) <= low_bound < up_bound)
+//' @param up_bound Upper bound of maximum point (max(x,y) <= low_bound < up_bound)
+//'
+//' @return vector: the simulated maximum, 'max', and time where maximum occurs, 'tau'
+//'
+//' @examples
+//' # simulate a maximum between 0 and 1 of a Brownian bridge starting at 0 and ending at 0 in time [0,1]
+//' max_sampler(x=0, y=0, s=0, t=1, low_bound = 0, up_bound = 1)
+//'
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector max_sampler(const double &x, const double &y,
                                 const double &s, const double &t,
@@ -176,6 +266,25 @@ Rcpp::NumericVector max_sampler(const double &x, const double &y,
   return Rcpp::NumericVector::create(Named("max", -sim_min["min"]), Named("tau", sim_min["tau"]));
 }
 
+//' Bessel Bridge point sampler given maximum
+//'
+//' This function simulates a point of a Bessel bridge at time q, given maximum occurs at time tuu
+//'
+//' @param x start value of Bessel bridge
+//' @param y end value of Bessel bridge
+//' @param s start value of Bessel bridge
+//' @param t end value of Bessel bridge
+//' @param max maxumum point 
+//' @param tau time of maximum point
+//' @param q time of simulation
+//' 
+//' @return simulated point of the Bessel bridge at time q
+//'
+//' @examples
+//' # simulating a point at q=0.2 for a Bessel bridge starting at 0 and ending at 0 in time [0,1] given maximum is at 0.4 at time 0.6
+//' max_Bessel_bridge_sampler(x = 0, y = 0, s = 0, t = 1, max = 0.4, tau = 0.6, q = 0.2)
+//'
+//' @export
 // [[Rcpp::export]]
 double max_Bessel_bridge_sampler(const double &x, const double &y,
                                  const double &s, const double &t,
@@ -191,6 +300,25 @@ double max_Bessel_bridge_sampler(const double &x, const double &y,
   return -W;
 }
 
+//' Bessel Bridge path sampler given maximum
+//'
+//' This function simulates a path of a Bessel bridge at given times, given maximum occurs at time tuu
+//'
+//' @param x start value of Bessel bridge
+//' @param y end value of Bessel bridge
+//' @param s start value of Bessel bridge
+//' @param t end value of Bessel bridge
+//' @param max maxumum point 
+//' @param tau time of maximum point
+//' @param times vector of real numbers to simulate Bessel bridge
+//' 
+//' @return matrix of the simulated Bessel bridge path, first row is points X, second row are corresponding times
+//'
+//' @examples
+//' # simulating a path at times=c(0.2, 0.4, 0.8) for a Bessel bridge starting at 0 and ending at 0 in time [0,1] given maximum is at 0.4 at time 0.6
+//' max_Bessel_bridge_path_sampler(x = 0, y = 0, s = 0, t = 1, max = 0.4, tau = 0.6, times = c(0.2, 0.4, 0.8))
+//'
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x, const double &y,
                                                    const double &s, const double &t,

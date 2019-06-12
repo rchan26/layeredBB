@@ -8,6 +8,19 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins("cpp17")]]
 
+//' Find product of a vector
+//'
+//' This function product of the elements of a numerical vector
+//'
+//' @param vect numerical vector
+//'
+//' @return product of element in vector given
+//'
+//' @examples
+//' # returns 120
+//' find_max(c(1,2,3,4,5)) 
+//'
+//' @export
 // [[Rcpp::export]]
 double product_vector_elements(const Rcpp::NumericVector &vect) {
   double prod = 1;
@@ -17,6 +30,26 @@ double product_vector_elements(const Rcpp::NumericVector &vect) {
   return prod;
 }
 
+//' Gamma coin flipper
+//'
+//' Flips 'Gamma coin'; uses the Cauchy sequence S^{gamma}_{k} to 
+//' determine whether or not the Brownian bridge starting at x, ending at y, between [s,t]
+//' remains in interval [l,v]
+//'
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param l lower bound of Brownian bridge
+//' @param v upper bound of Brownian bridge
+//' @param k integer value
+//'
+//' @examples
+//' gamma_coin(x = 0, y = 0, s = 0, t = 1, l = -0.5, v = 0.5, k = 1)
+//'
+//' @return boolean value: if T, accept probability that Brownian bridge remains in [l,v], otherwise reject
+//'
+//' @export
 // [[Rcpp::export]]
 bool gamma_coin(const double &x, const double &y, 
                 const double &s, const double &t,
@@ -45,6 +78,38 @@ bool gamma_coin(const double &x, const double &y,
   }
 }
 
+//' Gamma coin flipper for intervals
+//'
+//' Flips 'Gamma coin' for intervals; takes the product of the Cauchy sequence S^{gamma}_{k} to 
+//' determine whether or not the Brownian bridge remains in the interval [l,v]
+//' Vectors x, y, s, t should all be the same length, L, where for i = 1, ..., L, the Brownian Bridge skeleton 
+//' we have is broken up so that x[i] goes to y[i] between s[i] and t[i] - see example
+//'
+//' @param x vector of values
+//' @param y vector of values
+//' @param s vector of values
+//' @param t vector of values
+//' @param l lower bound of Brownian bridge
+//' @param v upper bound of Brownian bridge
+//' @param k integer value
+//'
+//' @examples
+//' # setting up vectors
+//' x_vect <- c(); y_vect <- c(); s_vect <- c(); t_vect <- c()
+//' brownian_bridge <- matrix(c(0, 0, -0.2, 0.4, 1, 1), ncol = 3, nrow = 2)
+//' for (i in 1:(ncol(brownian_bridge)-1)) {
+//'   x_vect[i] <- brownian_bridge[1,i]
+//'   y_vect[i] <- brownian_bridge[1,(i+1)]
+//'   s_vect[i] <- brownian_bridge[2,i]
+//'   t_vect[i] <- brownian_bridge[2,(i+1)]
+//' }
+//' 
+//' # flip gamma coin whether or not Brownian bridge remains in [-0.5, 1.5]
+//' gamma_coin_intervals(x = x_vect, y = y_vect, s = s_vect, t = t_vect, l = -0.5, v = 1.5, k = 1)
+//'
+//' @return boolean value: if T, accept probability that Brownian bridge remains in [l,v], otherwise reject
+//'
+//' @export
 // [[Rcpp::export]]
 bool gamma_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVector &y,
                           const Rcpp::NumericVector &s, const Rcpp::NumericVector &t,
@@ -86,6 +151,25 @@ bool gamma_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVecto
   }
 }
 
+//' Delta coin flipper
+//'
+//' Flips 'Delta coin'; uses the Cauchy sequence S^{delta}_{k} to 
+//' determine whether or not the Brownian bridge with minimum, min, 
+//' starting at x, ending at y, between [s,t] remains in interval [l,v]
+//'
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param min minimum of Brownian bridge
+//' @param v upper bound of Brownian bridge
+//' @param k integer value
+//'
+//' @examples
+//'
+//' @return boolean value: if T, accept probability that Brownian bridge with minimum, min, remains in [l,v], otherwise reject
+//'
+//' @export
 // [[Rcpp::export]]
 bool delta_coin(const double &x, const double &y, 
                 const double &s, const double &t,
@@ -122,6 +206,38 @@ bool delta_coin(const double &x, const double &y,
   }
 }
 
+//' Delta coin flipper for intervals
+//'
+//' Flips 'Delta coin' for intervals; takes the product of the Cauchy sequence S^{delta}_{k} to 
+//' determine whether or not the Brownian bridge with minimum, min, remains in the interval [l,v]
+//' Vectors x, y, s, t should all be the same length, L, where for i = 1, ..., L, the Brownian Bridge skeleton 
+//' we have is broken up so that x[i] goes to y[i] between s[i] and t[i] - see example
+//'
+//' @param x vector of values
+//' @param y vector of values
+//' @param s vector of values
+//' @param t vector of values
+//' @param min minimum of Brownian bridge
+//' @param v upper bound of Brownian bridge
+//' @param k integer value
+//'
+//' @examples
+//' # setting up vectors
+//' x_vect <- c(); y_vect <- c(); s_vect <- c(); t_vect <- c()
+//' brownian_bridge <- matrix(c(0, 0, -0.2, 0.4, 1, 1), ncol = 3, nrow = 2)
+//' for (i in 1:(ncol(brownian_bridge)-1)) {
+//'   x_vect[i] <- brownian_bridge[1,i]
+//'   y_vect[i] <- brownian_bridge[1,(i+1)]
+//'   s_vect[i] <- brownian_bridge[2,i]
+//'   t_vect[i] <- brownian_bridge[2,(i+1)]
+//' }
+//' 
+//' # flip delta coin whether or not Brownian bridge remains in [-0.2, 1.5]
+//' delta_coin_intervals(x = x_vect, y = y_vect, s = s_vect, t = t_vect, min = -0.2, v = 1.5, k = 1)
+//'
+//' @return boolean value: if T, accept probability that Brownian bridge with minimum, min, remains in [l,v], otherwise reject
+//'
+//' @export
 // [[Rcpp::export]]
 bool delta_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVector &y,
                           const Rcpp::NumericVector &s, const Rcpp::NumericVector &t,

@@ -9,6 +9,19 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins("cpp17")]]
 
+//' Find maximum of vector
+//'
+//' This function finds the maximum value of a numerical vector
+//'
+//' @param vect numerical vector
+//'
+//' @return maximum of vector given
+//'
+//' @examples
+//' # returns 0.8
+//' find_max(c(-0.4, 0.23, -0.4321, 0.6, 0.3, 0.8, 0.54)) 
+//'
+//' @export
 // [[Rcpp::export]]
 double find_max(const Rcpp::NumericVector vect) 
 {
@@ -22,6 +35,19 @@ double find_max(const Rcpp::NumericVector vect)
   return current_max;
 }
 
+//' Find minimum of vector
+//'
+//' This function finds the minimum value of a numerical vector
+//'
+//' @param vect numerical vector
+//'
+//' @return minimum of vector given
+//' 
+//' @examples
+//' # returns -0.4321
+//' find_min(c(-0.4, 0.23, -0.4321, 0.6, 0.3, 0.8, 0.54)) 
+//'
+//' @export
 // [[Rcpp::export]]
 double find_min(const Rcpp::NumericVector vect)
 {
@@ -35,6 +61,27 @@ double find_min(const Rcpp::NumericVector vect)
   return current_min;
 }
 
+//' Layered Brownian Bridge sampler
+//'
+//' This function simulates a layered Brownian Bridge given a Bessel layer, at given times
+//'
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param a vector/sequence of numbers
+//' @param l integer number denoting Bessel layer, i.e. Brownian bridge is contained in [min(x,y)-a[l], max(x,y)+a[l]]
+//' @param times vector of real numbers to simulate Bessel bridge
+//' 
+//' @return matrix of the simulated layered Brownian bridge path, first row is points X, second row are corresponding times
+//'
+//' @examples
+//' # simulate Bessel layer
+//' bes_layer <- bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 1.0, 0.1))
+//' # simulate layered Brownian bridge
+//' layered_brownian_bridge(x = 0, y = 0, s = 0, t = 1, a = bes_layer$a, l = bes_layer$l, times = seq(0.2, 0.8, 0.2))
+//'
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericMatrix layered_brownian_bridge(const double &x, const double &y,
                                             const double &s, const double &t,
