@@ -215,7 +215,7 @@ Rcpp::NumericVector calc_SgammaK_intervals(const int &k, const double &x, const 
 //' @param t end value of Brownian bridge
 //' @param min minimum of Brownian bridge
 //' @param v upper bound of Brownian bridge
-//' 
+//'
 //' @return vector of two values, S^{delta,1}_{2k+1} and S^{delta,1}_{2k}
 //'
 //' @examples
@@ -253,7 +253,7 @@ Rcpp::NumericVector calc_SdeltaK_1_intervals(const int &k, const double &x, cons
 //' @examples
 //' K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
 //' calc_SdeltaK_2_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
-//' 
+//'
 //' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k, const double &x, const double &y,
@@ -294,7 +294,7 @@ Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k, const double &x, cons
 //' @examples
 //' # case where min(x,y ) > min
 //' calc_SdeltaK_1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
-//' 
+//'
 //' # case where min(x,y) == min
 //' K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
 //' calc_SdeltaK_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)

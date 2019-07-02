@@ -99,10 +99,10 @@ Rcpp::NumericVector min_sampler(const double &x, const double &y,
 //' @param y end value of Bessel bridge
 //' @param s start value of Bessel bridge
 //' @param t end value of Bessel bridge
-//' @param min minumum point 
+//' @param min minumum point
 //' @param tau time of minimum point
 //' @param q time of simulation
-//' 
+//'
 //' @return simulated point of the Bessel bridge at time q
 //'
 //' @examples
@@ -154,13 +154,13 @@ double min_Bessel_bridge_sampler(const double &x, const double &y,
 
 //' Bessel Bridge path sampler given minimum
 //'
-//' This function simulates a path of a Bessel bridge at given times, given minimum occurs at time tuu
+//' This function simulates a path of a Bessel bridge at given times, given minimum occurs at time tau
 //'
 //' @param x start value of Bessel bridge
 //' @param y end value of Bessel bridge
 //' @param s start value of Bessel bridge
 //' @param t end value of Bessel bridge
-//' @param min minumum point 
+//' @param min minumum point
 //' @param tau time of minimum point
 //' @param times vector of real numbers to simulate Bessel bridge
 //'
