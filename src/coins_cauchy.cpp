@@ -271,6 +271,7 @@ bool delta_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVecto
   // while u \in (S_{2k+1}, S_{2k}) = (left,right), we keep calculating Cauchy sums
   double left_product = product_vector_elements(left);
   double right_product = product_vector_elements(right);
+  
   while (left_product < u && u < right_product) {
     k = k+1;
     for (int i=0; i < x.size(); ++i) {

@@ -52,7 +52,7 @@ List bessel_layer_simulation(const double &x, const double &y,
       // find the last element of the vector (a) and set it to (last)
       // since indices start from 0 in C++, this is the (size-1)-th element
       double last = a[(size-1)];
-      for (int i = 0; i < size; ++i) {
+      for (int i=0; i < size; ++i) {
         a.push_back(a[i] + last);
       }
       // remove any duplicates

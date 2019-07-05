@@ -198,26 +198,26 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double
   // and work from right to left when right of the min
   // this is so we can use the Markov property
 
-  for (int i = 0; times[i] <= tau; ++i) {
+  for (int i = 0; times.at(i) <= tau; ++i) {
     // simulate the point at each time
-    if (times[i] == s) {
-      simulated_bb[i] = x;
-    } else if (times[i] == tau) {
-      simulated_bb[i] = min;
+    if (times.at(i) == s) {
+      simulated_bb.at(i) = x;
+    } else if (times.at(i) == tau) {
+      simulated_bb.at(i) = min;
     } else {
       // if left of tau, then we simulate the next point normally, starting from the previous point to the end
-      simulated_bb[i] = min_Bessel_bridge_sampler(simulated_bb[i-1], y, times[i-1], t, min, tau, times[i]);
+      simulated_bb.at(i) = min_Bessel_bridge_sampler(simulated_bb.at(i-1), y, times.at(i-1), t, min, tau, times.at(i));
     }
   }
   
-  for (int i = times.size()-1; times[i] > tau; --i) {
+  for (int i = times.size()-1; times.at(i) > tau; --i) {
     // simulate the point at each time
-    if (times[i] == t) {
-      simulated_bb[i] = y;
+    if (times.at(i) == t) {
+      simulated_bb.at(i) = y;
     } else {
       // reflect it by taking the absolute value of the (time wanted - t)
-      simulated_bb[i] = min_Bessel_bridge_sampler(simulated_bb[i+1], x, fabs(times[i+1]-t), fabs(s-t), 
-                                                  min, fabs(tau-t), fabs(times[i]-t));
+      simulated_bb.at(i) = min_Bessel_bridge_sampler(simulated_bb.at(i+1), x, fabs(times.at(i+1)-t), fabs(s-t), 
+                                                     min, fabs(tau-t), fabs(times.at(i)-t));
     }
   }
 

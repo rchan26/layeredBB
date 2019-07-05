@@ -106,7 +106,6 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x, const double &y,
     if (u < 0.5) {
       // simulate minimum point
       Rcpp::NumericVector simulated_min;
-      
       // setting l1, l2, v1, v2 values in the different cases
       // simulating minimum points if needed
       if (l==0 && a.at(0)==0) {
