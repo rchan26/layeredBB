@@ -247,7 +247,7 @@ bool delta_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVecto
   if (x.size()!=y.size() || x.size()!=s.size() || x.size()!=t.size()) {
     stop("error in gamma_coin_intervals: vector lengths are not equal");
   }
-  
+   
   // simulating from a uniform distribution
   double u = Rcpp::runif(1, 0.0, 1.0)[0];
   

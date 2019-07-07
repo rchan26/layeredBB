@@ -19,26 +19,6 @@ bessel_layer_simulation <- function(x, y, s, t, a) {
     .Call(`_layeredBB_bessel_layer_simulation`, x, y, s, t, a)
 }
 
-#' M_function
-#'
-#' This function is used in the simulation of a minimum point of a Brownian bridge
-#'
-#' @param a real value
-#' @param x start value of Brownian bridge
-#' @param y end value of Brownian bridge
-#' @param s start value of Brownian bridge
-#' @param t end value of Brownian bridge
-#' 
-#' @return real value: M_function evaluated at point a
-#'
-#' @examples
-#' M_function(a = 0, x = 0, y = 0, s = 0, t = 1)
-#'
-#' @export
-M_function <- function(a, x, y, s, t) {
-    .Call(`_layeredBB_M_function`, a, x, y, s, t)
-}
-
 #' Brownian Bridge minimum point sampler
 #'
 #' This function simulates a minimum point of a Brownian bridge

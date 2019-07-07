@@ -9,24 +9,7 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins("cpp17")]]
 
-//' M_function
-//'
-//' This function is used in the simulation of a minimum point of a Brownian bridge
-//'
-//' @param a real value
-//' @param x start value of Brownian bridge
-//' @param y end value of Brownian bridge
-//' @param s start value of Brownian bridge
-//' @param t end value of Brownian bridge
-//' 
-//' @return real value: M_function evaluated at point a
-//'
-//' @examples
-//' M_function(a = 0, x = 0, y = 0, s = 0, t = 1)
-//'
-//' @export
-// [[Rcpp::export]]
-double M_function(const double &a, const double &x, const double &y, const double &s, const double &t) {
+double M_func(const double &a, const double &x, const double &y, const double &s, const double &t) {
   // M function that is used to simulate a minimum of a Brownian bridge
   return exp(-2.0 * (a-x) * (a-y) / (t-s));
 }
@@ -58,22 +41,12 @@ Rcpp::NumericVector min_sampler(const double &x, const double &y,
   // first element returned is the simulated minimum
   // second element returned is the simulated time which the minimum occurs
   
-  // calculate bounds for u1
-  double low_M = M_function(low_bound, x, y, s, t);
-  double up_M = M_function(up_bound, x, y, s, t);
-  
-  // simulate uniform random variables
-  double u1 = Rcpp::runif(1, low_M, up_M)[0];
-  double u2 = Rcpp::runif(1, 0.0, 1.0)[0];
-  
   // set simulated minimum value
-  double min = x - (0.5*(sqrt((y-x)*(y-x)-2.0*(t-s)*log(u1)) - y + x));
+  double min = x - (0.5*(sqrt((y-x)*(y-x)-2.0*(t-s)*log(Rcpp::runif(1, M_func(low_bound,x,y,s,t), M_func(up_bound,x,y,s,t))[0])) - y + x));
   
-  // condition for setting V
-  double condition = (x-min)/(x+y-(2.0*min));
-  // simulating from Inverse Gaussian
+  // simulating from Inverse Gaussian to set V and tau
   double mu, lambda, V;
-  if (u2 < condition) {
+  if (Rcpp::runif(1, 0.0, 1.0)[0] < (x-min)/(x+y-(2.0*min))) {
     mu = (y-min)/(x-min);
     lambda = (y-min)*(y-min)/(t-s);
     V = inv_gauss_sampler(mu, lambda);
@@ -83,12 +56,8 @@ Rcpp::NumericVector min_sampler(const double &x, const double &y,
     V = (1.0 / inv_gauss_sampler(mu, lambda));
   }
   
-  // set tau (time of simualted minimum)
-  double tau = ((s*V)+t)/(1.0+V);
-  
-  // setting simulated minimum and tau in array
-  Rcpp::NumericVector simulated_min = Rcpp::NumericVector::create(Named("min", min), Named("tau", tau));
-  return simulated_min;
+  // // setting simulated minimum and tau in array
+  return Rcpp::NumericVector::create(Named("min", min), Named("tau", ((s*V)+t)/(1.0+V)));
 }
 
 //' Bessel Bridge point sampler given minimum
@@ -145,11 +114,9 @@ double min_Bessel_bridge_sampler(const double &x, const double &y,
     b[i] = rnorm(1, 0.0, std_dev)[0];
   }
   
-  // set simulated value
+  // set simulated value and return
   double term1 = ((Wr-min)*fabs(tau-q)/(pow(fabs(tau-r), 1.5))) + b.at(0);
-  double W = min + sqrt(fabs(tau-r)*(term1*term1 + b.at(1)*b.at(1) + b.at(2)*b.at(2)));
-  
-  return W;
+  return (min + sqrt(fabs(tau-r)*(term1*term1 + b.at(1)*b.at(1) + b.at(2)*b.at(2))));
 }
 
 //' Bessel Bridge path sampler given minimum
@@ -293,11 +260,11 @@ double max_Bessel_bridge_sampler(const double &x, const double &y,
 {
   // function simulates a Bessel bridge at a given time (q) with minimum (min) at time (tau)
   
-  // reflect the problem to simulate a Bessel bridge with a given minimum point
-  double W = min_Bessel_bridge_sampler(-x, -y, s, t, -max, tau, q);
+  // // reflect the problem to simulate a Bessel bridge with a given minimum point
+  // double W = min_Bessel_bridge_sampler(-x, -y, s, t, -max, tau, q);
   
   // reflect on x-axis
-  return -W;
+  return -min_Bessel_bridge_sampler(-x, -y, s, t, -max, tau, q);
 }
 
 //' Bessel Bridge path sampler given maximum
@@ -337,6 +304,7 @@ Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x, const double
   for (int i=0; i < sim_path.ncol(); ++i) {
     sim_path(0, i) = -sim_path(0, i);
   }
+  
   return sim_path;
 }
 
