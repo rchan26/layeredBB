@@ -7,8 +7,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::plugins("cpp17")]]
-
 double M_func(const double &a, const double &x, const double &y, const double &s, const double &t) {
   // M function that is used to simulate a minimum of a Brownian bridge
   return exp(-2.0 * (a-x) * (a-y) / (t-s));

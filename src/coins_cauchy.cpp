@@ -6,8 +6,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::plugins("cpp17")]]
-
 //' Find product of a vector
 //'
 //' This function product of the elements of a numerical vector

@@ -5,8 +5,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::plugins("cpp17")]]
-
 //' Inverse Gaussian Sampler
 //'
 //' This function returns 1 sample from an Inverse Gaussian distribution with mean mu and shape lambda

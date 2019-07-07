@@ -5,8 +5,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::plugins("cpp17")]]
-
 //' Sigma_Bar
 //'
 //' This function evaluates the sigma_bar function used to simulate Bessel Layers in the infinite sums

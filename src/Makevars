@@ -1,4 +1,4 @@
 PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
-CXXFLAGS = -g -std=c++17 -Wall -pedantic
-CXX_STD = CXX17
+CXXFLAGS = -g -std=c++11 -Wall -pedantic
+CXX_STD = CXX11

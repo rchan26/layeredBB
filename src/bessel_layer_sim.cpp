@@ -7,9 +7,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::plugins("cpp17")]]
-
-
 //' Bessel Layer simulation
 //'
 //' Simulates a Bessel layer l for a given sequence a

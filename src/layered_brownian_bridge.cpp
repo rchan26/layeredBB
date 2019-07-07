@@ -7,8 +7,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::plugins("cpp17")]]
-
 //' Find maximum of vector
 //'
 //' This function finds the maximum value of a numerical vector
