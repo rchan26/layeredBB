@@ -17,6 +17,14 @@ bessel_layer_simulation(x, y, s, t, a)
 
 \item{a}{vector/sequence of numbers}
 }
+\value{
+A list with the following items:
+\itemize{
+  \item{a}{vector of real values}
+  \item{l}{bessel layer}
+}
+where the Bessel layer is [min(x,y)-a[l], min(x,y)+a[l]]
+}
 \description{
 Simulates a Bessel layer l for a given sequence a
 }

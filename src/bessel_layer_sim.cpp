@@ -19,12 +19,23 @@ using namespace Rcpp;
 //'
 //' @examples
 //' bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+//' 
+//' @return 
+//' A list with the following items:
+//' \itemize{
+//'   \item{a}{vector of real values}
+//'   \item{l}{bessel layer}
+//' }
+//' where the Bessel layer is [min(x,y)-a[l], min(x,y)+a[l]]
+//' 
 //'
 //' @export
 // [[Rcpp::export]]
-List bessel_layer_simulation(const double &x, const double &y,
-                             const double &s, const double &t,
-                             Rcpp::NumericVector &a)
+Rcpp::List bessel_layer_simulation(const double &x, 
+                                   const double &y,
+                                   const double &s,
+                                   const double &t,
+                                   Rcpp::NumericVector &a)
 {
   // initialise Bessel layer
   int l = 0;
@@ -57,3 +68,54 @@ List bessel_layer_simulation(const double &x, const double &y,
     }
   }
 }
+
+//' Multiple Bessel Layer simulation
+//'
+//' Simulates a Bessel layer l for a given sequence a for each component of the Brownian bridge
+//'
+//' @param dim dimension of Brownian bridge
+//' @param x vector of start values of Brownian bridge (length of vector must be equal to dim)
+//' @param y vector of end values of Brownian bridge (length of vector must be equal to dim)
+//' @param s start time of Brownian bridge
+//' @param t end time of Brownian bridge
+//' @param a vector/sequence of numbers
+//'
+//' @examples
+//' // simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+//' bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+//' 
+//' @return 
+//' A list of length dim where list[i] is the Bessel layer for component i, which is represented in
+//' a list with the following items:
+//' \itemize{
+//'   \item a vector of real values
+//'   \item l bessel layer
+//' }
+//' where the Bessel layer [min(x,y)-a[l], min(x,y)+a[l]]
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::List multi_bessel_layer_simulation(const int dim,
+                                         const Rcpp::NumericVector &x,
+                                         const Rcpp::NumericVector &y, 
+                                         const double &s, 
+                                         const double &t,
+                                         Rcpp::NumericVector &a) {
+  // check that x and y match the dimensions of dim
+  if (x.size() != dim) {
+    stop("multi_bessel_layer_simulation: size of x is not equal to dim");
+  } else if (y.size() != dim) {
+    stop("multi_bessel_layer_simulation: size of y is not equal to dim");
+  }
+  
+  // for each component, we simulate a Bessel layer
+  Rcpp::List layers(dim);
+  for (int i=0; i < dim; ++i) {
+    layers[i] = bessel_layer_simulation(x.at(i), y.at(i), s, t, a);
+  }
+  
+  return(layers);
+}
+  
+  
+  

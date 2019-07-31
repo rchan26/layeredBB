@@ -13,10 +13,48 @@
 #'
 #' @examples
 #' bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+#' 
+#' @return 
+#' A list with the following items:
+#' \itemize{
+#'   \item{a}{vector of real values}
+#'   \item{l}{bessel layer}
+#' }
+#' where the Bessel layer is [min(x,y)-a[l], min(x,y)+a[l]]
+#' 
 #'
 #' @export
 bessel_layer_simulation <- function(x, y, s, t, a) {
     .Call(`_layeredBB_bessel_layer_simulation`, x, y, s, t, a)
+}
+
+#' Multiple Bessel Layer simulation
+#'
+#' Simulates a Bessel layer l for a given sequence a for each component of the Brownian bridge
+#'
+#' @param dim dimension of Brownian bridge
+#' @param x vector of start values of Brownian bridge (length of vector must be equal to dim)
+#' @param y vector of end values of Brownian bridge (length of vector must be equal to dim)
+#' @param s start time of Brownian bridge
+#' @param t end time of Brownian bridge
+#' @param a vector/sequence of numbers
+#'
+#' @examples
+#' // simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+#' bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+#' 
+#' @return 
+#' A list of length dim where list[i] is the Bessel layer for component i, which is represented in
+#' a list with the following items:
+#' \itemize{
+#'   \item a vector of real values
+#'   \item l bessel layer
+#' }
+#' where the Bessel layer [min(x,y)-a[l], min(x,y)+a[l]]
+#' 
+#' @export
+multi_bessel_layer_simulation <- function(dim, x, y, s, t, a) {
+    .Call(`_layeredBB_multi_bessel_layer_simulation`, dim, x, y, s, t, a)
 }
 
 #' Brownian Bridge minimum point sampler

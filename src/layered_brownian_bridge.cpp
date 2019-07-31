@@ -81,9 +81,12 @@ double find_min(const Rcpp::NumericVector vect)
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericMatrix layered_brownian_bridge(const double &x, const double &y,
-                                            const double &s, const double &t,
-                                            const Rcpp::NumericVector &a, int l,
+Rcpp::NumericMatrix layered_brownian_bridge(const double &x, 
+                                            const double &y,
+                                            const double &s, 
+                                            const double &t,
+                                            const Rcpp::NumericVector &a,
+                                            int l,
                                             const Rcpp::NumericVector &times)
 {
   // layered Brownian bridge sampler
@@ -226,3 +229,35 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x, const double &y,
     }
   }	
 }
+
+// Rcpp::NumericMatrix multi_layered_brownian_bridge(const double &dim,
+//                                                   const Rcpp::NumericVector &x, 
+//                                                   const Rcpp::NumericVector &y,
+//                                                   const double &s, 
+//                                                   const double &t,
+//                                                   const Rcpp::List layers,
+//                                                   const Rcpp::NumericVector &times) {
+//   // check that x and y match the dimensions of dim
+//   if (x.size() != dim) {
+//     stop("multi_bessel_layer_simulation: size of x is not equal to dim");
+//   } else if (y.size() != dim) {
+//     stop("multi_bessel_layer_simulation: size of y is not equal to dim");
+//   }
+//   
+//   // for component, we simulate a layered Brownian bridge
+//   Rcpp::NumericMatrix;
+//   for (int i=0; i < dim; ++i) {
+//     layers[i] = bessel_layer_simulation(x.at(i), y.at(i), s, t, a);
+//   }
+//   
+//   return(layers);
+//   
+//   
+//   
+// }
+
+
+
+
+
+
