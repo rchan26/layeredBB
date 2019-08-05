@@ -105,7 +105,7 @@ Rcpp::List multi_bessel_layer_simulation(const int dim,
     stop("multi_bessel_layer_simulation: size of y is not equal to dim");
   }
   
-  // for each component, we simulate a Bessel layer
+  // for each component, we simulate a Bessel layer and store as value in list
   Rcpp::List layers(dim);
   for (int i=0; i < dim; ++i) {
     layers[i] = bessel_layer_simulation(x.at(i), y.at(i), s, t, a);
