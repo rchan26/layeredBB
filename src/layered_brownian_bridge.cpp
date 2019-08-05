@@ -283,8 +283,6 @@ Rcpp::NumericMatrix multi_layered_brownian_bridge(const double &dim,
   Rcpp::NumericMatrix multi_BB(dim+1, times.size());
   multi_BB(dim, _) = times;
   
-  Rcout << "size(layers): " << layers.size() << "\n";
-  
   // loop through the components and simulate a layered Brownian bridge
   // we keep the simulated values at the times we want
   // we 'throw away' auxiliary information about the maximum and minimum simualted
