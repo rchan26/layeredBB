@@ -6,8 +6,6 @@ devtools::install_github('rchan26/layeredBB')
 
 To do: make installable on windows.
 
-I'm not sure if this package runs on Microsoft Windows. 
-
 ## Using with `parallel`
 
 Here is an example to use in a cluster using `parallel`:
