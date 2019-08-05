@@ -1,7 +1,4 @@
 #include "../inc/cauchy_sums.hpp"
-#include <Rcpp.h>
-#include <cmath>
-#include <algorithm>
 
 using namespace Rcpp;
 

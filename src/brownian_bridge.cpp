@@ -1,10 +1,6 @@
 #include "../inc/brownian_bridge_min.hpp"
 #include "../inc/inverse_gauss.hpp"
 
-#include <Rcpp.h>
-#include <random>
-#include <cmath>
-
 using namespace Rcpp;
 
 double M_func(const double &a, const double &x, const double &y, const double &s, const double &t) {
@@ -151,7 +147,7 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double
   times.insert(times.end(), s);
   times.insert(times.end(), t);
   times.insert(times.end(), tau);
-  // sort the vector 'time' forward in time
+  // sort the vector 'times' forward in time
   times.sort();
   // delete any duplicates
   times.erase(std::unique(times.begin(), times.end()), times.end());

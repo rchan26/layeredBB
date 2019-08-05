@@ -32,7 +32,7 @@ where the Bessel layer [min(x,y)-a[l], min(x,y)+a[l]]
 Simulates a Bessel layer l for a given sequence a for each component of the Brownian bridge
 }
 \examples{
-// simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+# simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+multi_bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
 
 }

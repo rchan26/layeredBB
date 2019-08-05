@@ -1,9 +1,6 @@
 #include "../inc/bessel_layer_sim.hpp"
 #include "../inc/cauchy_sums.hpp"
 #include "../inc/coins_cauchy.hpp"
-#include <vector>
-#include <algorithm>
-#include <random>
 
 using namespace Rcpp;
 
@@ -81,8 +78,8 @@ Rcpp::List bessel_layer_simulation(const double &x,
 //' @param a vector/sequence of numbers
 //'
 //' @examples
-//' // simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-//' bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+//' # simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+//' multi_bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
 //' 
 //' @return 
 //' A list of length dim where list[i] is the Bessel layer for component i, which is represented in

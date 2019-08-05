@@ -2,6 +2,9 @@
 #define COINS_CAUCHY
 
 #include <Rcpp.h>
+#include <random>
+#include <iomanip>
+
 using namespace Rcpp;
 
 // forward declaration for taking products of vector elements

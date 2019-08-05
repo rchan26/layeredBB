@@ -2,6 +2,10 @@
 #define BROWNIAN_BRIDGE_MIN
 
 #include <Rcpp.h>
+#include <random>
+#include <cmath>
+#include <algorithm>
+
 using namespace Rcpp;
 
 // forward declaration for M_function that's used in min_sampler

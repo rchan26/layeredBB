@@ -436,6 +436,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// multi_layered_brownian_bridge
+Rcpp::NumericMatrix multi_layered_brownian_bridge(const double& dim, const Rcpp::NumericVector& x, const Rcpp::NumericVector& y, const double& s, const double& t, const Rcpp::List& layers, Rcpp::NumericVector times);
+RcppExport SEXP _layeredBB_multi_layered_brownian_bridge(SEXP dimSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP layersSEXP, SEXP timesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const double& >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type layers(layersSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type times(timesSEXP);
+    rcpp_result_gen = Rcpp::wrap(multi_layered_brownian_bridge(dim, x, y, s, t, layers, times));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_layeredBB_bessel_layer_simulation", (DL_FUNC) &_layeredBB_bessel_layer_simulation, 5},
@@ -465,6 +482,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_layeredBB_find_max", (DL_FUNC) &_layeredBB_find_max, 1},
     {"_layeredBB_find_min", (DL_FUNC) &_layeredBB_find_min, 1},
     {"_layeredBB_layered_brownian_bridge", (DL_FUNC) &_layeredBB_layered_brownian_bridge, 7},
+    {"_layeredBB_multi_layered_brownian_bridge", (DL_FUNC) &_layeredBB_multi_layered_brownian_bridge, 7},
     {NULL, NULL, 0}
 };
 

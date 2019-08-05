@@ -230,31 +230,85 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
   }	
 }
 
-// Rcpp::NumericMatrix multi_layered_brownian_bridge(const double &dim,
-//                                                   const Rcpp::NumericVector &x, 
-//                                                   const Rcpp::NumericVector &y,
-//                                                   const double &s, 
-//                                                   const double &t,
-//                                                   const Rcpp::List layers,
-//                                                   const Rcpp::NumericVector &times) {
-//   // check that x and y match the dimensions of dim
-//   if (x.size() != dim) {
-//     stop("multi_bessel_layer_simulation: size of x is not equal to dim");
-//   } else if (y.size() != dim) {
-//     stop("multi_bessel_layer_simulation: size of y is not equal to dim");
-//   }
-//   
-//   // for component, we simulate a layered Brownian bridge
-//   Rcpp::NumericMatrix;
-//   for (int i=0; i < dim; ++i) {
-//     layers[i] = bessel_layer_simulation(x.at(i), y.at(i), s, t, a);
-//   }
-//   
-//   return(layers);
-//   
-//   
-//   
-// }
+
+//' Multi-dimensional Layered Brownian Bridge sampler
+//'
+//' This function simulates a multi-dimensional layered Brownian Bridge given Bessel layers, at given times
+//'
+//' @param dim dimension of Brownian bridge
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param layers a list of length dim where list[i] is the Bessel layer for component i
+//' @param times vector of real numbers to simulate Bessel bridge
+//' 
+//' @return matrix of the simulated layered Brownian bridge path, first dim rows are points for X in each component, 
+//'         last row are corresponding times
+//'
+//' @examples
+//' # simulate Bessel layer for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+//' bes_layers <- multi_bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+//' # simulate two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+//' multi_layered_brownian_bridge(dim = 2, x = c(0,0), y = c(0,0), s = 0, t = 1, layers = bes_layers, times = seq(0.2, 0.8, 0.2))
+//'
+//' @export
+// [[Rcpp::export]]
+Rcpp::NumericMatrix multi_layered_brownian_bridge(const double &dim,
+                                                  const Rcpp::NumericVector &x,
+                                                  const Rcpp::NumericVector &y,
+                                                  const double &s,
+                                                  const double &t,
+                                                  const Rcpp::List &layers,
+                                                  Rcpp::NumericVector times) {
+  // check that x and y match the dimensions of dim
+  if (x.size() != dim) {
+    stop("multi_bessel_layer_simulation: size of x is not equal to dim");
+  } else if (y.size() != dim) {
+    stop("multi_bessel_layer_simulation: size of y is not equal to dim");
+  } else if (layers.size() != dim) {
+    stop("multi_bessel_layer_simulation: size of layers is not equal to dim");
+  }
+  
+  // collect all times into one vector
+  times.insert(times.end(), s);
+  times.insert(times.end(), t);
+  // sort the vector 'times' forward in time
+  times.sort();
+  // delete any duplicates
+  times.erase(std::unique(times.begin(), times.end()), times.end());
+
+  // for component, we simulate a layered Brownian bridge
+  // multi_BB is a matrix with dimensions (dim+1) x times.size()
+  Rcpp::NumericMatrix multi_BB(dim+1, times.size());
+  multi_BB(dim, _) = times;
+  
+  Rcout << "size(layers): " << layers.size() << "\n";
+  
+  // loop through the components and simulate a layered Brownian bridge
+  // we keep the simulated values at the times we want
+  // we 'throw away' auxiliary information about the maximum and minimum simualted
+  for (int i=0; i < dim; ++i) {
+    // getting layer information for component i
+    Rcpp::List sublist = layers[i];
+    Rcpp::NumericVector a = sublist[0];
+    int l = sublist[1];
+    
+    // simulate layered Brownian bridge for component i
+    Rcpp::NumericMatrix component_BB = layered_brownian_bridge(x.at(i), y.at(i), s, t, a, l, times);
+    // loop through the times in the simulated layered Brownian bridge for that component
+    // only keep the times that are wanted - throw away simulated minimum or maximum
+    int index = 0;
+    for (int j=0; j < component_BB.ncol(); ++j) {
+      if (std::find(times.begin(), times.end(), component_BB(1, j)) != times.end()) {
+        multi_BB(i, index) = component_BB(0, j);
+        index = index + 1;
+      } 
+    }
+  }
+
+  return(multi_BB);
+}
 
 
 

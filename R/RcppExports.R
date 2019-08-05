@@ -40,8 +40,8 @@ bessel_layer_simulation <- function(x, y, s, t, a) {
 #' @param a vector/sequence of numbers
 #'
 #' @examples
-#' // simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-#' bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+#' # simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+#' multi_bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
 #' 
 #' @return 
 #' A list of length dim where list[i] is the Bessel layer for component i, which is represented in
@@ -631,5 +631,31 @@ find_min <- function(vect) {
 #' @export
 layered_brownian_bridge <- function(x, y, s, t, a, l, times) {
     .Call(`_layeredBB_layered_brownian_bridge`, x, y, s, t, a, l, times)
+}
+
+#' Multi-dimensional Layered Brownian Bridge sampler
+#'
+#' This function simulates a multi-dimensional layered Brownian Bridge given Bessel layers, at given times
+#'
+#' @param dim dimension of Brownian bridge
+#' @param x start value of Brownian bridge
+#' @param y end value of Brownian bridge
+#' @param s start value of Brownian bridge
+#' @param t end value of Brownian bridge
+#' @param layers a list of length dim where list[i] is the Bessel layer for component i
+#' @param times vector of real numbers to simulate Bessel bridge
+#' 
+#' @return matrix of the simulated layered Brownian bridge path, first dim rows are points for X in each component, 
+#'         last row are corresponding times
+#'
+#' @examples
+#' # simulate Bessel layer for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+#' bes_layers <- multi_bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+#' # simulate two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+#' multi_layered_brownian_bridge(dim = 2, x = c(0,0), y = c(0,0), s = 0, t = 1, layers = bes_layers, times = seq(0.2, 0.8, 0.2))
+#'
+#' @export
+multi_layered_brownian_bridge <- function(dim, x, y, s, t, layers, times) {
+    .Call(`_layeredBB_multi_layered_brownian_bridge`, dim, x, y, s, t, layers, times)
 }
 

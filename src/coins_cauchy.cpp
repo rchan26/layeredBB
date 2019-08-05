@@ -1,8 +1,5 @@
 #include "../inc/coins_cauchy.hpp"
 #include "../inc/cauchy_sums.hpp"
-#include <random>
-#include <Rcpp.h>
-#include <iomanip>
 
 using namespace Rcpp;
 
