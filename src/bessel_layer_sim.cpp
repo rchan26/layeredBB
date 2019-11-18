@@ -92,7 +92,7 @@ Rcpp::List bessel_layer_simulation(const double &x,
 //' 
 //' @export
 // [[Rcpp::export]]
-Rcpp::List multi_bessel_layer_simulation(const int dim,
+Rcpp::List multi_bessel_layer_simulation(const int &dim,
                                          const Rcpp::NumericVector &x,
                                          const Rcpp::NumericVector &y, 
                                          const double &s, 

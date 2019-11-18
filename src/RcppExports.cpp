@@ -21,12 +21,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // multi_bessel_layer_simulation
-Rcpp::List multi_bessel_layer_simulation(const int dim, const Rcpp::NumericVector& x, const Rcpp::NumericVector& y, const double& s, const double& t, Rcpp::NumericVector& a);
+Rcpp::List multi_bessel_layer_simulation(const int& dim, const Rcpp::NumericVector& x, const Rcpp::NumericVector& y, const double& s, const double& t, Rcpp::NumericVector& a);
 RcppExport SEXP _layeredBB_multi_bessel_layer_simulation(SEXP dimSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP aSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const int >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< const int& >::type dim(dimSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
@@ -52,12 +52,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // multi_brownian_bridge
-Rcpp::NumericMatrix multi_brownian_bridge(const double& dim, const Rcpp::NumericVector& x, const Rcpp::NumericVector& y, const double& s, const double& t, Rcpp::NumericVector times);
+Rcpp::NumericMatrix multi_brownian_bridge(const int& dim, const Rcpp::NumericVector& x, const Rcpp::NumericVector& y, const double& s, const double& t, Rcpp::NumericVector times);
 RcppExport SEXP _layeredBB_multi_brownian_bridge(SEXP dimSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP timesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const double& >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< const int& >::type dim(dimSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
@@ -468,12 +468,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // multi_layered_brownian_bridge
-Rcpp::NumericMatrix multi_layered_brownian_bridge(const double& dim, const Rcpp::NumericVector& x, const Rcpp::NumericVector& y, const double& s, const double& t, const Rcpp::List& layers, Rcpp::NumericVector times);
+Rcpp::NumericMatrix multi_layered_brownian_bridge(const int& dim, const Rcpp::NumericVector& x, const Rcpp::NumericVector& y, const double& s, const double& t, const Rcpp::List& layers, Rcpp::NumericVector times);
 RcppExport SEXP _layeredBB_multi_layered_brownian_bridge(SEXP dimSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP layersSEXP, SEXP timesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const double& >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< const int& >::type dim(dimSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);

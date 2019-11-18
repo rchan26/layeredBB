@@ -50,7 +50,7 @@ Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
       double W_l = simulated_bb.at(i-1), W_r = y;
       double M = W_l + ((q-l)*(W_r-W_l)/(r-l));
       double S = sqrt((r-q)*(q-l)/(r-l));
-      simulated_bb.at(i) = Rcpp::rnorm(1, M, S).at(0);
+      simulated_bb.at(i) = Rcpp::rnorm(1, M, S)[0];
     }
   }
   
@@ -85,7 +85,7 @@ Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericMatrix multi_brownian_bridge(const double &dim,
+Rcpp::NumericMatrix multi_brownian_bridge(const int &dim,
                                           const Rcpp::NumericVector &x,
                                           const Rcpp::NumericVector &y,
                                           const double &s,

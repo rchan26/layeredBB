@@ -16,12 +16,11 @@ Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
                                                  Rcpp::NumericVector times);
 
 // forward declaration for multi-dimensional Brownian bridge path samplers
-Rcpp::NumericMatrix multi_brownian_bridge(const double &dim,
+Rcpp::NumericMatrix multi_brownian_bridge(const int &dim,
                                           const Rcpp::NumericVector &x,
                                           const Rcpp::NumericVector &y,
                                           const double &s,
                                           const double &t,
-                                          const Rcpp::List &layers,
                                           Rcpp::NumericVector times);
 
 // forward declaration for M_function that's used in min_sampler

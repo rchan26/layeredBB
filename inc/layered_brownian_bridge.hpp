@@ -21,7 +21,7 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
                                             const Rcpp::NumericVector &times);
 
 // forward declaration multi-dimensional layared brownian bridge sampler
-Rcpp::NumericMatrix multi_layered_brownian_bridge(const double &dim,
+Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
                                                   const Rcpp::NumericVector &x,
                                                   const Rcpp::NumericVector &y,
                                                   const double &s,
