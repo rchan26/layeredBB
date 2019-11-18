@@ -21,9 +21,13 @@ using namespace Rcpp;
 //'
 //' @export
 // [[Rcpp::export]]
-double sigma_bar(const double &j, const double &x, const double &y,
-                 const double &s, const double &t,
-                 const double &l, const double &v)
+double sigma_bar(const double &j, 
+                 const double &x,
+                 const double &y,
+                 const double &s, 
+                 const double &t,
+                 const double &l, 
+                 const double &v)
 {
   return exp((-2.0/(t-s))*((fabs(v-l)*j)+std::min(l,v)-x)*((fabs(v-l)*j)+std::min(l,v)-y));
 }
@@ -47,9 +51,13 @@ double sigma_bar(const double &j, const double &x, const double &y,
 //'
 //' @export
 // [[Rcpp::export]]
-double sigma(const double &j, const double &x, const double &y, 
-             const double &s, const double &t,
-             const double &l, const double &v)
+double sigma(const double &j, 
+             const double &x, 
+             const double &y, 
+             const double &s,
+             const double &t,
+             const double &l, 
+             const double &v)
 {
   return sigma_bar(j,x,y,s,t,l,v) + sigma_bar(j,-x,-y,s,t,-l,-v);
 }
@@ -73,9 +81,13 @@ double sigma(const double &j, const double &x, const double &y,
 //'
 //' @export
 // [[Rcpp::export]]
-double phi_bar(const double &j, const double &x, const double &y,
-               const double &s, const double &t,
-               const double &l, const double &v)
+double phi_bar(const double &j, 
+               const double &x, 
+               const double &y,
+               const double &s, 
+               const double &t,
+               const double &l, 
+               const double &v)
 {
   return exp(-(2.0*j/(t-s)) * (fabs(v-l)*fabs(v-l)*j + fabs(v-l)*(x-y))); 
 }
@@ -99,9 +111,13 @@ double phi_bar(const double &j, const double &x, const double &y,
 //' 
 //' @export
 // [[Rcpp::export]] 
-double phi(const double &j, const double &x, const double &y, 
-           const double &s, const double &t,
-           const double &l, const double &v)
+double phi(const double &j, 
+           const double &x, 
+           const double &y, 
+           const double &s, 
+           const double &t,
+           const double &l, 
+           const double &v)
 {
   return phi_bar(j,x,y,s,t,l,v) + phi_bar(j,-x,-y,s,t,-l,-v);
 }
@@ -125,9 +141,13 @@ double phi(const double &j, const double &x, const double &y,
 //' 
 //' @export
 // [[Rcpp::export]] 
-double psi(const double &j, const double &x, const double &y,
-           const double &s, const double &t,
-           const double &min, const double &v)
+double psi(const double &j, 
+           const double &x, 
+           const double &y,
+           const double &s, 
+           const double &t,
+           const double &min, 
+           const double &v)
 {
   return (((2*fabs(v-min)*j)-(std::max(x,y)-min))*(exp(-(2.0*fabs(v-min)*j/(t-s))*((fabs(v-min)*j)-(std::max(x,y)-min)))));
 }
@@ -151,9 +171,13 @@ double psi(const double &j, const double &x, const double &y,
 //'
 //' @export
 // [[Rcpp::export]]
-double chi(const double &j, const double &x, const double &y,
-           const double &s, const double &t,
-           const double &min, const double &v)
+double chi(const double &j, 
+           const double &x, 
+           const double &y,
+           const double &s, 
+           const double &t,
+           const double &min, 
+           const double &v)
 {
   return (((2*fabs(v-min)*j)+(std::max(x,y)-min))*(exp(-(2.0*fabs(v-min)*j/(t-s))*((fabs(v-min)*j)+(std::max(x,y)-min)))));
 }
@@ -177,9 +201,13 @@ double chi(const double &j, const double &x, const double &y,
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector calc_SgammaK_intervals(const int &k, const double &x, const double &y,
-                                           const double &s, const double &t,
-                                           const double &l, const double &v)
+Rcpp::NumericVector calc_SgammaK_intervals(const int &k, 
+                                           const double &x, 
+                                           const double &y,
+                                           const double &s, 
+                                           const double &t,
+                                           const double &l, 
+                                           const double &v)
 {
   // function calculates (S_{2k+1}^{gamma}, S_{2k}^{gamma}) for a given k
   
@@ -218,9 +246,13 @@ Rcpp::NumericVector calc_SgammaK_intervals(const int &k, const double &x, const 
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector calc_SdeltaK_1_intervals(const int &k, const double &x, const double &y,
-                                             const double &s, const double &t,
-                                             const double &min, const double &v)
+Rcpp::NumericVector calc_SdeltaK_1_intervals(const int &k, 
+                                             const double &x,
+                                             const double &y,
+                                             const double &s, 
+                                             const double &t,
+                                             const double &min, 
+                                             const double &v)
 {
   // function calculates (S_{2k+1}^{delta,1}, S_{2k}^{delta,1}) for a given k
   // S_{k}^{delta,1} = S_{k}^{gamma}/denom
@@ -251,9 +283,13 @@ Rcpp::NumericVector calc_SdeltaK_1_intervals(const int &k, const double &x, cons
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k, const double &x, const double &y,
-                                             const double &s, const double &t,
-                                             const double &min, const double &v)
+Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k, 
+                                             const double &x,
+                                             const double &y,
+                                             const double &s, 
+                                             const double &t,
+                                             const double &min, 
+                                             const double &v)
 {
   // function calculates (S_{2k+1}^{delta,2}, S_{2k}^{delta,2}) for a given k
   // checking k is large enough for this to be valid
@@ -296,9 +332,13 @@ Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k, const double &x, cons
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector calc_SdeltaK_intervals(const int &k, const double &x, const double &y,
-                                           const double &s, const double &t,
-                                           const double &min, const double &v)
+Rcpp::NumericVector calc_SdeltaK_intervals(const int &k, 
+                                           const double &x, 
+                                           const double &y,
+                                           const double &s, 
+                                           const double &t,
+                                           const double &min, 
+                                           const double &v)
 {
   if (std::min(x,y) > min) {
     return calc_SdeltaK_1_intervals(k,x,y,s,t,min,v);

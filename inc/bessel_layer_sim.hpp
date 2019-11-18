@@ -8,8 +8,10 @@
 
 using namespace Rcpp;
 
-List bessel_layer_simulation(const double &x, const double &y,
-                             const double &s, const double &t,
+List bessel_layer_simulation(const double &x,
+                             const double &y,
+                             const double &s,
+                             const double &t,
                              Rcpp::NumericVector &a);
 
 #endif

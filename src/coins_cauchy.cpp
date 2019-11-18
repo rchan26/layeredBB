@@ -46,9 +46,12 @@ double product_vector_elements(const Rcpp::NumericVector &vect) {
 //'
 //' @export
 // [[Rcpp::export]]
-bool gamma_coin(const double &x, const double &y, 
-                const double &s, const double &t,
-                const double &l, const double &v,
+bool gamma_coin(const double &x, 
+                const double &y, 
+                const double &s, 
+                const double &t,
+                const double &l, 
+                const double &v,
                 int k)
 {
   // simulating from a uniform distribution
@@ -106,9 +109,13 @@ bool gamma_coin(const double &x, const double &y,
 //'
 //' @export
 // [[Rcpp::export]]
-bool gamma_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVector &y,
-                          const Rcpp::NumericVector &s, const Rcpp::NumericVector &t,
-                          const double &l, const double &v, int k)
+bool gamma_coin_intervals(const Rcpp::NumericVector &x, 
+                          const Rcpp::NumericVector &y,
+                          const Rcpp::NumericVector &s, 
+                          const Rcpp::NumericVector &t,
+                          const double &l, 
+                          const double &v, 
+                          int k)
 {
   // check if vector lengths are all the same
   if (x.size()!=y.size() || x.size()!=s.size() || x.size()!=t.size()) {
@@ -166,9 +173,12 @@ bool gamma_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVecto
 //'
 //' @export
 // [[Rcpp::export]]
-bool delta_coin(const double &x, const double &y, 
-                const double &s, const double &t,
-                const double &min, const double &v,
+bool delta_coin(const double &x, 
+                const double &y, 
+                const double &s, 
+                const double &t,
+                const double &min, 
+                const double &v,
                 int k)
 {
   // simulating from a uniform distribution
@@ -234,9 +244,13 @@ bool delta_coin(const double &x, const double &y,
 //'
 //' @export
 // [[Rcpp::export]]
-bool delta_coin_intervals(const Rcpp::NumericVector &x, const Rcpp::NumericVector &y,
-                          const Rcpp::NumericVector &s, const Rcpp::NumericVector &t,
-                          const double &min, const double &v, int k)
+bool delta_coin_intervals(const Rcpp::NumericVector &x, 
+                          const Rcpp::NumericVector &y,
+                          const Rcpp::NumericVector &s, 
+                          const Rcpp::NumericVector &t,
+                          const double &min, 
+                          const double &v, 
+                          int k)
 {
   // check if vector lengths are all the same
   if (x.size()!=y.size() || x.size()!=s.size() || x.size()!=t.size()) {

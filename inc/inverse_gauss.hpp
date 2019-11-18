@@ -6,6 +6,7 @@
 #include <cmath>
 
 // forward declaration for simulation of Inverse Gaussian variable
-double inv_gauss_sampler(const double &mu, const double &lambda);
+double inv_gauss_sampler(const double &mu, 
+                         const double &lambda);
 
 #endif

@@ -18,7 +18,8 @@ using namespace Rcpp;
 //'
 //' @export
 // [[Rcpp::export]]
-double inv_gauss_sampler(const double &mu, const double &lambda)
+double inv_gauss_sampler(const double &mu,
+                         const double &lambda)
 {
   // function simulates from an inverse Gaussian distribution with mean mu and scale lambda
   

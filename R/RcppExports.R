@@ -57,6 +57,27 @@ multi_bessel_layer_simulation <- function(dim, x, y, s, t, a) {
     .Call(`_layeredBB_multi_bessel_layer_simulation`, dim, x, y, s, t, a)
 }
 
+#' Brownian Bridge path sampler
+#'
+#' This function simulates a path of a Brownian bridge at given times
+#'
+#' @param x start value of Brownian bridge
+#' @param y end value of Brownian bridge
+#' @param s start value of Brownian bridge
+#' @param t end value of Brownian bridge
+#' @param times vector of real numbers to simulate Brownian bridge
+#'
+#' @return matrix of the simulated Brownian bridge path, first row is points X, second row are corresponding times
+#'
+#' @example 
+#' # simulate a Brownian bridge path starting at 0 and ending at 0 in time [0,1]
+#' Brownian_bridge_path_sampler(0, 0, 0, 1, seq(0, 1, 0.01))
+#' 
+#' @export
+Brownian_bridge_path_sampler <- function(x, y, s, t, times) {
+    .Call(`_layeredBB_Brownian_bridge_path_sampler`, x, y, s, t, times)
+}
+
 #' Brownian Bridge minimum point sampler
 #'
 #' This function simulates a minimum point of a Brownian bridge
