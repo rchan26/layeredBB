@@ -3,7 +3,73 @@
 
 using namespace Rcpp;
 
-double M_func(const double &a, const double &x, const double &y, const double &s, const double &t) {
+//' Brownian Bridge path sampler
+//'
+//' This function simulates a path of a Brownian bridge at given times
+//'
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param times vector of real numbers to simulate Brownian bridge
+//'
+//' @return matrix of the simulated Brownian bridge path, first row is points X, second row are corresponding times
+//'
+//' @example 
+//' # simulate a Brownian bridge path starting at 0 and ending at 0 in time [0,1]
+//' Brownian_bridge_path_sampler(0, 0, 0, 1, seq(0, 1, 0.01))
+//' 
+//' @export
+// [[Rcpp::export]]
+Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
+                                                 const double &y,
+                                                 const double &s, 
+                                                 const double &t,
+                                                 Rcpp::NumericVector times)
+{
+  // collect all times into one vector
+  times.insert(times.end(), s);
+  times.insert(times.end(), t);
+  // sort the vector 'times' forward in time
+  times.sort();
+  // delete any duplicates
+  times.erase(std::unique(times.begin(), times.end()), times.end());
+  
+  // create vector to store the simulated Bessel bridge path
+  Rcpp::NumericVector simulated_bb(times.size());
+  
+  // when simulating the path, want to work from left to right
+  for (int i = 0; i < times.size(); ++i) {
+    // simulate the point at each time
+    if (times.at(i) == s) {
+      simulated_bb.at(i) = x;
+    } else if (times.at(i) == t) {
+      simulated_bb.at(i) = y;
+    } else {
+      double l = times.at(i-1), q = times.at(i), r = t;
+      double W_l = simulated_bb.at(i-1), W_r = y;
+      double M = W_l + ((q-l)*(W_r-W_l)/(r-l));
+      double S = sqrt((r-q)*(q-l)/(r-l));
+      simulated_bb.at(i) = Rcpp::rnorm(1, M, S).at(0);
+    }
+  }
+  
+  // creating matrix to store the path and the corresponding times
+  Rcpp::NumericMatrix bb(2, simulated_bb.size());
+  bb(0, _) = simulated_bb;
+  bb(1, _) = times;
+  
+  // setting rownames
+  rownames(bb) = CharacterVector::create("X", "time");
+  
+  return bb;
+}
+
+double M_func(const double &a,
+              const double &x, 
+              const double &y, 
+              const double &s, 
+              const double &t) {
   // M function that is used to simulate a minimum of a Brownian bridge
   return exp(-2.0 * (a-x) * (a-y) / (t-s));
 }
@@ -27,9 +93,12 @@ double M_func(const double &a, const double &x, const double &y, const double &s
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector min_sampler(const double &x, const double &y,
-                                const double &s, const double &t,
-                                const double &low_bound, const double &up_bound)
+Rcpp::NumericVector min_sampler(const double &x, 
+                                const double &y,
+                                const double &s, 
+                                const double &t,
+                                const double &low_bound, 
+                                const double &up_bound)
 {
   // function simulates a minimum of a Brownian bridge between (low_bound) and (up_bound)
   // first element returned is the simulated minimum
@@ -74,9 +143,12 @@ Rcpp::NumericVector min_sampler(const double &x, const double &y,
 //'
 //' @export
 // [[Rcpp::export]]
-double min_Bessel_bridge_sampler(const double &x, const double &y,
-                                 const double &s, const double &t,
-                                 const double &min, const double &tau,
+double min_Bessel_bridge_sampler(const double &x, 
+                                 const double &y,
+                                 const double &s, 
+                                 const double &t,
+                                 const double &min,
+                                 const double &tau,
                                  const double &q)
 {
   // function simulates a Bessel bridge at a given time (q) with minimum (min) at time (tau)
@@ -133,9 +205,12 @@ double min_Bessel_bridge_sampler(const double &x, const double &y,
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double &y,
-                                                   const double &s, const double &t,
-                                                   const double &min, const double &tau,
+Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, 
+                                                   const double &y,
+                                                   const double &s, 
+                                                   const double &t,
+                                                   const double &min,
+                                                   const double &tau,
                                                    Rcpp::NumericVector times)
 {
   // function simulates a Bessel bridge sample path with minimum (min) at time (tau)
@@ -212,9 +287,12 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x, const double
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector max_sampler(const double &x, const double &y,
-                                const double &s, const double &t,
-                                const double &low_bound, const double &up_bound)
+Rcpp::NumericVector max_sampler(const double &x, 
+                                const double &y,
+                                const double &s, 
+                                const double &t,
+                                const double &low_bound, 
+                                const double &up_bound)
 {
   // function simulates a maximum of a Brownian bridge between (low_bound) and (up_bound)
   // first element returned is the simulated maximum
@@ -247,9 +325,12 @@ Rcpp::NumericVector max_sampler(const double &x, const double &y,
 //'
 //' @export
 // [[Rcpp::export]]
-double max_Bessel_bridge_sampler(const double &x, const double &y,
-                                 const double &s, const double &t,
-                                 const double &max, const double &tau,
+double max_Bessel_bridge_sampler(const double &x, 
+                                 const double &y,
+                                 const double &s, 
+                                 const double &t,
+                                 const double &max,
+                                 const double &tau,
                                  const double &q)
 {
   // function simulates a Bessel bridge at a given time (q) with minimum (min) at time (tau)
@@ -281,9 +362,12 @@ double max_Bessel_bridge_sampler(const double &x, const double &y,
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x, const double &y,
-                                                   const double &s, const double &t,
-                                                   const double &max, const double &tau,
+Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x,
+                                                   const double &y,
+                                                   const double &s, 
+                                                   const double &t,
+                                                   const double &max, 
+                                                   const double &tau,
                                                    Rcpp::NumericVector times)
 {
   // function simulates a Bessel bridge sample path with maximum (max) at time (tau)
