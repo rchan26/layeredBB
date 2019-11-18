@@ -263,11 +263,11 @@ Rcpp::NumericMatrix multi_layered_brownian_bridge(const double &dim,
                                                   Rcpp::NumericVector times) {
   // check that x and y match the dimensions of dim
   if (x.size() != dim) {
-    stop("multi_bessel_layer_simulation: size of x is not equal to dim");
+    stop("multi_layered_brownian_bridge: size of x is not equal to dim");
   } else if (y.size() != dim) {
-    stop("multi_bessel_layer_simulation: size of y is not equal to dim");
+    stop("multi_layered_brownian_bridge: size of y is not equal to dim");
   } else if (layers.size() != dim) {
-    stop("multi_bessel_layer_simulation: size of layers is not equal to dim");
+    stop("multi_layered_brownian_bridge: size of layers is not equal to dim");
   }
   
   // collect all times into one vector
