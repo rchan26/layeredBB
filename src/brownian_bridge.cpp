@@ -65,6 +65,64 @@ Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
   return bb;
 }
 
+//' Multi-dimensional Brownian Bridge path sampler
+//'
+//' This function simulates a multi-dimensional Brownian Bridge, at given times
+//'
+//' @param dim dimension of Brownian bridge
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param times vector of real numbers to simulate Brownian bridge
+//' 
+//' @return matrix of the simulated layered Brownian bridge path, first dim rows are points for X in each component, 
+//'         last row are corresponding times
+//'
+//' @examples
+//' # simulate two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+//' multi_brownian_bridge(dim = 2, x = c(0,0), y = c(0,0), s = 0, t = 1, times = seq(0.2, 0.8, 0.2))
+//'
+//' @export
+// [[Rcpp::export]]
+Rcpp::NumericMatrix multi_brownian_bridge(const double &dim,
+                                          const Rcpp::NumericVector &x,
+                                          const Rcpp::NumericVector &y,
+                                          const double &s,
+                                          const double &t,
+                                          const Rcpp::List &layers,
+                                          Rcpp::NumericVector times) {
+  // check that x and y match the dimensions of dim
+  if (x.size() != dim) {
+    stop("multi_brownian_bridge: size of x is not equal to dim");
+  } else if (y.size() != dim) {
+    stop("multi_brownian_bridge: size of y is not equal to dim");
+  } else if (layers.size() != dim) {
+    stop("multi_brownian_bridge: size of layers is not equal to dim");
+  }
+  
+  // collect all times into one vector
+  times.insert(times.end(), s);
+  times.insert(times.end(), t);
+  // sort the vector 'times' forward in time
+  times.sort();
+  // delete any duplicates
+  times.erase(std::unique(times.begin(), times.end()), times.end());
+  
+  // for each component, we simulate a Brownian bridge
+  // multi_BB is a matrix with dimensions (dim+1) x times.size()
+  Rcpp::NumericMatrix multi_BB(dim+1, times.size());
+  multi_BB(dim, _) = times;
+  
+  // loop through the components and simulate a Brownian bridge
+  for (int i=0; i < dim; ++i) {
+    Rcpp::NumericMatrix component_BB = Brownian_bridge_path_sampler(x.at(i), y.at(i), s, t, times);
+    multi_BB(i, _) = component_BB(0, _);
+  }
+  
+  return(multi_BB);
+}
+
 double M_func(const double &a,
               const double &x, 
               const double &y, 
