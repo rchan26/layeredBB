@@ -78,6 +78,29 @@ Brownian_bridge_path_sampler <- function(x, y, s, t, times) {
     .Call(`_layeredBB_Brownian_bridge_path_sampler`, x, y, s, t, times)
 }
 
+#' Multi-dimensional Brownian Bridge path sampler
+#'
+#' This function simulates a multi-dimensional Brownian Bridge, at given times
+#'
+#' @param dim dimension of Brownian bridge
+#' @param x start value of Brownian bridge
+#' @param y end value of Brownian bridge
+#' @param s start value of Brownian bridge
+#' @param t end value of Brownian bridge
+#' @param times vector of real numbers to simulate Brownian bridge
+#' 
+#' @return matrix of the simulated layered Brownian bridge path, first dim rows are points for X in each component, 
+#'         last row are corresponding times
+#'
+#' @examples
+#' # simulate two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
+#' multi_brownian_bridge(dim = 2, x = c(0,0), y = c(0,0), s = 0, t = 1, times = seq(0.2, 0.8, 0.2))
+#'
+#' @export
+multi_brownian_bridge <- function(dim, x, y, s, t, times) {
+    .Call(`_layeredBB_multi_brownian_bridge`, dim, x, y, s, t, times)
+}
+
 #' Brownian Bridge minimum point sampler
 #'
 #' This function simulates a minimum point of a Brownian bridge

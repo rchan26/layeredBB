@@ -90,16 +90,13 @@ Rcpp::NumericMatrix multi_brownian_bridge(const double &dim,
                                           const Rcpp::NumericVector &y,
                                           const double &s,
                                           const double &t,
-                                          const Rcpp::List &layers,
                                           Rcpp::NumericVector times) {
   // check that x and y match the dimensions of dim
   if (x.size() != dim) {
     stop("multi_brownian_bridge: size of x is not equal to dim");
   } else if (y.size() != dim) {
     stop("multi_brownian_bridge: size of y is not equal to dim");
-  } else if (layers.size() != dim) {
-    stop("multi_brownian_bridge: size of layers is not equal to dim");
-  }
+  } 
   
   // collect all times into one vector
   times.insert(times.end(), s);

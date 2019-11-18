@@ -51,6 +51,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// multi_brownian_bridge
+Rcpp::NumericMatrix multi_brownian_bridge(const double& dim, const Rcpp::NumericVector& x, const Rcpp::NumericVector& y, const double& s, const double& t, Rcpp::NumericVector times);
+RcppExport SEXP _layeredBB_multi_brownian_bridge(SEXP dimSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP timesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const double& >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type times(timesSEXP);
+    rcpp_result_gen = Rcpp::wrap(multi_brownian_bridge(dim, x, y, s, t, times));
+    return rcpp_result_gen;
+END_RCPP
+}
 // min_sampler
 Rcpp::NumericVector min_sampler(const double& x, const double& y, const double& s, const double& t, const double& low_bound, const double& up_bound);
 RcppExport SEXP _layeredBB_min_sampler(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP low_boundSEXP, SEXP up_boundSEXP) {
@@ -473,6 +489,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_layeredBB_bessel_layer_simulation", (DL_FUNC) &_layeredBB_bessel_layer_simulation, 5},
     {"_layeredBB_multi_bessel_layer_simulation", (DL_FUNC) &_layeredBB_multi_bessel_layer_simulation, 6},
     {"_layeredBB_Brownian_bridge_path_sampler", (DL_FUNC) &_layeredBB_Brownian_bridge_path_sampler, 5},
+    {"_layeredBB_multi_brownian_bridge", (DL_FUNC) &_layeredBB_multi_brownian_bridge, 6},
     {"_layeredBB_min_sampler", (DL_FUNC) &_layeredBB_min_sampler, 6},
     {"_layeredBB_min_Bessel_bridge_sampler", (DL_FUNC) &_layeredBB_min_Bessel_bridge_sampler, 7},
     {"_layeredBB_min_Bessel_bridge_path_sampler", (DL_FUNC) &_layeredBB_min_Bessel_bridge_path_sampler, 7},
