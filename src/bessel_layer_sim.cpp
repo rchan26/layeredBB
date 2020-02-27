@@ -93,8 +93,8 @@ Rcpp::List bessel_layer_simulation(const double &x,
 //' @export
 // [[Rcpp::export]]
 Rcpp::List multi_bessel_layer_simulation(const int &dim,
-                                         const Rcpp::NumericVector &x,
-                                         const Rcpp::NumericVector &y, 
+                                         const arma::vec &x,
+                                         const arma::vec &y, 
                                          const double &s, 
                                          const double &t,
                                          Rcpp::NumericVector &a) {
@@ -108,7 +108,7 @@ Rcpp::List multi_bessel_layer_simulation(const int &dim,
   // for each component, we simulate a Bessel layer and store as value in list
   Rcpp::List layers(dim);
   for (int i=0; i < dim; ++i) {
-    layers[i] = bessel_layer_simulation(x.at(i), y.at(i), s, t, a);
+    layers.at(i) = bessel_layer_simulation(x.at(i), y.at(i), s, t, a);
   }
   
   return(layers);

@@ -1,7 +1,7 @@
 #ifndef LAYERED_BROWNIAN_BRIDGE
 #define LAYERED_BROWNIAN_BRIDGE
 
-#include <Rcpp.h>
+#include <RcppArmadillo.h>
 
 using namespace Rcpp;
 
@@ -22,8 +22,8 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
 
 // forward declaration multi-dimensional layared brownian bridge sampler
 Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
-                                                  const Rcpp::NumericVector &x,
-                                                  const Rcpp::NumericVector &y,
+                                                  const arma::vec &x,
+                                                  const arma::vec &y,
                                                   const double &s,
                                                   const double &t,
                                                   const Rcpp::List &layers,

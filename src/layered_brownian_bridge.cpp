@@ -255,8 +255,8 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
 //' @export
 // [[Rcpp::export]]
 Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
-                                                  const Rcpp::NumericVector &x,
-                                                  const Rcpp::NumericVector &y,
+                                                  const arma::vec &x,
+                                                  const arma::vec &y,
                                                   const double &s,
                                                   const double &t,
                                                   const Rcpp::List &layers,
