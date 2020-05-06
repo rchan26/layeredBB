@@ -230,7 +230,6 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
   }	
 }
 
-
 //' Multi-dimensional Layered Brownian Bridge sampler
 //'
 //' This function simulates a multi-dimensional layered Brownian Bridge given Bessel layers, at given times
@@ -281,7 +280,7 @@ Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
   // for component, we simulate a layered Brownian bridge
   // multi_BB is a matrix with dimensions (dim+1) x times.size()
   Rcpp::NumericMatrix multi_BB(dim+1, times.size());
-  multi_BB(dim, _) = times;
+  multi_BB.row(dim) = times;
   
   // loop through the components and simulate a layered Brownian bridge
   // we keep the simulated values at the times we want
@@ -308,8 +307,31 @@ Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
   return(multi_BB);
 }
 
-
-
-
-
-
+// // function to pick out the associated values of the layered Brownian bridge at the Poisson points
+// // [[Rcpp::export]]
+// arma::mat get_pois_points_multi(const Rcpp::NumericMatrix &skeleton,
+//                                 const Rcpp::NumericVector &pois_times) {
+//   arma::mat pois_points(skeleton.nrow()-1, pois_times.size());
+//   int col_index = 0;
+//   // loop through the columns of the skeleton
+//   for (int j=0; j < skeleton.ncol(); ++j) {
+//     if (std::find(pois_times.begin(), pois_times.end(), skeleton((skeleton.nrow()-1),j)) != pois_times.end()) {
+//       // if the current time is in pois_times, then we store the corresponding values of the Brownian bridge into another matrix
+//       // loop through the rows and storing the values into the matrix pois_points
+//       for (int i=0; i < skeleton.nrow()-1; ++i) {
+//         pois_points(i, col_index) = skeleton(i, j);
+//       }
+//       col_index = col_index + 1;
+//     }
+//   }
+//   return(pois_points);
+// }
+// 
+// // function to pick out the associated values of the layered Brownian bridge at Poisson points by
+// // accessing elements quickly if the times for the skeleton are sorted
+// // [[Rcpp::export]]
+// Rcpp::NumericMatrix get_pois_points_fast(Rcpp::NumericMatrix &skeleton) {
+//   Rcpp::NumericMatrix pois_points = skeleton(Rcpp::Range(0, skeleton.nrow()-2),
+//                                              Rcpp::Range(1, skeleton.ncol()-2));
+//   return(pois_points);
+// }
