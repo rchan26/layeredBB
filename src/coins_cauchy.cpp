@@ -119,7 +119,7 @@ bool gamma_coin_intervals(const Rcpp::NumericVector &x,
 {
   // check if vector lengths are all the same
   if (x.size()!=y.size() || x.size()!=s.size() || x.size()!=t.size()) {
-    stop("error in gamma_coin_intervals: vector lengths are not equal");
+    stop("layeredBB::gamma_coin_intervals: vector lengths are not equal");
   }
   
   // simulating from a uniform distribution
@@ -254,7 +254,7 @@ bool delta_coin_intervals(const Rcpp::NumericVector &x,
 {
   // check if vector lengths are all the same
   if (x.size()!=y.size() || x.size()!=s.size() || x.size()!=t.size()) {
-    stop("error in gamma_coin_intervals: vector lengths are not equal");
+    stop("layeredBB::gamma_coin_intervals: vector lengths are not equal");
   }
    
   // simulating from a uniform distribution

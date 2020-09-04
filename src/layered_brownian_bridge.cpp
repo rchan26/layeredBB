@@ -91,18 +91,16 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
 {
   // layered Brownian bridge sampler
   // simulate from uniform random variable
-  double u = Rcpp::runif(1, 0.0, 1.0)[0];
+  double u = Rcpp::runif(1, 0.0, 1.0).at(0);
   // we minus 1 from the Bessel layer (l), since indicies start from 0 in C++ but start from 1 in R
   l -= 1;
   
   while (true) {
     // add in line to abort C++ if user has pressed Ctrl/Cmd+C or Escape in R
     Rcpp::checkUserInterrupt();
-    
     // declare variables required
     double l1, l2, v1, v2;
     Rcpp::NumericMatrix simulated_BB;
-    // Rcpp::NumericVector bridge_times = times;
     
     if (u < 0.5) {
       // simulate minimum point
@@ -114,26 +112,28 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
         // set minimum to occur at min(x,y)
         if (x < y) {
           // mimimum occurs at (x) at time (s)
-          l1 = x, l2 = x;
-          v1 = y, v2 = y;
+          l1 = x, l2 = x, v1 = y, v2 = y;
           simulated_min = Rcpp::NumericVector::create(Named("min", x), Named("tau", s));
         } else {
           // minimum occurs at (y) at time (t)
-          l1 = y, l2 = y;
-          v1 = x, v2 = x;
+          l1 = y, l2 = y, v1 = x, v2 = x;
           simulated_min = Rcpp::NumericVector::create(Named("min", y), Named("tau", t));
         }
       } else if (l==0 && a.at(0)!=0) {
         // simulated Bessel layer was [min(x,y)-a[0], max(x,y)+a[0]]
         // but this is the first layer, don't have a[l-1]
         simulated_min = min_sampler(x, y, s, t, std::min(x,y)-a.at(l), std::min(x,y));
-        l1 = simulated_min["min"], l2 = simulated_min["min"];
-        v1 = std::max(x,y)+a.at(l), v2 = std::max(x,y)+a.at(l);
+        l1 = simulated_min["min"];
+        l2 = simulated_min["min"];
+        v1 = std::max(x,y)+a.at(l);
+        v2 = std::max(x,y)+a.at(l);
       } else {
         // simulated Bessel layer was [min(x,y)-a[l], max(x,y)+a[l]]
         simulated_min = min_sampler(x, y, s, t, std::min(x,y)-a.at(l), std::min(x,y)-a.at(l-1));
-        l1 = simulated_min["min"], l2 = simulated_min["min"];
-        v1 = std::max(x,y)+a.at(l-1), v2 = std::max(x,y)+a.at(l);
+        l1 = simulated_min["min"];
+        l2 = simulated_min["min"];
+        v1 = std::max(x,y)+a.at(l-1);
+        v2 = std::max(x,y)+a.at(l);
       }
       
       // simulate Bessel bridge conditional on the minimum point at intermediate points
@@ -151,26 +151,28 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
         // set maximum to occur at max(x,y)
         if (x < y) {
           // maximum occurs at (y) at time (t)
-          l1 = x, l2 = x;
-          v1 = y, v2 = y;
+          l1 = x, l2 = x, v1 = y, v2 = y;
           simulated_max = Rcpp::NumericVector::create(Named("max", y), Named("tau", t));
         } else {
           // maximum occurs at (x) at time (s)
-          l1 = y, l2 = y;
-          v1 = x, v2 = x;
+          l1 = y, l2 = y, v1 = x, v2 = x;
           simulated_max = Rcpp::NumericVector::create(Named("max", x), Named("tau", s));
         }
       } else if (l==0 && a.at(0)!=0) {
         // simulated Bessel layer was [min(x,y)-a[0], max(x,y)+a[0]]
         // but this is the first layer, don't have a[l-1]
         simulated_max = max_sampler(x, y, s, t, std::max(x,y), std::max(x,y)+a.at(l));
-        l1 = std::min(x,y)-a.at(l), l2 = std::min(x,y)-a.at(l);
-        v1 = simulated_max["max"], v2 = simulated_max["max"];
+        l1 = std::min(x,y)-a.at(l);
+        l2 = std::min(x,y)-a.at(l);
+        v1 = simulated_max["max"];
+        v2 = simulated_max["max"];
       } else {
         // simulated Bessel layer was [min(x,y)-a[l], max(x,y)+a[l]]
         simulated_max = max_sampler(x, y, s, t, std::max(x,y)+a.at(l-1), std::max(x,y)+a.at(l));
-        l1 = std::min(x,y)-a.at(l-1), l2 = std::min(x,y)-a.at(l);
-        v1 = simulated_max["max"], v2 = simulated_max["max"];
+        l1 = std::min(x,y)-a.at(l-1);
+        l2 = std::min(x,y)-a.at(l);
+        v1 = simulated_max["max"];
+        v2 = simulated_max["max"];
       }
       
       // simulate Bessel bridge conditional on the maximum at intermediate points
@@ -276,6 +278,10 @@ Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
   times.sort();
   // delete any duplicates
   times.erase(std::unique(times.begin(), times.end()), times.end());
+  
+  // if (core == 3) {
+  //   Rcout << "times: " << times << "\n"; 
+  // }
 
   // for component, we simulate a layered Brownian bridge
   // multi_BB is a matrix with dimensions (dim+1) x times.size()
@@ -286,10 +292,20 @@ Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
   // we keep the simulated values at the times we want
   // we 'throw away' auxiliary information about the maximum and minimum simualted
   for (int i=0; i < dim; ++i) {
+    // if (core == 3) {
+    //   Rcout << "simulating layered BB in dimension " << i << " / " << dim << "\n";
+    // }
+    
     // getting layer information for component i
     Rcpp::List sublist = layers[i];
     Rcpp::NumericVector a = sublist[0];
     int l = sublist[1];
+    
+    // if (core == 3) {
+    //   Rcout << "i: " << i << "\n";
+    //   Rcout << "a: " << a << "\n";
+    //   Rcout << "l: " << l << "\n";
+    // }
     
     // simulate layered Brownian bridge for component i
     Rcpp::NumericMatrix component_BB = layered_brownian_bridge(x.at(i), y.at(i), s, t, a, l, times);

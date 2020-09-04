@@ -4,8 +4,6 @@
 devtools::install_github('rchan26/layeredBB')
 ```
 
-To do: make installable on windows.
-
 ## Using with `parallel`
 
 Here is an example to use in a cluster using `parallel`:

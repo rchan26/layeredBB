@@ -35,12 +35,11 @@ Rcpp::List bessel_layer_simulation(const double &x,
                                    Rcpp::NumericVector &a)
 {
   // initialise Bessel layer
-  int l = 0;
-  
+  int l = 1;
   while (true) {
     // flip gamma coin to determine if BB stays within (min(x,y)-a[l], max(x,y)+a[l])
     if (!(x==y && a.at(l)==0)) {
-      if (gamma_coin(x,y,s,t,std::min(x,y)-a.at(l),std::max(x,y)+a.at(l),0)) {
+      if (gamma_coin(x, y, s, t, std::min(x, y)-a.at(l), std::max(x, y)+a.at(l), 0)) {
         // if true, then return current Bessel layer (l) and current vector (a) as a list
         // we return (l+1), since indicies start from 0 in C++ but start from 1 in R
         return List::create(_["a"] = a, _["l"] = l+1);
@@ -100,9 +99,9 @@ Rcpp::List multi_bessel_layer_simulation(const int &dim,
                                          Rcpp::NumericVector &a) {
   // check that x and y match the dimensions of dim
   if (x.size() != dim) {
-    stop("multi_bessel_layer_simulation: size of x is not equal to dim");
+    stop("layeredBB::multi_bessel_layer_simulation: size of x is not equal to dim");
   } else if (y.size() != dim) {
-    stop("multi_bessel_layer_simulation: size of y is not equal to dim");
+    stop("layeredBB::multi_bessel_layer_simulation: size of y is not equal to dim");
   }
   
   // for each component, we simulate a Bessel layer and store as value in list

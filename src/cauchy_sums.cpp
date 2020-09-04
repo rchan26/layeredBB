@@ -295,7 +295,7 @@ Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k,
   // checking k is large enough for this to be valid
   double K = sqrt((t-s)+(fabs(v-min)*fabs(v-min)))/(2*fabs(v-min));
   if (k < K) {
-    stop("error in calc_SdeltaK_2_intervals: given k is too small");
+    stop("layeredBB::calc_SdeltaK_2_intervals: given k is too small");
   }
   
   // calculating S_{2k+1}^{delta,2} = 1 - (psi(j)-chi(j)) / abs(x-y)
@@ -345,7 +345,7 @@ Rcpp::NumericVector calc_SdeltaK_intervals(const int &k,
   } else if (std::min(x,y) == min) {
     return calc_SdeltaK_2_intervals(k,x,y,s,t,min,v);
   } else {
-    stop("error in calc_SdeltaK_intervals: min(x,y) < min - given minimum point is not the minimum of the BB");
+    stop("layeredBB::calc_SdeltaK_intervals: min(x,y) < min - given minimum point is not the minimum of the BB");
   }
 }
 

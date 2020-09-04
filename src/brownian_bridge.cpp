@@ -126,7 +126,7 @@ double M_func(const double &a,
               const double &s, 
               const double &t) {
   // M function that is used to simulate a minimum of a Brownian bridge
-  return exp(-2.0 * (a-x) * (a-y) / (t-s));
+  return exp(-2.0*(a-x)*(a-y)/(t-s));
 }
 
 //' Brownian Bridge minimum point sampler
@@ -158,6 +158,11 @@ Rcpp::NumericVector min_sampler(const double &x,
   // function simulates a minimum of a Brownian bridge between (low_bound) and (up_bound)
   // first element returned is the simulated minimum
   // second element returned is the simulated time which the minimum occurs
+  if (low_bound > up_bound) {
+    stop("layeredBB::min_sampler: low_bound > up_bound");
+  } else if (up_bound > std::min(x, y)) {
+    stop("layeredBB::min_sampler: up_bound > min(x, y)");
+  }
   
   // set simulated minimum value
   double min = x - (0.5*(sqrt((y-x)*(y-x)-2.0*(t-s)*log(Rcpp::runif(1, M_func(low_bound,x,y,s,t), M_func(up_bound,x,y,s,t))[0])) - y + x));
@@ -175,7 +180,8 @@ Rcpp::NumericVector min_sampler(const double &x,
   }
   
   // // setting simulated minimum and tau in array
-  return Rcpp::NumericVector::create(Named("min", min), Named("tau", ((s*V)+t)/(1.0+V)));
+  return Rcpp::NumericVector::create(Named("min", min), 
+                                     Named("tau", ((s*V)+t)/(1.0+V)));
 }
 
 //' Bessel Bridge point sampler given minimum
@@ -357,7 +363,8 @@ Rcpp::NumericVector max_sampler(const double &x,
   Rcpp::NumericVector sim_min = min_sampler(-x, -y, s, t, -up_bound, -low_bound);
   
   // reflect on x-axis
-  return Rcpp::NumericVector::create(Named("max", -sim_min["min"]), Named("tau", sim_min["tau"]));
+  return Rcpp::NumericVector::create(Named("max", -sim_min["min"]), 
+                                     Named("tau", sim_min["tau"]));
 }
 
 //' Bessel Bridge point sampler given maximum
@@ -390,9 +397,7 @@ double max_Bessel_bridge_sampler(const double &x,
 {
   // function simulates a Bessel bridge at a given time (q) with minimum (min) at time (tau)
   
-  // // reflect the problem to simulate a Bessel bridge with a given minimum point
-  // double W = min_Bessel_bridge_sampler(-x, -y, s, t, -max, tau, q);
-  
+  // reflect the problem to simulate a Bessel bridge with a given minimum point
   // reflect on x-axis
   return -min_Bessel_bridge_sampler(-x, -y, s, t, -max, tau, q);
 }

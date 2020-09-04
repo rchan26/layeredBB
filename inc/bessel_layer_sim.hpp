@@ -8,11 +8,11 @@
 
 using namespace Rcpp;
 
-List bessel_layer_simulation(const double &x,
-                             const double &y,
-                             const double &s,
-                             const double &t,
-                             Rcpp::NumericVector &a);
+Rcpp::List bessel_layer_simulation(const double &x, 
+                                   const double &y,
+                                   const double &s,
+                                   const double &t,
+                                   Rcpp::NumericVector &a);
 
 Rcpp::List multi_bessel_layer_simulation(const int &dim,
                                          const arma::vec &x,
