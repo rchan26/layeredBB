@@ -4,7 +4,7 @@
 \alias{max_Bessel_bridge_path_sampler}
 \title{Bessel Bridge path sampler given maximum}
 \usage{
-max_Bessel_bridge_path_sampler(x, y, s, t, max, tau, times)
+max_Bessel_bridge_path_sampler(x, y, s, t, max, tau, times, keep_max = TRUE)
 }
 \arguments{
 \item{x}{start value of Bessel bridge}
@@ -20,6 +20,8 @@ max_Bessel_bridge_path_sampler(x, y, s, t, max, tau, times)
 \item{tau}{time of maximum point}
 
 \item{times}{vector of real numbers to simulate Bessel bridge}
+
+\item{keep_max}{if TRUE (default), the maximum point is returned in the sample path}
 }
 \value{
 matrix of the simulated Bessel bridge path, first row is points X, second row are corresponding times

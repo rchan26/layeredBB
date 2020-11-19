@@ -102,8 +102,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // min_Bessel_bridge_path_sampler
-Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double& x, const double& y, const double& s, const double& t, const double& min, const double& tau, Rcpp::NumericVector times);
-RcppExport SEXP _layeredBB_min_Bessel_bridge_path_sampler(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP tauSEXP, SEXP timesSEXP) {
+Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double& x, const double& y, const double& s, const double& t, const double& min, const double& tau, Rcpp::NumericVector times, const bool& keep_min);
+RcppExport SEXP _layeredBB_min_Bessel_bridge_path_sampler(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP tauSEXP, SEXP timesSEXP, SEXP keep_minSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -114,7 +114,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type tau(tauSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type times(timesSEXP);
-    rcpp_result_gen = Rcpp::wrap(min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times));
+    Rcpp::traits::input_parameter< const bool& >::type keep_min(keep_minSEXP);
+    rcpp_result_gen = Rcpp::wrap(min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times, keep_min));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -152,8 +153,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // max_Bessel_bridge_path_sampler
-Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double& x, const double& y, const double& s, const double& t, const double& max, const double& tau, Rcpp::NumericVector times);
-RcppExport SEXP _layeredBB_max_Bessel_bridge_path_sampler(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP maxSEXP, SEXP tauSEXP, SEXP timesSEXP) {
+Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double& x, const double& y, const double& s, const double& t, const double& max, const double& tau, Rcpp::NumericVector times, const bool& keep_max);
+RcppExport SEXP _layeredBB_max_Bessel_bridge_path_sampler(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP maxSEXP, SEXP tauSEXP, SEXP timesSEXP, SEXP keep_maxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -164,7 +165,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type max(maxSEXP);
     Rcpp::traits::input_parameter< const double& >::type tau(tauSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type times(timesSEXP);
-    rcpp_result_gen = Rcpp::wrap(max_Bessel_bridge_path_sampler(x, y, s, t, max, tau, times));
+    Rcpp::traits::input_parameter< const bool& >::type keep_max(keep_maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(max_Bessel_bridge_path_sampler(x, y, s, t, max, tau, times, keep_max));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -493,10 +495,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_layeredBB_multi_brownian_bridge", (DL_FUNC) &_layeredBB_multi_brownian_bridge, 6},
     {"_layeredBB_min_sampler", (DL_FUNC) &_layeredBB_min_sampler, 6},
     {"_layeredBB_min_Bessel_bridge_sampler", (DL_FUNC) &_layeredBB_min_Bessel_bridge_sampler, 7},
-    {"_layeredBB_min_Bessel_bridge_path_sampler", (DL_FUNC) &_layeredBB_min_Bessel_bridge_path_sampler, 7},
+    {"_layeredBB_min_Bessel_bridge_path_sampler", (DL_FUNC) &_layeredBB_min_Bessel_bridge_path_sampler, 8},
     {"_layeredBB_max_sampler", (DL_FUNC) &_layeredBB_max_sampler, 6},
     {"_layeredBB_max_Bessel_bridge_sampler", (DL_FUNC) &_layeredBB_max_Bessel_bridge_sampler, 7},
-    {"_layeredBB_max_Bessel_bridge_path_sampler", (DL_FUNC) &_layeredBB_max_Bessel_bridge_path_sampler, 7},
+    {"_layeredBB_max_Bessel_bridge_path_sampler", (DL_FUNC) &_layeredBB_max_Bessel_bridge_path_sampler, 8},
     {"_layeredBB_sigma_bar", (DL_FUNC) &_layeredBB_sigma_bar, 7},
     {"_layeredBB_sigma", (DL_FUNC) &_layeredBB_sigma, 7},
     {"_layeredBB_phi_bar", (DL_FUNC) &_layeredBB_phi_bar, 7},

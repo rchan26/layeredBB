@@ -21,8 +21,7 @@ using namespace Rcpp;
 //'
 //' @export
 // [[Rcpp::export]]
-double find_max(const Rcpp::NumericVector vect) 
-{
+double find_max(const Rcpp::NumericVector vect) {
   // finds the maximum value in a vector
   double current_max = vect.at(0); // first element
   for (const auto &element: vect) {
@@ -47,8 +46,7 @@ double find_max(const Rcpp::NumericVector vect)
 //'
 //' @export
 // [[Rcpp::export]]
-double find_min(const Rcpp::NumericVector vect)
-{
+double find_min(const Rcpp::NumericVector vect) {
   // finds the minimum value in a vector
   double current_min = vect.at(0); // first element
   for (const auto &element: vect) {
@@ -87,8 +85,7 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
                                             const double &t,
                                             const Rcpp::NumericVector &a,
                                             int l,
-                                            const Rcpp::NumericVector &times)
-{
+                                            const Rcpp::NumericVector &times) {
   // layered Brownian bridge sampler
   // simulate from uniform random variable
   double u = Rcpp::runif(1, 0.0, 1.0).at(0);
@@ -137,11 +134,19 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
       }
       
       // simulate Bessel bridge conditional on the minimum point at intermediate points
-      simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t, simulated_min["min"], simulated_min["tau"], times);
+      simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t,
+                                                    simulated_min["min"],
+                                                    simulated_min["tau"],
+                                                    times,
+                                                    false);
       
       // check that none of the simulated points are outside of the layer: if so, resample Bessel bridge
       while (find_max(simulated_BB(0, _)) > v2) { 
-        simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t, simulated_min["min"], simulated_min["tau"], times);
+        simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t,
+                                                      simulated_min["min"],
+                                                      simulated_min["tau"],
+                                                      times,
+                                                      false);
       }
     } else {
       // simulate maximum point
@@ -176,11 +181,19 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
       }
       
       // simulate Bessel bridge conditional on the maximum at intermediate points
-      simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, simulated_max["max"], simulated_max["tau"], times);
+      simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, 
+                                                    simulated_max["max"], 
+                                                    simulated_max["tau"], 
+                                                    times, 
+                                                    false);
       
       // check that none of the simulated points are outside of the layer: if so, resample Bessel bridge
       while (find_min(simulated_BB(0, _)) < l2) {
-        simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, simulated_max["max"], simulated_max["tau"], times);
+        simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t,
+                                                      simulated_max["max"],
+                                                      simulated_max["tau"],
+                                                      times,
+                                                      false);
       }
     }
     
@@ -270,7 +283,7 @@ Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
   } else if (layers.size() != dim) {
     stop("multi_layered_brownian_bridge: size of layers is not equal to dim");
   }
-  
+
   // collect all times into one vector
   times.insert(times.end(), s);
   times.insert(times.end(), t);
@@ -279,10 +292,6 @@ Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
   // delete any duplicates
   times.erase(std::unique(times.begin(), times.end()), times.end());
   
-  // if (core == 3) {
-  //   Rcout << "times: " << times << "\n"; 
-  // }
-
   // for component, we simulate a layered Brownian bridge
   // multi_BB is a matrix with dimensions (dim+1) x times.size()
   Rcpp::NumericMatrix multi_BB(dim+1, times.size());
@@ -292,32 +301,13 @@ Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
   // we keep the simulated values at the times we want
   // we 'throw away' auxiliary information about the maximum and minimum simualted
   for (int i=0; i < dim; ++i) {
-    // if (core == 3) {
-    //   Rcout << "simulating layered BB in dimension " << i << " / " << dim << "\n";
-    // }
-    
     // getting layer information for component i
     Rcpp::List sublist = layers[i];
     Rcpp::NumericVector a = sublist[0];
     int l = sublist[1];
-    
-    // if (core == 3) {
-    //   Rcout << "i: " << i << "\n";
-    //   Rcout << "a: " << a << "\n";
-    //   Rcout << "l: " << l << "\n";
-    // }
-    
     // simulate layered Brownian bridge for component i
     Rcpp::NumericMatrix component_BB = layered_brownian_bridge(x.at(i), y.at(i), s, t, a, l, times);
-    // loop through the times in the simulated layered Brownian bridge for that component
-    // only keep the times that are wanted - throw away simulated minimum or maximum
-    int index = 0;
-    for (int j=0; j < component_BB.ncol(); ++j) {
-      if (std::find(times.begin(), times.end(), component_BB(1, j)) != times.end()) {
-        multi_BB(i, index) = component_BB(0, j);
-        index = index + 1;
-      } 
-    }
+    multi_BB(i, _) = component_BB(0, _);
   }
 
   return(multi_BB);

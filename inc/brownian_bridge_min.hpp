@@ -54,7 +54,8 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x,
                                                    const double &t,
                                                    const double &min,
                                                    const double &tau,
-                                                   Rcpp::NumericVector times);
+                                                   Rcpp::NumericVector times,
+                                                   const bool &keep_min);
 
 // forward declaration for maximum Bessel Bridge simulation at time q
 Rcpp::NumericVector max_sampler(const double &x, 
@@ -80,6 +81,7 @@ Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x,
                                                    const double &t,
                                                    const double &max,
                                                    const double &tau,
-                                                   Rcpp::NumericVector times);
+                                                   Rcpp::NumericVector times,
+                                                   const bool &keep_max);
 
 #endif

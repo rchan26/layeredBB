@@ -157,6 +157,7 @@ min_Bessel_bridge_sampler <- function(x, y, s, t, min, tau, q) {
 #' @param min minumum point
 #' @param tau time of minimum point
 #' @param times vector of real numbers to simulate Bessel bridge
+#' @param keep_min if TRUE (default), the minimum point is returned in the sample path
 #'
 #' @return matrix of the simulated Bessel bridge path, first row is points X, second row are corresponding times
 #'
@@ -165,8 +166,8 @@ min_Bessel_bridge_sampler <- function(x, y, s, t, min, tau, q) {
 #' min_Bessel_bridge_path_sampler(x = 0, y = 0, s = 0, t = 1, min = -0.4, tau = 0.6, times = c(0.2, 0.4, 0.8))
 #'
 #' @export
-min_Bessel_bridge_path_sampler <- function(x, y, s, t, min, tau, times) {
-    .Call(`_layeredBB_min_Bessel_bridge_path_sampler`, x, y, s, t, min, tau, times)
+min_Bessel_bridge_path_sampler <- function(x, y, s, t, min, tau, times, keep_min = TRUE) {
+    .Call(`_layeredBB_min_Bessel_bridge_path_sampler`, x, y, s, t, min, tau, times, keep_min)
 }
 
 #' Brownian Bridge maximum point sampler
@@ -225,6 +226,7 @@ max_Bessel_bridge_sampler <- function(x, y, s, t, max, tau, q) {
 #' @param max maxumum point 
 #' @param tau time of maximum point
 #' @param times vector of real numbers to simulate Bessel bridge
+#' @param keep_max if TRUE (default), the maximum point is returned in the sample path
 #' 
 #' @return matrix of the simulated Bessel bridge path, first row is points X, second row are corresponding times
 #'
@@ -233,8 +235,8 @@ max_Bessel_bridge_sampler <- function(x, y, s, t, max, tau, q) {
 #' max_Bessel_bridge_path_sampler(x = 0, y = 0, s = 0, t = 1, max = 0.4, tau = 0.6, times = c(0.2, 0.4, 0.8))
 #'
 #' @export
-max_Bessel_bridge_path_sampler <- function(x, y, s, t, max, tau, times) {
-    .Call(`_layeredBB_max_Bessel_bridge_path_sampler`, x, y, s, t, max, tau, times)
+max_Bessel_bridge_path_sampler <- function(x, y, s, t, max, tau, times, keep_max = TRUE) {
+    .Call(`_layeredBB_max_Bessel_bridge_path_sampler`, x, y, s, t, max, tau, times, keep_max)
 }
 
 #' Sigma_Bar

@@ -4,7 +4,7 @@
 \alias{min_Bessel_bridge_path_sampler}
 \title{Bessel Bridge path sampler given minimum}
 \usage{
-min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times)
+min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times, keep_min = TRUE)
 }
 \arguments{
 \item{x}{start value of Bessel bridge}
@@ -20,6 +20,8 @@ min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times)
 \item{tau}{time of minimum point}
 
 \item{times}{vector of real numbers to simulate Bessel bridge}
+
+\item{keep_min}{if TRUE (default), the minimum point is returned in the sample path}
 }
 \value{
 matrix of the simulated Bessel bridge path, first row is points X, second row are corresponding times

@@ -257,6 +257,7 @@ double min_Bessel_bridge_sampler(const double &x,
 //' @param min minumum point
 //' @param tau time of minimum point
 //' @param times vector of real numbers to simulate Bessel bridge
+//' @param keep_min if TRUE (default), the minimum point is returned in the sample path
 //'
 //' @return matrix of the simulated Bessel bridge path, first row is points X, second row are corresponding times
 //'
@@ -272,7 +273,8 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x,
                                                    const double &t,
                                                    const double &min,
                                                    const double &tau,
-                                                   Rcpp::NumericVector times)
+                                                   Rcpp::NumericVector times,
+                                                   const bool &keep_min = true)
 {
   // function simulates a Bessel bridge sample path with minimum (min) at time (tau)
   // (times) get altered in this function to match the indices of the simulated path
@@ -282,7 +284,11 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x,
   // collect all times into one vector
   times.insert(times.end(), s);
   times.insert(times.end(), t);
-  times.insert(times.end(), tau);
+  // might want to not keep the simulated minimum
+  if (keep_min) {
+    times.insert(times.end(), tau);
+  }
+  
   // sort the vector 'times' forward in time
   times.sort();
   // delete any duplicates
@@ -413,6 +419,7 @@ double max_Bessel_bridge_sampler(const double &x,
 //' @param max maxumum point 
 //' @param tau time of maximum point
 //' @param times vector of real numbers to simulate Bessel bridge
+//' @param keep_max if TRUE (default), the maximum point is returned in the sample path
 //' 
 //' @return matrix of the simulated Bessel bridge path, first row is points X, second row are corresponding times
 //'
@@ -428,7 +435,8 @@ Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x,
                                                    const double &t,
                                                    const double &max, 
                                                    const double &tau,
-                                                   Rcpp::NumericVector times)
+                                                   Rcpp::NumericVector times,
+                                                   const bool &keep_max = true)
 {
   // function simulates a Bessel bridge sample path with maximum (max) at time (tau)
   // (times) get altered in this function to match the indices of the simulated path
@@ -436,7 +444,7 @@ Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x,
   // this is because (times) may not include the times (s), (t), (tau)
   
   // reflect the problem to simulate a Bessel bright path with a given minimum point
-  Rcpp::NumericMatrix sim_path = min_Bessel_bridge_path_sampler(-x, -y, s, t, -max, tau, times);
+  Rcpp::NumericMatrix sim_path = min_Bessel_bridge_path_sampler(-x, -y, s, t, -max, tau, times, keep_max);
   
   // reflect on x-axis
   for (int i=0; i < sim_path.ncol(); ++i) {
