@@ -16,14 +16,25 @@ using namespace Rcpp;
 //' @return matrix of the simulated Brownian bridge path, first row is points X, 
 //'         second row are corresponding times
 //'
-//' @example 
+//' @examples 
 //' # simulate a Brownian bridge path starting at 0 and ending at 0 in time [0,1]
 //' Brownian_bridge_path_sampler(x = 0,
 //'                              y = 0,
 //'                              s = 0,
 //'                              t = 1,
 //'                              times = seq(0, 1, 0.01))
-//' 
+//'
+//' # another example
+//' start <- runif(1, -1, 1)
+//' end <- runif(1, -1, 1)
+//' path <- Brownian_bridge_path_sampler(x = start,
+//'                                      y = end,
+//'                                      s = 0,
+//'                                      t = 1,
+//'                                      times = seq(0, 1, 0.01))
+//' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
+//' lines(x = path['time',], y = path['X',])
+//'
 //' @export
 // [[Rcpp::export]]
 Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
@@ -146,7 +157,14 @@ double M_func(const double &a,
 //' @examples
 //' # simulate a minimum between 0 and 1 of a Brownian bridge starting 
 //' # at 0 and ending at 0 in time [0,1]
-//' min_sampler(x=0, y=0, s=0, t=1, low_bound = -1, up_bound = 0)
+//' min_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = -1, up_bound = 0)
+//'
+//' # plotting multiple simulated minimums and their times
+//' minimums <- sapply(1:5000, function(i) {
+//'   min_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = -10, up_bound = 0)
+//' })
+//' plot(x = minimums[2,], y = minimums[1,], pch = 20, lwd = 0.1,
+//'      xlab = 'Time', ylab = 'X')
 //'
 //' @export
 // [[Rcpp::export]]
@@ -175,9 +193,8 @@ Rcpp::NumericVector min_sampler(const double &x,
   } else {
     mu = (x-min)/(y-min);
     lambda = (x-min)*(x-min)/(t-s);
-    V = (1.0 / inv_gauss_sampler(mu, lambda));
+    V = 1.0 / inv_gauss_sampler(mu, lambda);
   }
-  // setting simulated minimum and tau in array
   return Rcpp::NumericVector::create(Named("min", min), 
                                      Named("tau", ((s*V)+t)/(1.0+V)));
 }
@@ -268,6 +285,26 @@ double min_Bessel_bridge_sampler(const double &x,
 //'                                min = -0.4,
 //'                                tau = 0.6,
 //'                                times = c(0.2, 0.4, 0.8))
+//' 
+//' # another example
+//' start <- runif(1, -1, 1)
+//' end <- runif(1, -1, 1)
+//' min <- min_sampler(x = start,
+//'                    y = end,
+//'                    s = 0,
+//'                    t = 1,
+//'                    low_bound = min(start, end)-0.4,
+//'                    up_bound = min(start, end)-0.2)
+//' path <- min_Bessel_bridge_path_sampler(x = start,
+//'                                        y = end,
+//'                                        s = 0,
+//'                                        t = 1,
+//'                                        min = min['min'],
+//'                                        tau = min['tau'],
+//'                                        times = seq(0, 1, 0.01))
+//' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
+//' lines(x = path['time',], y = path['X',])
+//' points(x = min['tau'], y = min['min'], col = 'red', pch = 20)
 //'
 //' @export
 // [[Rcpp::export]]
@@ -354,7 +391,14 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x,
 //' @examples
 //' # simulate a maximum between 0 and 1 of a Brownian bridge starting at 
 //' # 0 and ending at 0 in time [0,1]
-//' max_sampler(x=0, y=0, s=0, t=1, low_bound = 0, up_bound = 1)
+//' max_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = 0, up_bound = 1)
+//'
+//' # plotting multiple simulated maximums and their times
+//' maximums <- sapply(1:5000, function(i) {
+//'   max_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = 0 , up_bound = 10)
+//' })
+//' plot(x = maximums[2,], y = maximums[1,], pch = 20, lwd = 0.1,
+//'      xlab = 'Time', ylab = 'X')
 //'
 //' @export
 // [[Rcpp::export]]
@@ -435,6 +479,26 @@ double max_Bessel_bridge_sampler(const double &x,
 //'                                max = 0.4,
 //'                                tau = 0.6,
 //'                                times = c(0.2, 0.4, 0.8))
+//'                                
+//' # another example
+//' start <- runif(1, -1, 1)
+//' end <- runif(1, -1, 1)
+//' max <- max_sampler(x = start,
+//'                    y = end,
+//'                    s = 0,
+//'                    t = 1,
+//'                    low_bound = max(start, end)+0.2,
+//'                    up_bound = max(start, end)+0.4)
+//' path <- max_Bessel_bridge_path_sampler(x = start,
+//'                                        y = end,
+//'                                        s = 0,
+//'                                        t = 1,
+//'                                        max = max['max'],
+//'                                        tau = max['tau'],
+//'                                        times = seq(0, 1, 0.01))
+//' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
+//' lines(x = path['time',], y = path['X',])
+//' points(x = max['tau'], y = max['max'], col = 'red', pch = 20)
 //'
 //' @export
 // [[Rcpp::export]]

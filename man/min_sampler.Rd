@@ -28,6 +28,13 @@ Simulation of a minimum point of a Brownian bridge
 \examples{
 # simulate a minimum between 0 and 1 of a Brownian bridge starting 
 # at 0 and ending at 0 in time [0,1]
-min_sampler(x=0, y=0, s=0, t=1, low_bound = -1, up_bound = 0)
+min_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = -1, up_bound = 0)
+
+# plotting multiple simulated minimums and their times
+minimums <- sapply(1:5000, function(i) {
+  min_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = -10, up_bound = 0)
+})
+plot(x = minimums[2,], y = minimums[1,], pch = 20, lwd = 0.1,
+     xlab = 'Time', ylab = 'X')
 
 }

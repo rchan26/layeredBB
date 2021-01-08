@@ -7,19 +7,21 @@
 inv_gauss_sampler(mu, lambda)
 }
 \arguments{
-\item{mu}{mean}
+\item{mu}{mean value}
 
-\item{lambda}{shape}
+\item{lambda}{shape value}
 }
 \value{
-real value: simulated point from Inverse Gaussian distribution with mean mu and shape lambda
+real value: simulated point from Inverse Gaussian 
+        distribution with mean mu and shape lambda
 }
 \description{
-This function returns 1 sample from an Inverse Gaussian distribution with mean mu and shape lambda
+This function returns 1 sample from an Inverse Gaussian 
+distribution with mean mu and shape lambda
 }
 \examples{
 curve(statmod::dinvgauss(x, mean = 1, shape = 1), 0, 4)
-samples <- sapply(1:10000, function(i) inv_gauss_sampler(mu = 1, lambda =1))
+samples <- sapply(1:10000, function(i) inv_gauss_sampler(mu = 1, lambda = 1))
 lines(density(x = samples, adjust = 0.5), col = 'blue')
 
 }

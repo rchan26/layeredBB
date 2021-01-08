@@ -24,3 +24,23 @@ matrix of the simulated Brownian bridge path, first row is points X,
 \description{
 Simulation of a path of a Brownian bridge at given times
 }
+\examples{
+# simulate a Brownian bridge path starting at 0 and ending at 0 in time [0,1]
+Brownian_bridge_path_sampler(x = 0,
+                             y = 0,
+                             s = 0,
+                             t = 1,
+                             times = seq(0, 1, 0.01))
+
+# another example
+start <- runif(1, -1, 1)
+end <- runif(1, -1, 1)
+path <- Brownian_bridge_path_sampler(x = start,
+                                     y = end,
+                                     s = 0,
+                                     t = 1,
+                                     times = seq(0, 1, 0.01))
+plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
+lines(x = path['time',], y = path['X',])
+
+}

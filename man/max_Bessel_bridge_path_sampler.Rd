@@ -38,5 +38,25 @@ max_Bessel_bridge_path_sampler(x = 0,
                                max = 0.4,
                                tau = 0.6,
                                times = c(0.2, 0.4, 0.8))
+                               
+# another example
+start <- runif(1, -1, 1)
+end <- runif(1, -1, 1)
+max <- max_sampler(x = start,
+                   y = end,
+                   s = 0,
+                   t = 1,
+                   low_bound = max(start, end)+0.2,
+                   up_bound = max(start, end)+0.4)
+path <- max_Bessel_bridge_path_sampler(x = start,
+                                       y = end,
+                                       s = 0,
+                                       t = 1,
+                                       max = max['max'],
+                                       tau = max['tau'],
+                                       times = seq(0, 1, 0.01))
+plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
+lines(x = path['time',], y = path['X',])
+points(x = max['tau'], y = max['max'], col = 'red', pch = 20)
 
 }

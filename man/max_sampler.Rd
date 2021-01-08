@@ -28,6 +28,13 @@ Simulation of a maximum point of a Brownian bridge
 \examples{
 # simulate a maximum between 0 and 1 of a Brownian bridge starting at 
 # 0 and ending at 0 in time [0,1]
-max_sampler(x=0, y=0, s=0, t=1, low_bound = 0, up_bound = 1)
+max_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = 0, up_bound = 1)
+
+# plotting multiple simulated maximums and their times
+maximums <- sapply(1:5000, function(i) {
+  max_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = 0 , up_bound = 10)
+})
+plot(x = maximums[2,], y = maximums[1,], pch = 20, lwd = 0.1,
+     xlab = 'Time', ylab = 'X')
 
 }

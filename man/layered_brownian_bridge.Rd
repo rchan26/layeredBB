@@ -38,7 +38,7 @@ bes_layer <- bessel_layer_simulation(x = 0,
                                      y = 0,
                                      s = 0,
                                      t = 1,
-                                     mult = 0.5)
+                                     mult = 0.2)
 # simulate layered Brownian bridge
 # simulated minimum or maximum is removed
 layered_brownian_bridge(x = 0,
@@ -54,6 +54,40 @@ layered_brownian_bridge(x = 0,
                         t = 1,
                         bessel_layer = bes_layer,
                         times = seq(0.2, 0.8, 0.2),
-                        remove_m = false)
+                        remove_m = FALSE)
+
+# another example
+# simulated minimum or maximum is removed
+start <- runif(1, -1, 1)
+end <- runif(1, -1, 1)
+bes_layer <- bessel_layer_simulation(x = start, y = end, s = 0, t = 1, mult = 0.2)
+path <- layered_brownian_bridge(x = start,
+                                y = end,
+                                s = 0,
+                                t = 1,
+                                bessel_layer = bes_layer,
+                                times = seq(0, 1, 0.01))
+plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X',
+     ylim = c(bes_layer$L, bes_layer$U))
+lines(x = path['time',], y = path['X',])
+abline(h=c(bes_layer$L, bes_layer$U), col = 'red')
+abline(h=c(bes_layer$l, bes_layer$u), col = 'red', lty = 2)
+
+# simulated miniumum or maximum is kept
+start <- runif(1, -1, 1)
+end <- runif(1, -1, 1)
+bes_layer <- bessel_layer_simulation(x = start, y = end, s = 0, t = 1, mult = 0.2)
+path <- layered_brownian_bridge(x = start,
+                                y = end,
+                                s = 0,
+                                t = 1,
+                                bessel_layer = bes_layer,
+                                times = seq(0, 1, 0.01),
+                                remove_m = FALSE)
+plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X',
+     ylim = c(bes_layer$L, bes_layer$U))
+lines(x = path['time',], y = path['X',])
+abline(h=c(bes_layer$L, bes_layer$U), col = 'red')
+abline(h=c(bes_layer$l, bes_layer$u), col = 'red', lty = 2)
 
 }

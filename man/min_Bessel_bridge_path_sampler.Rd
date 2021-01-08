@@ -39,4 +39,24 @@ min_Bessel_bridge_path_sampler(x = 0,
                                tau = 0.6,
                                times = c(0.2, 0.4, 0.8))
 
+# another example
+start <- runif(1, -1, 1)
+end <- runif(1, -1, 1)
+min <- min_sampler(x = start,
+                   y = end,
+                   s = 0,
+                   t = 1,
+                   low_bound = min(start, end)-0.4,
+                   up_bound = min(start, end)-0.2)
+path <- min_Bessel_bridge_path_sampler(x = start,
+                                       y = end,
+                                       s = 0,
+                                       t = 1,
+                                       min = min['min'],
+                                       tau = min['tau'],
+                                       times = seq(0, 1, 0.01))
+plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
+lines(x = path['time',], y = path['X',])
+points(x = min['tau'], y = min['min'], col = 'red', pch = 20)
+
 }

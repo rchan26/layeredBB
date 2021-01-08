@@ -81,14 +81,25 @@ multi_bessel_layer_simulation <- function(dim, x, y, s, t, mult = 1) {
 #' @return matrix of the simulated Brownian bridge path, first row is points X, 
 #'         second row are corresponding times
 #'
-#' @example 
+#' @examples 
 #' # simulate a Brownian bridge path starting at 0 and ending at 0 in time [0,1]
 #' Brownian_bridge_path_sampler(x = 0,
 #'                              y = 0,
 #'                              s = 0,
 #'                              t = 1,
 #'                              times = seq(0, 1, 0.01))
-#' 
+#'
+#' # another example
+#' start <- runif(1, -1, 1)
+#' end <- runif(1, -1, 1)
+#' path <- Brownian_bridge_path_sampler(x = start,
+#'                                      y = end,
+#'                                      s = 0,
+#'                                      t = 1,
+#'                                      times = seq(0, 1, 0.01))
+#' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
+#' lines(x = path['time',], y = path['X',])
+#'
 #' @export
 Brownian_bridge_path_sampler <- function(x, y, s, t, times) {
     .Call(`_layeredBB_Brownian_bridge_path_sampler`, x, y, s, t, times)
@@ -140,7 +151,14 @@ multi_brownian_bridge <- function(dim, x, y, s, t, times) {
 #' @examples
 #' # simulate a minimum between 0 and 1 of a Brownian bridge starting 
 #' # at 0 and ending at 0 in time [0,1]
-#' min_sampler(x=0, y=0, s=0, t=1, low_bound = -1, up_bound = 0)
+#' min_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = -1, up_bound = 0)
+#'
+#' # plotting multiple simulated minimums and their times
+#' minimums <- sapply(1:5000, function(i) {
+#'   min_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = -10, up_bound = 0)
+#' })
+#' plot(x = minimums[2,], y = minimums[1,], pch = 20, lwd = 0.1,
+#'      xlab = 'Time', ylab = 'X')
 #'
 #' @export
 min_sampler <- function(x, y, s, t, low_bound, up_bound) {
@@ -202,6 +220,26 @@ min_Bessel_bridge_sampler <- function(x, y, s, t, min, tau, q) {
 #'                                min = -0.4,
 #'                                tau = 0.6,
 #'                                times = c(0.2, 0.4, 0.8))
+#' 
+#' # another example
+#' start <- runif(1, -1, 1)
+#' end <- runif(1, -1, 1)
+#' min <- min_sampler(x = start,
+#'                    y = end,
+#'                    s = 0,
+#'                    t = 1,
+#'                    low_bound = min(start, end)-0.4,
+#'                    up_bound = min(start, end)-0.2)
+#' path <- min_Bessel_bridge_path_sampler(x = start,
+#'                                        y = end,
+#'                                        s = 0,
+#'                                        t = 1,
+#'                                        min = min['min'],
+#'                                        tau = min['tau'],
+#'                                        times = seq(0, 1, 0.01))
+#' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
+#' lines(x = path['time',], y = path['X',])
+#' points(x = min['tau'], y = min['min'], col = 'red', pch = 20)
 #'
 #' @export
 min_Bessel_bridge_path_sampler <- function(x, y, s, t, min, tau, times) {
@@ -224,7 +262,14 @@ min_Bessel_bridge_path_sampler <- function(x, y, s, t, min, tau, times) {
 #' @examples
 #' # simulate a maximum between 0 and 1 of a Brownian bridge starting at 
 #' # 0 and ending at 0 in time [0,1]
-#' max_sampler(x=0, y=0, s=0, t=1, low_bound = 0, up_bound = 1)
+#' max_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = 0, up_bound = 1)
+#'
+#' # plotting multiple simulated maximums and their times
+#' maximums <- sapply(1:5000, function(i) {
+#'   max_sampler(x = 0, y = 0, s = 0, t = 1, low_bound = 0 , up_bound = 10)
+#' })
+#' plot(x = maximums[2,], y = maximums[1,], pch = 20, lwd = 0.1,
+#'      xlab = 'Time', ylab = 'X')
 #'
 #' @export
 max_sampler <- function(x, y, s, t, low_bound, up_bound) {
@@ -280,6 +325,26 @@ max_Bessel_bridge_sampler <- function(x, y, s, t, max, tau, q) {
 #'                                max = 0.4,
 #'                                tau = 0.6,
 #'                                times = c(0.2, 0.4, 0.8))
+#'                                
+#' # another example
+#' start <- runif(1, -1, 1)
+#' end <- runif(1, -1, 1)
+#' max <- max_sampler(x = start,
+#'                    y = end,
+#'                    s = 0,
+#'                    t = 1,
+#'                    low_bound = max(start, end)+0.2,
+#'                    up_bound = max(start, end)+0.4)
+#' path <- max_Bessel_bridge_path_sampler(x = start,
+#'                                        y = end,
+#'                                        s = 0,
+#'                                        t = 1,
+#'                                        max = max['max'],
+#'                                        tau = max['tau'],
+#'                                        times = seq(0, 1, 0.01))
+#' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
+#' lines(x = path['time',], y = path['X',])
+#' points(x = max['tau'], y = max['max'], col = 'red', pch = 20)
 #'
 #' @export
 max_Bessel_bridge_path_sampler <- function(x, y, s, t, max, tau, times) {
@@ -749,16 +814,18 @@ delta_coin_intervals <- function(k, X, times, min, v) {
 
 #' Inverse Gaussian Sampler
 #'
-#' This function returns 1 sample from an Inverse Gaussian distribution with mean mu and shape lambda
+#' This function returns 1 sample from an Inverse Gaussian 
+#' distribution with mean mu and shape lambda
 #'
-#' @param mu mean
-#' @param lambda shape
+#' @param mu mean value
+#' @param lambda shape value
 #' 
-#' @return real value: simulated point from Inverse Gaussian distribution with mean mu and shape lambda
+#' @return real value: simulated point from Inverse Gaussian 
+#'         distribution with mean mu and shape lambda
 #'
 #' @examples
 #' curve(statmod::dinvgauss(x, mean = 1, shape = 1), 0, 4)
-#' samples <- sapply(1:10000, function(i) inv_gauss_sampler(mu = 1, lambda =1))
+#' samples <- sapply(1:10000, function(i) inv_gauss_sampler(mu = 1, lambda = 1))
 #' lines(density(x = samples, adjust = 0.5), col = 'blue')
 #'
 #' @export
@@ -824,7 +891,7 @@ find_min <- function(vect) {
 #'                                      y = 0,
 #'                                      s = 0,
 #'                                      t = 1,
-#'                                      mult = 0.5)
+#'                                      mult = 0.2)
 #' # simulate layered Brownian bridge
 #' # simulated minimum or maximum is removed
 #' layered_brownian_bridge(x = 0,
@@ -840,7 +907,41 @@ find_min <- function(vect) {
 #'                         t = 1,
 #'                         bessel_layer = bes_layer,
 #'                         times = seq(0.2, 0.8, 0.2),
-#'                         remove_m = false)
+#'                         remove_m = FALSE)
+#' 
+#' # another example
+#' # simulated minimum or maximum is removed
+#' start <- runif(1, -1, 1)
+#' end <- runif(1, -1, 1)
+#' bes_layer <- bessel_layer_simulation(x = start, y = end, s = 0, t = 1, mult = 0.2)
+#' path <- layered_brownian_bridge(x = start,
+#'                                 y = end,
+#'                                 s = 0,
+#'                                 t = 1,
+#'                                 bessel_layer = bes_layer,
+#'                                 times = seq(0, 1, 0.01))
+#' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X',
+#'      ylim = c(bes_layer$L, bes_layer$U))
+#' lines(x = path['time',], y = path['X',])
+#' abline(h=c(bes_layer$L, bes_layer$U), col = 'red')
+#' abline(h=c(bes_layer$l, bes_layer$u), col = 'red', lty = 2)
+#' 
+#' # simulated miniumum or maximum is kept
+#' start <- runif(1, -1, 1)
+#' end <- runif(1, -1, 1)
+#' bes_layer <- bessel_layer_simulation(x = start, y = end, s = 0, t = 1, mult = 0.2)
+#' path <- layered_brownian_bridge(x = start,
+#'                                 y = end,
+#'                                 s = 0,
+#'                                 t = 1,
+#'                                 bessel_layer = bes_layer,
+#'                                 times = seq(0, 1, 0.01),
+#'                                 remove_m = FALSE)
+#' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X',
+#'      ylim = c(bes_layer$L, bes_layer$U))
+#' lines(x = path['time',], y = path['X',])
+#' abline(h=c(bes_layer$L, bes_layer$U), col = 'red')
+#' abline(h=c(bes_layer$l, bes_layer$u), col = 'red', lty = 2)
 #' 
 #' @export
 layered_brownian_bridge <- function(x, y, s, t, bessel_layer, times, remove_m = TRUE) {
