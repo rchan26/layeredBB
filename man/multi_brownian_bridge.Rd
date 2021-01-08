@@ -20,14 +20,21 @@ multi_brownian_bridge(dim, x, y, s, t, times)
 \item{times}{vector of real numbers to simulate Brownian bridge}
 }
 \value{
-matrix of the simulated layered Brownian bridge path, first dim rows are points for X in each component, 
+matrix of the simulated layered Brownian bridge path, 
+        first dim rows are points for X in each component, 
         last row are corresponding times
 }
 \description{
-This function simulates a multi-dimensional Brownian Bridge, at given times
+Simulation of a multi-dimensional Brownian Bridge, at given times
 }
 \examples{
-# simulate two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-multi_brownian_bridge(dim = 2, x = c(0,0), y = c(0,0), s = 0, t = 1, times = seq(0.2, 0.8, 0.2))
+# simulate two-dimensional Brownian bridge starting and ending 
+# at (0,0) in time [0,1]
+multi_brownian_bridge(dim = 2,
+                      x = c(0,0),
+                      y = c(0,0),
+                      s = 0,
+                      t = 1,
+                      times = seq(0.2, 0.8, 0.2))
 
 }

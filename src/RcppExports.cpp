@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // bessel_layer_simulation
-Rcpp::List bessel_layer_simulation(const double& x, const double& y, const double& s, const double& t, Rcpp::NumericVector& a);
-RcppExport SEXP _layeredBB_bessel_layer_simulation(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP aSEXP) {
+Rcpp::List bessel_layer_simulation(const double& x, const double& y, const double& s, const double& t, const double& mult);
+RcppExport SEXP _layeredBB_bessel_layer_simulation(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP multSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -16,14 +16,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(bessel_layer_simulation(x, y, s, t, a));
+    Rcpp::traits::input_parameter< const double& >::type mult(multSEXP);
+    rcpp_result_gen = Rcpp::wrap(bessel_layer_simulation(x, y, s, t, mult));
     return rcpp_result_gen;
 END_RCPP
 }
 // multi_bessel_layer_simulation
-Rcpp::List multi_bessel_layer_simulation(const int& dim, const arma::vec& x, const arma::vec& y, const double& s, const double& t, Rcpp::NumericVector& a);
-RcppExport SEXP _layeredBB_multi_bessel_layer_simulation(SEXP dimSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP aSEXP) {
+Rcpp::List multi_bessel_layer_simulation(const int& dim, const arma::vec& x, const arma::vec& y, const double& s, const double& t, const double& mult);
+RcppExport SEXP _layeredBB_multi_bessel_layer_simulation(SEXP dimSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP multSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -32,8 +32,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(multi_bessel_layer_simulation(dim, x, y, s, t, a));
+    Rcpp::traits::input_parameter< const double& >::type mult(multSEXP);
+    rcpp_result_gen = Rcpp::wrap(multi_bessel_layer_simulation(dim, x, y, s, t, mult));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -102,8 +102,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // min_Bessel_bridge_path_sampler
-Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double& x, const double& y, const double& s, const double& t, const double& min, const double& tau, Rcpp::NumericVector times, const bool& keep_min);
-RcppExport SEXP _layeredBB_min_Bessel_bridge_path_sampler(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP tauSEXP, SEXP timesSEXP, SEXP keep_minSEXP) {
+Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double& x, const double& y, const double& s, const double& t, const double& min, const double& tau, Rcpp::NumericVector times);
+RcppExport SEXP _layeredBB_min_Bessel_bridge_path_sampler(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP tauSEXP, SEXP timesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -114,8 +114,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type tau(tauSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type times(timesSEXP);
-    Rcpp::traits::input_parameter< const bool& >::type keep_min(keep_minSEXP);
-    rcpp_result_gen = Rcpp::wrap(min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times, keep_min));
+    rcpp_result_gen = Rcpp::wrap(min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -153,8 +152,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // max_Bessel_bridge_path_sampler
-Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double& x, const double& y, const double& s, const double& t, const double& max, const double& tau, Rcpp::NumericVector times, const bool& keep_max);
-RcppExport SEXP _layeredBB_max_Bessel_bridge_path_sampler(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP maxSEXP, SEXP tauSEXP, SEXP timesSEXP, SEXP keep_maxSEXP) {
+Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double& x, const double& y, const double& s, const double& t, const double& max, const double& tau, Rcpp::NumericVector times);
+RcppExport SEXP _layeredBB_max_Bessel_bridge_path_sampler(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP maxSEXP, SEXP tauSEXP, SEXP timesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -165,14 +164,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type max(maxSEXP);
     Rcpp::traits::input_parameter< const double& >::type tau(tauSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type times(timesSEXP);
-    Rcpp::traits::input_parameter< const bool& >::type keep_max(keep_maxSEXP);
-    rcpp_result_gen = Rcpp::wrap(max_Bessel_bridge_path_sampler(x, y, s, t, max, tau, times, keep_max));
+    rcpp_result_gen = Rcpp::wrap(max_Bessel_bridge_path_sampler(x, y, s, t, max, tau, times));
     return rcpp_result_gen;
 END_RCPP
 }
-// sigma_bar
-double sigma_bar(const double& j, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
-RcppExport SEXP _layeredBB_sigma_bar(SEXP jSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
+// easigma_bar
+double easigma_bar(const double& j, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
+RcppExport SEXP _layeredBB_easigma_bar(SEXP jSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -183,13 +181,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type l(lSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(sigma_bar(j, x, y, s, t, l, v));
+    rcpp_result_gen = Rcpp::wrap(easigma_bar(j, x, y, s, t, l, v));
     return rcpp_result_gen;
 END_RCPP
 }
-// sigma
-double sigma(const double& j, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
-RcppExport SEXP _layeredBB_sigma(SEXP jSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
+// easigma
+double easigma(const double& j, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
+RcppExport SEXP _layeredBB_easigma(SEXP jSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -200,13 +198,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type l(lSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(sigma(j, x, y, s, t, l, v));
+    rcpp_result_gen = Rcpp::wrap(easigma(j, x, y, s, t, l, v));
     return rcpp_result_gen;
 END_RCPP
 }
-// phi_bar
-double phi_bar(const double& j, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
-RcppExport SEXP _layeredBB_phi_bar(SEXP jSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
+// eaphi_bar
+double eaphi_bar(const double& j, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
+RcppExport SEXP _layeredBB_eaphi_bar(SEXP jSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -217,13 +215,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type l(lSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(phi_bar(j, x, y, s, t, l, v));
+    rcpp_result_gen = Rcpp::wrap(eaphi_bar(j, x, y, s, t, l, v));
     return rcpp_result_gen;
 END_RCPP
 }
-// phi
-double phi(const double& j, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
-RcppExport SEXP _layeredBB_phi(SEXP jSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
+// eaphi
+double eaphi(const double& j, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
+RcppExport SEXP _layeredBB_eaphi(SEXP jSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -234,47 +232,113 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type l(lSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(phi(j, x, y, s, t, l, v));
+    rcpp_result_gen = Rcpp::wrap(eaphi(j, x, y, s, t, l, v));
     return rcpp_result_gen;
 END_RCPP
 }
-// psi
-double psi(const double& j, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
-RcppExport SEXP _layeredBB_psi(SEXP jSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
+// eapsi
+double eapsi(const double& j, const double& xoy, const double& s, const double& t, const double& min, const double& v);
+RcppExport SEXP _layeredBB_eapsi(SEXP jSEXP, SEXP xoySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const double& >::type j(jSEXP);
+    Rcpp::traits::input_parameter< const double& >::type xoy(xoySEXP);
+    Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
+    Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
+    Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(eapsi(j, xoy, s, t, min, v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// eachi
+double eachi(const double& j, const double& xoy, const double& s, const double& t, const double& min, const double& v);
+RcppExport SEXP _layeredBB_eachi(SEXP jSEXP, SEXP xoySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const double& >::type j(jSEXP);
+    Rcpp::traits::input_parameter< const double& >::type xoy(xoySEXP);
+    Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
+    Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
+    Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(eachi(j, xoy, s, t, min, v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// eagamma
+double eagamma(const int& n, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
+RcppExport SEXP _layeredBB_eagamma(SEXP nSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int& >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const double& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
+    Rcpp::traits::input_parameter< const double& >::type l(lSEXP);
+    Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(eagamma(n, x, y, s, t, l, v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// eadelta1
+double eadelta1(const int& n, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
+RcppExport SEXP _layeredBB_eadelta1(SEXP nSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int& >::type n(nSEXP);
     Rcpp::traits::input_parameter< const double& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(psi(j, x, y, s, t, min, v));
+    rcpp_result_gen = Rcpp::wrap(eadelta1(n, x, y, s, t, min, v));
     return rcpp_result_gen;
 END_RCPP
 }
-// chi
-double chi(const double& j, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
-RcppExport SEXP _layeredBB_chi(SEXP jSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
+// eadelta2
+double eadelta2(const int& n, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
+RcppExport SEXP _layeredBB_eadelta2(SEXP nSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const double& >::type j(jSEXP);
+    Rcpp::traits::input_parameter< const int& >::type n(nSEXP);
     Rcpp::traits::input_parameter< const double& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(chi(j, x, y, s, t, min, v));
+    rcpp_result_gen = Rcpp::wrap(eadelta2(n, x, y, s, t, min, v));
     return rcpp_result_gen;
 END_RCPP
 }
-// calc_SgammaK_intervals
-Rcpp::NumericVector calc_SgammaK_intervals(const int& k, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
-RcppExport SEXP _layeredBB_calc_SgammaK_intervals(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
+// eadelta
+double eadelta(const int& n, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
+RcppExport SEXP _layeredBB_eadelta(SEXP nSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int& >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const double& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
+    Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
+    Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(eadelta(n, x, y, s, t, min, v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// eagamma_intervals
+Rcpp::NumericVector eagamma_intervals(const int& k, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
+RcppExport SEXP _layeredBB_eagamma_intervals(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -285,13 +349,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type l(lSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(calc_SgammaK_intervals(k, x, y, s, t, l, v));
+    rcpp_result_gen = Rcpp::wrap(eagamma_intervals(k, x, y, s, t, l, v));
     return rcpp_result_gen;
 END_RCPP
 }
-// calc_SdeltaK_1_intervals
-Rcpp::NumericVector calc_SdeltaK_1_intervals(const int& k, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
-RcppExport SEXP _layeredBB_calc_SdeltaK_1_intervals(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
+// eadelta1_intervals
+Rcpp::NumericVector eadelta1_intervals(const int& k, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
+RcppExport SEXP _layeredBB_eadelta1_intervals(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -302,13 +366,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(calc_SdeltaK_1_intervals(k, x, y, s, t, min, v));
+    rcpp_result_gen = Rcpp::wrap(eadelta1_intervals(k, x, y, s, t, min, v));
     return rcpp_result_gen;
 END_RCPP
 }
-// calc_SdeltaK_2_intervals
-Rcpp::NumericVector calc_SdeltaK_2_intervals(const int& k, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
-RcppExport SEXP _layeredBB_calc_SdeltaK_2_intervals(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
+// eadelta2_intervals
+Rcpp::NumericVector eadelta2_intervals(const int& k, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
+RcppExport SEXP _layeredBB_eadelta2_intervals(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -319,13 +383,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(calc_SdeltaK_2_intervals(k, x, y, s, t, min, v));
+    rcpp_result_gen = Rcpp::wrap(eadelta2_intervals(k, x, y, s, t, min, v));
     return rcpp_result_gen;
 END_RCPP
 }
-// calc_SdeltaK_intervals
-Rcpp::NumericVector calc_SdeltaK_intervals(const int& k, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
-RcppExport SEXP _layeredBB_calc_SdeltaK_intervals(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
+// eadelta_intervals
+Rcpp::NumericVector eadelta_intervals(const int& k, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
+RcppExport SEXP _layeredBB_eadelta_intervals(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -336,7 +400,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(calc_SdeltaK_intervals(k, x, y, s, t, min, v));
+    rcpp_result_gen = Rcpp::wrap(eadelta_intervals(k, x, y, s, t, min, v));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -352,70 +416,51 @@ BEGIN_RCPP
 END_RCPP
 }
 // gamma_coin
-bool gamma_coin(const double& x, const double& y, const double& s, const double& t, const double& l, const double& v, int k);
-RcppExport SEXP _layeredBB_gamma_coin(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP, SEXP kSEXP) {
+bool gamma_coin(int k, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
+RcppExport SEXP _layeredBB_gamma_coin(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< const double& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type l(lSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(gamma_coin(x, y, s, t, l, v, k));
-    return rcpp_result_gen;
-END_RCPP
-}
-// gamma_coin_intervals
-bool gamma_coin_intervals(const Rcpp::NumericVector& x, const Rcpp::NumericVector& y, const Rcpp::NumericVector& s, const Rcpp::NumericVector& t, const double& l, const double& v, int k);
-RcppExport SEXP _layeredBB_gamma_coin_intervals(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP, SEXP kSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type s(sSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type t(tSEXP);
-    Rcpp::traits::input_parameter< const double& >::type l(lSEXP);
-    Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(gamma_coin_intervals(x, y, s, t, l, v, k));
+    rcpp_result_gen = Rcpp::wrap(gamma_coin(k, x, y, s, t, l, v));
     return rcpp_result_gen;
 END_RCPP
 }
 // delta_coin
-bool delta_coin(const double& x, const double& y, const double& s, const double& t, const double& min, const double& v, int k);
-RcppExport SEXP _layeredBB_delta_coin(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP, SEXP kSEXP) {
+bool delta_coin(int k, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
+RcppExport SEXP _layeredBB_delta_coin(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< const double& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(delta_coin(x, y, s, t, min, v, k));
+    rcpp_result_gen = Rcpp::wrap(delta_coin(k, x, y, s, t, min, v));
     return rcpp_result_gen;
 END_RCPP
 }
 // delta_coin_intervals
-bool delta_coin_intervals(const Rcpp::NumericVector& x, const Rcpp::NumericVector& y, const Rcpp::NumericVector& s, const Rcpp::NumericVector& t, const double& min, const double& v, int k);
-RcppExport SEXP _layeredBB_delta_coin_intervals(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP, SEXP kSEXP) {
+bool delta_coin_intervals(int k, const Rcpp::NumericVector& X, const Rcpp::NumericVector& times, const double& min, const double& v);
+RcppExport SEXP _layeredBB_delta_coin_intervals(SEXP kSEXP, SEXP XSEXP, SEXP timesSEXP, SEXP minSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type s(sSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type t(tSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type times(timesSEXP);
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(delta_coin_intervals(x, y, s, t, min, v, k));
+    rcpp_result_gen = Rcpp::wrap(delta_coin_intervals(k, X, times, min, v));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -454,8 +499,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // layered_brownian_bridge
-Rcpp::NumericMatrix layered_brownian_bridge(const double& x, const double& y, const double& s, const double& t, const Rcpp::NumericVector& a, int l, const Rcpp::NumericVector& times);
-RcppExport SEXP _layeredBB_layered_brownian_bridge(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP aSEXP, SEXP lSEXP, SEXP timesSEXP) {
+Rcpp::NumericMatrix layered_brownian_bridge(const double& x, const double& y, const double& s, const double& t, const Rcpp::List& bessel_layer, const Rcpp::NumericVector& times, const bool& remove_m);
+RcppExport SEXP _layeredBB_layered_brownian_bridge(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP bessel_layerSEXP, SEXP timesSEXP, SEXP remove_mSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -463,16 +508,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type a(aSEXP);
-    Rcpp::traits::input_parameter< int >::type l(lSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type bessel_layer(bessel_layerSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type times(timesSEXP);
-    rcpp_result_gen = Rcpp::wrap(layered_brownian_bridge(x, y, s, t, a, l, times));
+    Rcpp::traits::input_parameter< const bool& >::type remove_m(remove_mSEXP);
+    rcpp_result_gen = Rcpp::wrap(layered_brownian_bridge(x, y, s, t, bessel_layer, times, remove_m));
     return rcpp_result_gen;
 END_RCPP
 }
 // multi_layered_brownian_bridge
-Rcpp::NumericMatrix multi_layered_brownian_bridge(const int& dim, const arma::vec& x, const arma::vec& y, const double& s, const double& t, const Rcpp::List& layers, Rcpp::NumericVector times);
-RcppExport SEXP _layeredBB_multi_layered_brownian_bridge(SEXP dimSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP layersSEXP, SEXP timesSEXP) {
+Rcpp::NumericMatrix multi_layered_brownian_bridge(const int& dim, const arma::vec& x, const arma::vec& y, const double& s, const double& t, const Rcpp::List& bessel_layers, Rcpp::NumericVector times);
+RcppExport SEXP _layeredBB_multi_layered_brownian_bridge(SEXP dimSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP bessel_layersSEXP, SEXP timesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -481,9 +526,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
     Rcpp::traits::input_parameter< const double& >::type s(sSEXP);
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::List& >::type layers(layersSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type bessel_layers(bessel_layersSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type times(timesSEXP);
-    rcpp_result_gen = Rcpp::wrap(multi_layered_brownian_bridge(dim, x, y, s, t, layers, times));
+    rcpp_result_gen = Rcpp::wrap(multi_layered_brownian_bridge(dim, x, y, s, t, bessel_layers, times));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -495,25 +540,28 @@ static const R_CallMethodDef CallEntries[] = {
     {"_layeredBB_multi_brownian_bridge", (DL_FUNC) &_layeredBB_multi_brownian_bridge, 6},
     {"_layeredBB_min_sampler", (DL_FUNC) &_layeredBB_min_sampler, 6},
     {"_layeredBB_min_Bessel_bridge_sampler", (DL_FUNC) &_layeredBB_min_Bessel_bridge_sampler, 7},
-    {"_layeredBB_min_Bessel_bridge_path_sampler", (DL_FUNC) &_layeredBB_min_Bessel_bridge_path_sampler, 8},
+    {"_layeredBB_min_Bessel_bridge_path_sampler", (DL_FUNC) &_layeredBB_min_Bessel_bridge_path_sampler, 7},
     {"_layeredBB_max_sampler", (DL_FUNC) &_layeredBB_max_sampler, 6},
     {"_layeredBB_max_Bessel_bridge_sampler", (DL_FUNC) &_layeredBB_max_Bessel_bridge_sampler, 7},
-    {"_layeredBB_max_Bessel_bridge_path_sampler", (DL_FUNC) &_layeredBB_max_Bessel_bridge_path_sampler, 8},
-    {"_layeredBB_sigma_bar", (DL_FUNC) &_layeredBB_sigma_bar, 7},
-    {"_layeredBB_sigma", (DL_FUNC) &_layeredBB_sigma, 7},
-    {"_layeredBB_phi_bar", (DL_FUNC) &_layeredBB_phi_bar, 7},
-    {"_layeredBB_phi", (DL_FUNC) &_layeredBB_phi, 7},
-    {"_layeredBB_psi", (DL_FUNC) &_layeredBB_psi, 7},
-    {"_layeredBB_chi", (DL_FUNC) &_layeredBB_chi, 7},
-    {"_layeredBB_calc_SgammaK_intervals", (DL_FUNC) &_layeredBB_calc_SgammaK_intervals, 7},
-    {"_layeredBB_calc_SdeltaK_1_intervals", (DL_FUNC) &_layeredBB_calc_SdeltaK_1_intervals, 7},
-    {"_layeredBB_calc_SdeltaK_2_intervals", (DL_FUNC) &_layeredBB_calc_SdeltaK_2_intervals, 7},
-    {"_layeredBB_calc_SdeltaK_intervals", (DL_FUNC) &_layeredBB_calc_SdeltaK_intervals, 7},
+    {"_layeredBB_max_Bessel_bridge_path_sampler", (DL_FUNC) &_layeredBB_max_Bessel_bridge_path_sampler, 7},
+    {"_layeredBB_easigma_bar", (DL_FUNC) &_layeredBB_easigma_bar, 7},
+    {"_layeredBB_easigma", (DL_FUNC) &_layeredBB_easigma, 7},
+    {"_layeredBB_eaphi_bar", (DL_FUNC) &_layeredBB_eaphi_bar, 7},
+    {"_layeredBB_eaphi", (DL_FUNC) &_layeredBB_eaphi, 7},
+    {"_layeredBB_eapsi", (DL_FUNC) &_layeredBB_eapsi, 6},
+    {"_layeredBB_eachi", (DL_FUNC) &_layeredBB_eachi, 6},
+    {"_layeredBB_eagamma", (DL_FUNC) &_layeredBB_eagamma, 7},
+    {"_layeredBB_eadelta1", (DL_FUNC) &_layeredBB_eadelta1, 7},
+    {"_layeredBB_eadelta2", (DL_FUNC) &_layeredBB_eadelta2, 7},
+    {"_layeredBB_eadelta", (DL_FUNC) &_layeredBB_eadelta, 7},
+    {"_layeredBB_eagamma_intervals", (DL_FUNC) &_layeredBB_eagamma_intervals, 7},
+    {"_layeredBB_eadelta1_intervals", (DL_FUNC) &_layeredBB_eadelta1_intervals, 7},
+    {"_layeredBB_eadelta2_intervals", (DL_FUNC) &_layeredBB_eadelta2_intervals, 7},
+    {"_layeredBB_eadelta_intervals", (DL_FUNC) &_layeredBB_eadelta_intervals, 7},
     {"_layeredBB_product_vector_elements", (DL_FUNC) &_layeredBB_product_vector_elements, 1},
     {"_layeredBB_gamma_coin", (DL_FUNC) &_layeredBB_gamma_coin, 7},
-    {"_layeredBB_gamma_coin_intervals", (DL_FUNC) &_layeredBB_gamma_coin_intervals, 7},
     {"_layeredBB_delta_coin", (DL_FUNC) &_layeredBB_delta_coin, 7},
-    {"_layeredBB_delta_coin_intervals", (DL_FUNC) &_layeredBB_delta_coin_intervals, 7},
+    {"_layeredBB_delta_coin_intervals", (DL_FUNC) &_layeredBB_delta_coin_intervals, 5},
     {"_layeredBB_inv_gauss_sampler", (DL_FUNC) &_layeredBB_inv_gauss_sampler, 2},
     {"_layeredBB_find_max", (DL_FUNC) &_layeredBB_find_max, 1},
     {"_layeredBB_find_min", (DL_FUNC) &_layeredBB_find_min, 1},

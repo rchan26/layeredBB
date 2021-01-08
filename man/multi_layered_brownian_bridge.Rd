@@ -4,7 +4,7 @@
 \alias{multi_layered_brownian_bridge}
 \title{Multi-dimensional Layered Brownian Bridge sampler}
 \usage{
-multi_layered_brownian_bridge(dim, x, y, s, t, layers, times)
+multi_layered_brownian_bridge(dim, x, y, s, t, bessel_layers, times)
 }
 \arguments{
 \item{dim}{dimension of Brownian bridge}
@@ -17,21 +17,36 @@ multi_layered_brownian_bridge(dim, x, y, s, t, layers, times)
 
 \item{t}{end value of Brownian bridge}
 
-\item{layers}{a list of length dim where list[i] is the Bessel layer for component i}
+\item{bessel_layers}{a list of length dim where list[i] is the Bessel layer for component i}
 
 \item{times}{vector of real numbers to simulate Bessel bridge}
 }
 \value{
-matrix of the simulated layered Brownian bridge path, first dim rows are points for X in each component, 
+matrix of the simulated layered Brownian bridge path, 
+        first dim rows are points for X in each component, 
         last row are corresponding times
 }
 \description{
-This function simulates a multi-dimensional layered Brownian Bridge given Bessel layers, at given times
+Simulation of a multi-dimensional layered Brownian Bridge given Bessel layers
+at user-specified times
 }
 \examples{
-# simulate Bessel layer for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-bes_layers <- multi_bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
-# simulate two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-multi_layered_brownian_bridge(dim = 2, x = c(0,0), y = c(0,0), s = 0, t = 1, layers = bes_layers, times = seq(0.2, 0.8, 0.2))
+# simulate Bessel layer for two-dimensional Brownian bridge starting 
+# and ending at (0,0) in time [0,1]
+bes_layers <- multi_bessel_layer_simulation(dim = 2,
+                                            x = c(0, 0),
+                                            y = c(0, 0),
+                                            s = 0,
+                                            t = 1,
+                                            mult = 0.5)
+# simulate two-dimensional Brownian bridge starting 
+# and ending at (0,0) in time [0,1]
+multi_layered_brownian_bridge(dim = 2,
+                              x = c(0,0),
+                              y = c(0,0),
+                              s = 0,
+                              t = 1,
+                              bessel_layers = bes_layers,
+                              times = seq(0.2, 0.8, 0.2))
 
 }

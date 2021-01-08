@@ -2,11 +2,13 @@
 % Please edit documentation in R/RcppExports.R
 \name{delta_coin}
 \alias{delta_coin}
-\title{Delta coin flipper}
+\title{Delta coin flipper (Algorithm 28 in ST329)}
 \usage{
-delta_coin(x, y, s, t, min, v, k)
+delta_coin(k, x, y, s, t, min, v)
 }
 \arguments{
+\item{k}{integer value starting index for calculating the intervals}
+
 \item{x}{start value of Brownian bridge}
 
 \item{y}{end value of Brownian bridge}
@@ -18,11 +20,10 @@ delta_coin(x, y, s, t, min, v, k)
 \item{min}{minimum of Brownian bridge}
 
 \item{v}{upper bound of Brownian bridge}
-
-\item{k}{integer value}
 }
 \value{
-boolean value: if T, accept probability that Brownian bridge with minimum, min, remains in [l,v], otherwise reject
+boolean value: if T, accept probability that Brownian bridge with 
+        minimum, min, remains in [l,v], otherwise reject
 }
 \description{
 Flips 'Delta coin'; uses the Cauchy sequence S^{delta}_{k} to 
@@ -30,5 +31,12 @@ determine whether or not the Brownian bridge with minimum, min,
 starting at x, ending at y, between [s,t] remains in interval [l,v]
 }
 \examples{
-
+delta_coin_intervals(k = 0,
+                     x = 0.1,
+                     y = 0.4,
+                     s = 0,
+                     t = 1,
+                     min = -0.2,
+                     v = 1.5)
+                     
 }

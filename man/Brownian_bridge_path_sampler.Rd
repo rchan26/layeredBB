@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{Brownian_bridge_path_sampler}
 \alias{Brownian_bridge_path_sampler}
-\title{Brownian Bridge path sampler}
+\title{Brownian Bridge path sampler (Algorithm 13 in ST329)}
 \usage{
 Brownian_bridge_path_sampler(x, y, s, t, times)
 }
@@ -18,8 +18,9 @@ Brownian_bridge_path_sampler(x, y, s, t, times)
 \item{times}{vector of real numbers to simulate Brownian bridge}
 }
 \value{
-matrix of the simulated Brownian bridge path, first row is points X, second row are corresponding times
+matrix of the simulated Brownian bridge path, first row is points X, 
+        second row are corresponding times
 }
 \description{
-This function simulates a path of a Brownian bridge at given times
+Simulation of a path of a Brownian bridge at given times
 }

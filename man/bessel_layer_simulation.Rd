@@ -4,7 +4,7 @@
 \alias{bessel_layer_simulation}
 \title{Bessel Layer simulation}
 \usage{
-bessel_layer_simulation(x, y, s, t, a)
+bessel_layer_simulation(x, y, s, t, mult = 1)
 }
 \arguments{
 \item{x}{start value of Brownian bridge}
@@ -19,16 +19,19 @@ bessel_layer_simulation(x, y, s, t, a)
 }
 \value{
 A list with the following items:
-\itemize{
-  \item{a}{vector of real values}
-  \item{l}{bessel layer}
+\describe{
+  \item{L}{Hard lower bound}
+  \item{l}{Soft lower bound}
+  \item{u}{Soft upper bound}
+  \item{U}{Hard upper bound}
 }
-where the Bessel layer is [min(x,y)-a[l], min(x,y)+a[l]]
+where the Bessel layer is [L, U] and either the minimum occurs in [L, l] or
+the maximum occurs in [u, U]
 }
 \description{
 Simulates a Bessel layer l for a given sequence a
 }
 \examples{
-bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, mult = 0.5)
 
 }

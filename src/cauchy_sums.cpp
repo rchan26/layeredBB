@@ -2,7 +2,7 @@
 
 using namespace Rcpp;
 
-//' Sigma_Bar
+//' Sigma_Bar (Equation 141 in ST329)
 //'
 //' This function evaluates the sigma_bar function used to simulate Bessel Layers in the infinite sums
 //'
@@ -14,25 +14,28 @@ using namespace Rcpp;
 //' @param l lower bound of Brownian bridge
 //' @param v upper bound of Brownian bridge
 //' 
-//' @return real value: sigma_bar evaluated at point j
+//' @return real value: easigma_bar evaluated at point j
 //'
 //' @examples
-//' sigma_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
+//' easigma_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
 //'
 //' @export
 // [[Rcpp::export]]
-double sigma_bar(const double &j, 
-                 const double &x,
-                 const double &y,
-                 const double &s, 
-                 const double &t,
-                 const double &l, 
-                 const double &v)
+double easigma_bar(const double &j,
+                   const double &x,
+                   const double &y,
+                   const double &s,
+                   const double &t,
+                   const double &l,
+                   const double &v)
 {
-  return exp((-2.0/(t-s))*((fabs(v-l)*j)+std::min(l,v)-x)*((fabs(v-l)*j)+std::min(l,v)-y));
+  double P = -2.0/(t-s);
+  double D = std::abs(v-l);
+  double landv = std::min(l,v);
+  return exp(P * (D*j + landv - x) * (D*j + landv - y));
 }
 
-//' Sigma
+//' Sigma (Equation 140 in ST329)
 //'
 //' This function evaluates the sigma function used to simulate Bessel Layers in the infinite sums
 //'
@@ -47,22 +50,22 @@ double sigma_bar(const double &j,
 //' @return real value: sigma evaluated at point j
 //'
 //' @examples
-//' sigma(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
+//' easigma(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
 //'
 //' @export
 // [[Rcpp::export]]
-double sigma(const double &j, 
-             const double &x, 
-             const double &y, 
-             const double &s,
-             const double &t,
-             const double &l, 
-             const double &v)
+double easigma(const double &j,
+               const double &x,
+               const double &y,
+               const double &s,
+               const double &t,
+               const double &l,
+               const double &v)
 {
-  return sigma_bar(j,x,y,s,t,l,v) + sigma_bar(j,-x,-y,s,t,-l,-v);
+  return easigma_bar(j,x,y,s,t,l,v) + easigma_bar(j,-x,-y,s,t,-l,-v);
 }
 
-//' Phi_Bar
+//' Phi_Bar (Equation 142 in ST329)
 //'
 //' This function evaluates the phi_bar function used to simulate Bessel Layers in the infinite sums
 //'
@@ -77,24 +80,26 @@ double sigma(const double &j,
 //' @return real value: phi_bar evaluated at point j
 //'
 //' @examples
-//' phi_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
+//' eaphi_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
 //'
 //' @export
 // [[Rcpp::export]]
-double phi_bar(const double &j, 
-               const double &x, 
-               const double &y,
-               const double &s, 
-               const double &t,
-               const double &l, 
-               const double &v)
+double eaphi_bar(const double &j,
+                 const double &x,
+                 const double &y,
+                 const double &s,
+                 const double &t,
+                 const double &l,
+                 const double &v)
 {
-  return exp(-(2.0*j/(t-s)) * (fabs(v-l)*fabs(v-l)*j + fabs(v-l)*(x-y))); 
+  double P = -2.0*j/(t-s);
+  double D = std::abs(v-l);
+  return exp(P * (D*D*j + D*(x-y)));
 }
 
-//' Phi
+//' Phi (Equation 140 in ST329)
 //'
-//' This function evaluates the phi function used to simulate Bessel Layers in the infinite sums
+//' This function evaluates the eaphi function used to simulate Bessel Layers in the infinite sums
 //'
 //' @param j real value
 //' @param x start value of Brownian bridge
@@ -104,61 +109,59 @@ double phi_bar(const double &j,
 //' @param l lower bound of Brownian bridge
 //' @param v upper bound of Brownian bridge
 //' 
-//' @return real value: phi evaluated at point j
+//' @return real value: eaphi evaluated at point j
 //'
 //' @examples
-//' phi(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
+//' eaphi(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
 //' 
 //' @export
 // [[Rcpp::export]] 
-double phi(const double &j, 
-           const double &x, 
-           const double &y, 
-           const double &s, 
-           const double &t,
-           const double &l, 
-           const double &v)
+double eaphi(const double &j,
+             const double &x,
+             const double &y,
+             const double &s,
+             const double &t,
+             const double &l,
+             const double &v)
 {
-  return phi_bar(j,x,y,s,t,l,v) + phi_bar(j,-x,-y,s,t,-l,-v);
+  return eaphi_bar(j,x,y,s,t,l,v) + eaphi_bar(j,-x,-y,s,t,-l,-v);
 }
 
-//' Psi
+//' Psi (Equation 155 and 162 in ST329)
 //'
-//' This function evaluates the psi function used to simulate Bessel Layers in the infinite sums
+//' This function evaluates the eapsi function used to simulate Bessel Layers in the infinite sums
 //'
 //' @param j real value
-//' @param x start value of Brownian bridge
-//' @param y end value of Brownian bridge
+//' @param xoy maximum of x and y where x and y are the start and end values of Brownian bridge
 //' @param s start value of Brownian bridge
 //' @param t end value of Brownian bridge
 //' @param min minimum of Brownian bridge
 //' @param v upper bound of Brownian bridge
 //' 
-//' @return real value: psi evaluated at point j
+//' @return real value: eapsi evaluated at point j
 //'
 //' @examples
-//' psi(j = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
+//' eapsi(j = 1, xoy = 0, s = 0, t = 1, min = -2, v = 1)
 //' 
 //' @export
 // [[Rcpp::export]] 
-double psi(const double &j, 
-           const double &x, 
-           const double &y,
-           const double &s, 
-           const double &t,
-           const double &min, 
-           const double &v)
+double eapsi(const double &j,
+             const double &xoy,
+             const double &s,
+             const double &t,
+             const double &min,
+             const double &v)
 {
-  return (((2*fabs(v-min)*j)-(std::max(x,y)-min))*(exp(-(2.0*fabs(v-min)*j/(t-s))*((fabs(v-min)*j)-(std::max(x,y)-min)))));
+  double P = 2 * std::abs(v-min) * j;
+  return (P - (xoy - min)) * exp(-(P/(t-s)) * (std::abs(v-min)*j - (xoy-min)));
 }
 
-//' Chi
+//' Chi (Equation 156 and 163 in ST329)
 //'
-//' This function evaluates the psi function used to simulate Bessel Layers in the infinite sums
+//' This function evaluates the chi function used to simulate Bessel Layers in the infinite sums
 //'
 //' @param j real value
-//' @param x start value of Brownian bridge
-//' @param y end value of Brownian bridge
+//' @param xoy maximum of x and y where x and y are the start and end values of Brownian bridge
 //' @param s start value of Brownian bridge
 //' @param t end value of Brownian bridge
 //' @param min minimum of Brownian bridge
@@ -167,22 +170,131 @@ double psi(const double &j,
 //' @return real value: chi evaluated at point j
 //'
 //' @examples
-//' chi(j = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
+//' eachi(j = 1, xoy = 0, s = 0, t = 1, min = -2, v = 1)
 //'
 //' @export
 // [[Rcpp::export]]
-double chi(const double &j, 
-           const double &x, 
-           const double &y,
-           const double &s, 
-           const double &t,
-           const double &min, 
-           const double &v)
+double eachi(const double &j,
+             const double &xoy,
+             const double &s,
+             const double &t,
+             const double &min,
+             const double &v)
 {
-  return (((2*fabs(v-min)*j)+(std::max(x,y)-min))*(exp(-(2.0*fabs(v-min)*j/(t-s))*((fabs(v-min)*j)+(std::max(x,y)-min)))));
+  double P = 2 * std::abs(v-min) * j;
+  return (P + (xoy - min)) * exp(-(P/(t-s)) * (std::abs(v-min)*j + (xoy-min)));
 }
 
-//' Calculate interval: [S^{gamma}_{2k+1}, S^{gamma}_{2k}]
+// ---------- Calculate S_{n}^{gamma} and S_{n}^{delta}
+
+// [[Rcpp::export]]
+double eagamma(const int &n,
+               const double &x,
+               const double &y,
+               const double &s,
+               const double &t,
+               const double &l,
+               const double &v)
+{
+  if (std::min(x,y) < l) {
+    return 0;
+  } else if (std::max(x,y) > v) {
+    return 0;
+  }
+  if (n % 2 == 0) {
+    int k = n / 2;
+    double zeta = 0;
+    for (int j=1; j <= k; ++j) {
+      zeta += (easigma(j,x,y,s,t,l,v) - eaphi(j,x,y,s,t,l,v));
+    }
+    return 1 - zeta;
+  } else {
+    if (n > 1) {
+      int k = (n-1)/2;
+      double zeta = 0;
+      for (int j=1; j <= k; ++j) {
+        zeta += (easigma(j,x,y,s,t,l,v) - eaphi(j,x,y,s,t,l,v));
+      }
+      return 1 - zeta - easigma(k+1,x,y,s,t,l,v);
+    } else {
+      return 1 - easigma(1,x,y,s,t,l,v);
+    }
+  }
+}
+
+// [[Rcpp::export]]
+double eadelta1(const int &n,
+                const double &x,
+                const double &y,
+                const double &s,
+                const double &t,
+                const double &min,
+                const double &v)
+{
+  return eagamma(n,x,y,s,t,min,v) / (1 - exp(-2.0*(x-min)*(y-min)/(t-s)));
+}
+
+// [[Rcpp::export]]
+double eadelta2(const int &n,
+                const double &x,
+                const double &y,
+                const double &s,
+                const double &t,
+                const double &min,
+                const double &v)
+{
+  if (std::min(x,y) < min) {
+    return 0;
+  } else if (std::max(x,y) > v) {
+    return 0;
+  }
+  double xoy = std::max(x,y);
+  double denom = xoy - min;
+  if (n % 2 == 0) {
+    int k = n / 2;
+    double sum = 0;
+    for (int j=1; j <= k; ++j) {
+      sum += (eapsi(j,xoy,s,t,min,v) - eachi(j,xoy,s,t,min,v)) / denom;
+    }
+    return 1 - sum;
+  } else {
+    if (n > 1) {
+      int k = (n-1)/2;
+      double sum = 0;
+      for (int j=1; j <= k; ++j) {
+        sum += (eapsi(j,xoy,s,t,min,v) - eachi(j,xoy,s,t,min,v)) / denom;
+      }
+      return 1 - sum - (eapsi(k+1,xoy,s,t,min,v) / denom);
+    } else {
+      return 1 - (eapsi(1,xoy,s,t,min,v) / denom);
+    }
+  } 
+}
+
+// [[Rcpp::export]]
+double eadelta(const int &n,
+               const double &x,
+               const double &y,
+               const double &s,
+               const double &t,
+               const double &min,
+               const double &v)
+{
+  if (std::max(x,y) > v) {
+    return 0;
+  } 
+  if (std::min(x,y) > min) {
+    return eadelta1(n,x,y,s,t,min,v);
+  } else if (std::min(x,y) == min) {
+    return eadelta2(n,x,y,s,t,min,v);
+  } else {
+    return 0;
+  }
+}
+
+// ---------- Calculate intervals needed for EA. i.e. calculating [S_{2k+1}, S_{2k}]
+
+//' Calculate interval: [S^{gamma}_{2k+1}, S^{gamma}_{2k}] (Corollary 2 and Algorithm 26 in ST329)
 //'
 //' This function calculates the interval [S^{gamma}_{2k+1}, S^{gamma}_{2k}] for given k
 //'
@@ -197,37 +309,38 @@ double chi(const double &j,
 //' @return vector of two values, S^{gamma}_{2k+1} and S^{gamma}_{2k}
 //'
 //' @examples
-//' calc_SgammaK_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
+//' eagamma_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector calc_SgammaK_intervals(const int &k, 
-                                           const double &x, 
-                                           const double &y,
-                                           const double &s, 
-                                           const double &t,
-                                           const double &l, 
-                                           const double &v)
+Rcpp::NumericVector eagamma_intervals(const int &k,
+                                      const double &x,
+                                      const double &y,
+                                      const double &s,
+                                      const double &t,
+                                      const double &l,
+                                      const double &v)
 {
-  // function calculates (S_{2k+1}^{gamma}, S_{2k}^{gamma}) for a given k
-  
-  // if k==0, then we need to calculate (S_{1}^{gamma}, S_{0}^{gamma}) = (1-sigma(1), 1)
-  if (k == 0) {
-    return Rcpp::NumericVector::create(1-sigma(1.0,x,y,s,t,l,v), 1);
-  } 
-  
-  // calculating S_{2k}^{gamma} = 1 - sum_{j=1}^{k} sigma(j)-phi(j)
-  double S_2k = 1;
-  for (int j=1; j <= k; ++j) {
-    S_2k -= (sigma(j,x,y,s,t,l,v) - phi(j,x,y,s,t,l,v));
+  // check if x or y already outside bounds
+  if (std::min(x,y) < l) {
+    return Rcpp::NumericVector::create(0.0, 0.0);
+  } else if (std::max(x,y) > v) {
+    return Rcpp::NumericVector::create(0.0, 0.0);
   }
-  // calculating S_{2k+1}^{gamma} = S_{2k} - sigma(k+1)
-  double S_2k_plus_1 = S_2k - sigma(k+1,x,y,s,t,l,v);
-  
-  return Rcpp::NumericVector::create(S_2k_plus_1, S_2k);
+  if (k == 0) {
+    return Rcpp::NumericVector::create(1-easigma(1.0,x,y,s,t,l,v), 1);
+  } else {
+    double zeta = 0;
+    for (int j=1; j <= k; ++j) {
+      zeta += (easigma(j,x,y,s,t,l,v) - eaphi(j,x,y,s,t,l,v));
+    }
+    double S_2k = 1 - zeta;
+    double S_2k_plus_1 = S_2k - easigma(k+1,x,y,s,t,l,v);
+    return Rcpp::NumericVector::create(S_2k_plus_1, S_2k);
+  }
 }
 
-//' Calculate interval: [S^{delta,1}_{2k+1}, S^{delta,1}_{2k}]
+//' Calculate interval: [S^{delta,1}_{2k+1}, S^{delta,1}_{2k}] (Corollary 3 in ST329)
 //'
 //' This function calculates the interval [S^{delta,1}_{2k+1}, S^{delta, 1}_{2k}] (case where min(x,y) > min)
 //'
@@ -242,30 +355,27 @@ Rcpp::NumericVector calc_SgammaK_intervals(const int &k,
 //' @return vector of two values, S^{delta,1}_{2k+1} and S^{delta,1}_{2k}
 //'
 //' @examples
-//' calc_SdeltaK_1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
+//' eadelta1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector calc_SdeltaK_1_intervals(const int &k, 
-                                             const double &x,
-                                             const double &y,
-                                             const double &s, 
-                                             const double &t,
-                                             const double &min, 
-                                             const double &v)
+Rcpp::NumericVector eadelta1_intervals(const int &k,
+                                       const double &x,
+                                       const double &y,
+                                       const double &s,
+                                       const double &t,
+                                       const double &min,
+                                       const double &v)
 {
-  // function calculates (S_{2k+1}^{delta,1}, S_{2k}^{delta,1}) for a given k
-  // S_{k}^{delta,1} = S_{k}^{gamma}/denom
   double denom = 1 - exp(-2.0*(x-min)*(y-min)/(t-s));
-  // use calc_SgammaK_intervals and divide the result by denom
-  Rcpp::NumericVector SgammaK = calc_SgammaK_intervals(k,x,y,s,t,min,v);
-  
-  return Rcpp::NumericVector::create(SgammaK.at(0)/denom, SgammaK.at(1)/denom);
+  Rcpp::NumericVector eagamma = eagamma_intervals(k,x,y,s,t,min,v);
+  return Rcpp::NumericVector::create(eagamma.at(0)/denom, eagamma.at(1)/denom);
 }
 
-//' Calculate interval: [S^{delta,2}_{2k+1}, S^{delta,2}_{2k}]
+//' Calculate interval: [S^{delta,2}_{2k+1}, S^{delta,2}_{2k}] (Corollary 4 in ST329)
 //'
-//' This function calculates the interval [S^{delta,2}_{2k+1}, S^{delta, 2}_{2k}] (case where min(x,y) == min)
+//' This function calculates the interval [S^{delta,2}_{2k+1}, S^{delta, 2}_{2k}] 
+//' (case where min(x,y) == min)
 //'
 //' @param k integer value
 //' @param x start value of Brownian bridge
@@ -279,38 +389,38 @@ Rcpp::NumericVector calc_SdeltaK_1_intervals(const int &k,
 //'
 //' @examples
 //' K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
-//' calc_SdeltaK_2_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
+//' eadelta2_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k, 
-                                             const double &x,
-                                             const double &y,
-                                             const double &s, 
-                                             const double &t,
-                                             const double &min, 
-                                             const double &v)
+Rcpp::NumericVector eadelta2_intervals(const int &k,
+                                       const double &x,
+                                       const double &y,
+                                       const double &s,
+                                       const double &t,
+                                       const double &min,
+                                       const double &v)
 {
-  // function calculates (S_{2k+1}^{delta,2}, S_{2k}^{delta,2}) for a given k
-  // checking k is large enough for this to be valid
-  double K = sqrt((t-s)+(fabs(v-min)*fabs(v-min)))/(2*fabs(v-min));
+  double D = std::abs(v-min);
+  double K = sqrt(t-s + D*D) / (2*D);
   if (k < K) {
-    stop("layeredBB::calc_SdeltaK_2_intervals: given k is too small");
+    stop("layeredBB::eadelta2_intervals: given k is too small");
   }
-  
-  // calculating S_{2k+1}^{delta,2} = 1 - (psi(j)-chi(j)) / abs(x-y)
-  double S_2k = 1;
+  double sum = 0;
+  double xoy = std::max(x,y);
+  double denom = xoy - min;
   for (int j=1; j <= k; ++j) {
-    S_2k -= ((psi(j,x,y,s,t,min,v)-chi(j,x,y,s,t,min,v))/fabs(x-y));
+    sum += (eapsi(j,xoy,s,t,min,v) - eachi(j,xoy,s,t,min,v)) / denom;
   }
-  double S_2k_plus_1 = S_2k - (psi(k+1,x,y,s,t,min,v)/fabs(x-y));
-   
+  double S_2k = 1- sum;
+  double S_2k_plus_1 = S_2k - (eapsi(k+1,xoy,s,t,min,v) / denom);
   return Rcpp::NumericVector::create(S_2k_plus_1, S_2k);
 }
 
-//' Calculate interval: [S^{delta}_{2k+1}, S^{delta}_{2k}]
+//' Calculate interval: [S^{delta}_{2k+1}, S^{delta}_{2k}] (Algorithm 28 in ST329)
 //'
-//' This function calculates the interval [S^{delta}_{2k+1}, S^{delta}_{2k}] (case where min(x,y) > min or where min(x,y) == min)
+//' This function calculates the interval [S^{delta}_{2k+1}, S^{delta}_{2k}] 
+//' (case where min(x,y) > min or where min(x,y) == min)
 //'
 //' @param k integer value
 //' @param x start value of Brownian bridge
@@ -324,28 +434,30 @@ Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k,
 //'
 //' @examples
 //' # case where min(x,y ) > min
-//' calc_SdeltaK_1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
+//' eadelta1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
 //'
 //' # case where min(x,y) == min
 //' K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
-//' calc_SdeltaK_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
+//' eadelta_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector calc_SdeltaK_intervals(const int &k, 
-                                           const double &x, 
-                                           const double &y,
-                                           const double &s, 
-                                           const double &t,
-                                           const double &min, 
-                                           const double &v)
+Rcpp::NumericVector eadelta_intervals(const int &k,
+                                      const double &x,
+                                      const double &y,
+                                      const double &s,
+                                      const double &t,
+                                      const double &min,
+                                      const double &v)
 {
+  if (std::max(x,y) > v) {
+    return Rcpp::NumericVector::create(0.0, 0.0);
+  }
   if (std::min(x,y) > min) {
-    return calc_SdeltaK_1_intervals(k,x,y,s,t,min,v);
+    return eadelta1_intervals(k,x,y,s,t,min,v);
   } else if (std::min(x,y) == min) {
-    return calc_SdeltaK_2_intervals(k,x,y,s,t,min,v);
+    return eadelta2_intervals(k,x,y,s,t,min,v);
   } else {
-    stop("layeredBB::calc_SdeltaK_intervals: min(x,y) < min - given minimum point is not the minimum of the BB");
+    return Rcpp::NumericVector::create(0.0, 0.0);
   }
 }
-

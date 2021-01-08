@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{min_Bessel_bridge_sampler}
 \alias{min_Bessel_bridge_sampler}
-\title{Bessel Bridge point sampler given minimum}
+\title{Bessel Bridge point sampler given minimum (Algorithm 15 in ST329)}
 \usage{
 min_Bessel_bridge_sampler(x, y, s, t, min, tau, q)
 }
@@ -25,10 +25,17 @@ min_Bessel_bridge_sampler(x, y, s, t, min, tau, q)
 simulated point of the Bessel bridge at time q
 }
 \description{
-This function simulates a point of a Bessel bridge at time q, given minimum occurs at time tuu
+Simulation of a point of a Bessel bridge at time q, given minimum occurs at time tau
 }
 \examples{
-# simulating a point at q=0.2 for a Bessel bridge starting at 0 and ending at 0 in time [0,1] given minimum is at -0.4 at time 0.6
-min_Bessel_bridge_sampler(x = 0, y = 0, s = 0, t = 1, min = -0.4, tau = 0.6, q = 0.2)
+# simulating a point at q=0.2 for a Bessel bridge starting at 0 and ending 
+# at 0 in time [0,1] given minimum is at -0.4 at time 0.6
+min_Bessel_bridge_sampler(x = 0,
+                          y = 0,
+                          s = 0,
+                          t = 1,
+                          min = -0.4,
+                          tau = 0.6,
+                          q = 0.2)
 
 }

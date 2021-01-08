@@ -15,53 +15,41 @@ using namespace Rcpp;
 //' @param a vector/sequence of numbers
 //'
 //' @examples
-//' bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+//' bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, mult = 0.5)
 //' 
 //' @return 
 //' A list with the following items:
-//' \itemize{
-//'   \item{a}{vector of real values}
-//'   \item{l}{bessel layer}
+//' \describe{
+//'   \item{L}{Hard lower bound}
+//'   \item{l}{Soft lower bound}
+//'   \item{u}{Soft upper bound}
+//'   \item{U}{Hard upper bound}
 //' }
-//' where the Bessel layer is [min(x,y)-a[l], min(x,y)+a[l]]
-//' 
+//' where the Bessel layer is [L, U] and either the minimum occurs in [L, l] or
+//' the maximum occurs in [u, U] 
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::List bessel_layer_simulation(const double &x, 
+Rcpp::List bessel_layer_simulation(const double &x,
                                    const double &y,
                                    const double &s,
                                    const double &t,
-                                   Rcpp::NumericVector &a)
+                                   const double &mult = 1)
 {
-  // initialise Bessel layer
   int l = 1;
+  double xandy = std::min(x, y);
+  double xoy = std::max(x, y);
+  double layer_size = sqrt(t-s)*mult;
   while (true) {
-    // flip gamma coin to determine if BB stays within (min(x,y)-a[l], max(x,y)+a[l])
-    if (!(x==y && a.at(l)==0)) {
-      if (gamma_coin(x, y, s, t, std::min(x, y)-a.at(l), std::max(x, y)+a.at(l), 0)) {
-        // if true, then return current Bessel layer (l) and current vector (a) as a list
-        // we return (l+1), since indicies start from 0 in C++ but start from 1 in R
-        return List::create(_["a"] = a, _["l"] = l+1);
-      }
+    // flip gamma coin to determine if BB stays within the interval:
+    // [min(x,y) - layer_size*l, max(x,y) + layer_size*l]
+    if (gamma_coin(1, x, y, s, t, xandy - layer_size*l, xoy + layer_size*l)) {
+      return List::create(Named("L", xandy - layer_size*l),
+                          Named("l", xandy - layer_size*(l-1)),
+                          Named("u", xoy + layer_size*(l-1)),
+                          Named("U", xoy + layer_size*l));
     }
-    
-    // if false, l = l+1
     l += 1;
-    // need to check that we are not at the end of the sequence (a)
-    // in this case, we extend the sequence of (a), and try carry on to find a layer
-    if (l >= a.size()) {
-      // find the size of the vector (a) and set it to (size)
-      auto size = a.size();
-      // find the last element of the vector (a) and set it to (last)
-      // since indices start from 0 in C++, this is the (size-1)-th element
-      double last = a[(size-1)];
-      for (int i=0; i < size; ++i) {
-        a.push_back(a[i] + last);
-      }
-      // remove any duplicates
-      a.erase(std::unique(a.begin(), a.end()), a.end());
-    }
   }
 }
 
@@ -77,41 +65,46 @@ Rcpp::List bessel_layer_simulation(const double &x,
 //' @param a vector/sequence of numbers
 //'
 //' @examples
-//' # simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-//' multi_bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+//' # simulate layer information for two-dimensional Brownian bridge starting 
+//' # and ending at (0,0) in time [0,1]
+//' multi_bessel_layer_simulation(dim = 2,
+//'                               x = c(0, 0),
+//'                               y = c(0, 0),
+//'                               s = 0,
+//'                               t = 1,
+//'                               mult = 0.5)
 //' 
 //' @return 
-//' A list of length dim where list[i] is the Bessel layer for component i, which is represented in
-//' a list with the following items:
-//' \itemize{
-//'   \item a vector of real values
-//'   \item l bessel layer
+//' A list of length dim where list[i] is the Bessel layer for component i,
+//' which is represented in a list with the following items:
+//' \describe{
+//'   \item{L}{Hard lower bound}
+//'   \item{l}{Soft lower bound}
+//'   \item{u}{Soft upper bound}
+//'   \item{U}{Hard upper bound}
 //' }
-//' where the Bessel layer [min(x,y)-a[l], min(x,y)+a[l]]
+//' where the Bessel layer for compnent i is [L, U] and either the minimum 
+//' occurs in [L, l] or the maximum occurs in [u, U] 
 //' 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List multi_bessel_layer_simulation(const int &dim,
                                          const arma::vec &x,
-                                         const arma::vec &y, 
-                                         const double &s, 
+                                         const arma::vec &y,
+                                         const double &s,
                                          const double &t,
-                                         Rcpp::NumericVector &a) {
+                                         const double &mult = 1)
+{
   // check that x and y match the dimensions of dim
   if (x.size() != dim) {
     stop("layeredBB::multi_bessel_layer_simulation: size of x is not equal to dim");
   } else if (y.size() != dim) {
     stop("layeredBB::multi_bessel_layer_simulation: size of y is not equal to dim");
   }
-  
   // for each component, we simulate a Bessel layer and store as value in list
   Rcpp::List layers(dim);
   for (int i=0; i < dim; ++i) {
-    layers.at(i) = bessel_layer_simulation(x.at(i), y.at(i), s, t, a);
+    layers.at(i) = bessel_layer_simulation(x.at(i), y.at(i), s, t, mult);
   }
-  
   return(layers);
 }
-  
-  
-  

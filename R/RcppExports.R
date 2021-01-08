@@ -12,20 +12,22 @@
 #' @param a vector/sequence of numbers
 #'
 #' @examples
-#' bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+#' bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, mult = 0.5)
 #' 
 #' @return 
 #' A list with the following items:
-#' \itemize{
-#'   \item{a}{vector of real values}
-#'   \item{l}{bessel layer}
+#' \describe{
+#'   \item{L}{Hard lower bound}
+#'   \item{l}{Soft lower bound}
+#'   \item{u}{Soft upper bound}
+#'   \item{U}{Hard upper bound}
 #' }
-#' where the Bessel layer is [min(x,y)-a[l], min(x,y)+a[l]]
-#' 
+#' where the Bessel layer is [L, U] and either the minimum occurs in [L, l] or
+#' the maximum occurs in [u, U] 
 #'
 #' @export
-bessel_layer_simulation <- function(x, y, s, t, a) {
-    .Call(`_layeredBB_bessel_layer_simulation`, x, y, s, t, a)
+bessel_layer_simulation <- function(x, y, s, t, mult = 1) {
+    .Call(`_layeredBB_bessel_layer_simulation`, x, y, s, t, mult)
 }
 
 #' Multiple Bessel Layer simulation
@@ -40,26 +42,35 @@ bessel_layer_simulation <- function(x, y, s, t, a) {
 #' @param a vector/sequence of numbers
 #'
 #' @examples
-#' # simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-#' multi_bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+#' # simulate layer information for two-dimensional Brownian bridge starting 
+#' # and ending at (0,0) in time [0,1]
+#' multi_bessel_layer_simulation(dim = 2,
+#'                               x = c(0, 0),
+#'                               y = c(0, 0),
+#'                               s = 0,
+#'                               t = 1,
+#'                               mult = 0.5)
 #' 
 #' @return 
-#' A list of length dim where list[i] is the Bessel layer for component i, which is represented in
-#' a list with the following items:
-#' \itemize{
-#'   \item a vector of real values
-#'   \item l bessel layer
+#' A list of length dim where list[i] is the Bessel layer for component i,
+#' which is represented in a list with the following items:
+#' \describe{
+#'   \item{L}{Hard lower bound}
+#'   \item{l}{Soft lower bound}
+#'   \item{u}{Soft upper bound}
+#'   \item{U}{Hard upper bound}
 #' }
-#' where the Bessel layer [min(x,y)-a[l], min(x,y)+a[l]]
+#' where the Bessel layer for compnent i is [L, U] and either the minimum 
+#' occurs in [L, l] or the maximum occurs in [u, U] 
 #' 
 #' @export
-multi_bessel_layer_simulation <- function(dim, x, y, s, t, a) {
-    .Call(`_layeredBB_multi_bessel_layer_simulation`, dim, x, y, s, t, a)
+multi_bessel_layer_simulation <- function(dim, x, y, s, t, mult = 1) {
+    .Call(`_layeredBB_multi_bessel_layer_simulation`, dim, x, y, s, t, mult)
 }
 
-#' Brownian Bridge path sampler
+#' Brownian Bridge path sampler (Algorithm 13 in ST329)
 #'
-#' This function simulates a path of a Brownian bridge at given times
+#' Simulation of a path of a Brownian bridge at given times
 #'
 #' @param x start value of Brownian bridge
 #' @param y end value of Brownian bridge
@@ -67,11 +78,16 @@ multi_bessel_layer_simulation <- function(dim, x, y, s, t, a) {
 #' @param t end value of Brownian bridge
 #' @param times vector of real numbers to simulate Brownian bridge
 #'
-#' @return matrix of the simulated Brownian bridge path, first row is points X, second row are corresponding times
+#' @return matrix of the simulated Brownian bridge path, first row is points X, 
+#'         second row are corresponding times
 #'
 #' @example 
 #' # simulate a Brownian bridge path starting at 0 and ending at 0 in time [0,1]
-#' Brownian_bridge_path_sampler(0, 0, 0, 1, seq(0, 1, 0.01))
+#' Brownian_bridge_path_sampler(x = 0,
+#'                              y = 0,
+#'                              s = 0,
+#'                              t = 1,
+#'                              times = seq(0, 1, 0.01))
 #' 
 #' @export
 Brownian_bridge_path_sampler <- function(x, y, s, t, times) {
@@ -80,7 +96,7 @@ Brownian_bridge_path_sampler <- function(x, y, s, t, times) {
 
 #' Multi-dimensional Brownian Bridge path sampler
 #'
-#' This function simulates a multi-dimensional Brownian Bridge, at given times
+#' Simulation of a multi-dimensional Brownian Bridge, at given times
 #'
 #' @param dim dimension of Brownian bridge
 #' @param x start value of Brownian bridge
@@ -89,21 +105,28 @@ Brownian_bridge_path_sampler <- function(x, y, s, t, times) {
 #' @param t end value of Brownian bridge
 #' @param times vector of real numbers to simulate Brownian bridge
 #' 
-#' @return matrix of the simulated layered Brownian bridge path, first dim rows are points for X in each component, 
+#' @return matrix of the simulated layered Brownian bridge path, 
+#'         first dim rows are points for X in each component, 
 #'         last row are corresponding times
 #'
 #' @examples
-#' # simulate two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-#' multi_brownian_bridge(dim = 2, x = c(0,0), y = c(0,0), s = 0, t = 1, times = seq(0.2, 0.8, 0.2))
+#' # simulate two-dimensional Brownian bridge starting and ending 
+#' # at (0,0) in time [0,1]
+#' multi_brownian_bridge(dim = 2,
+#'                       x = c(0,0),
+#'                       y = c(0,0),
+#'                       s = 0,
+#'                       t = 1,
+#'                       times = seq(0.2, 0.8, 0.2))
 #'
 #' @export
 multi_brownian_bridge <- function(dim, x, y, s, t, times) {
     .Call(`_layeredBB_multi_brownian_bridge`, dim, x, y, s, t, times)
 }
 
-#' Brownian Bridge minimum point sampler
+#' Brownian Bridge minimum point sampler (Algorithm 14 in ST329)
 #'
-#' This function simulates a minimum point of a Brownian bridge
+#' Simulation of a minimum point of a Brownian bridge
 #'
 #' @param x start value of Brownian bridge
 #' @param y end value of Brownian bridge
@@ -115,7 +138,8 @@ multi_brownian_bridge <- function(dim, x, y, s, t, times) {
 #' @return vector: the simulated minimum, 'min', and time where minimum occurs, 'tau'
 #'
 #' @examples
-#' # simulate a minimum between 0 and 1 of a Brownian bridge starting at 0 and ending at 0 in time [0,1]
+#' # simulate a minimum between 0 and 1 of a Brownian bridge starting 
+#' # at 0 and ending at 0 in time [0,1]
 #' min_sampler(x=0, y=0, s=0, t=1, low_bound = -1, up_bound = 0)
 #'
 #' @export
@@ -123,9 +147,9 @@ min_sampler <- function(x, y, s, t, low_bound, up_bound) {
     .Call(`_layeredBB_min_sampler`, x, y, s, t, low_bound, up_bound)
 }
 
-#' Bessel Bridge point sampler given minimum
+#' Bessel Bridge point sampler given minimum (Algorithm 15 in ST329)
 #'
-#' This function simulates a point of a Bessel bridge at time q, given minimum occurs at time tuu
+#' Simulation of a point of a Bessel bridge at time q, given minimum occurs at time tau
 #'
 #' @param x start value of Bessel bridge
 #' @param y end value of Bessel bridge
@@ -138,8 +162,15 @@ min_sampler <- function(x, y, s, t, low_bound, up_bound) {
 #' @return simulated point of the Bessel bridge at time q
 #'
 #' @examples
-#' # simulating a point at q=0.2 for a Bessel bridge starting at 0 and ending at 0 in time [0,1] given minimum is at -0.4 at time 0.6
-#' min_Bessel_bridge_sampler(x = 0, y = 0, s = 0, t = 1, min = -0.4, tau = 0.6, q = 0.2)
+#' # simulating a point at q=0.2 for a Bessel bridge starting at 0 and ending 
+#' # at 0 in time [0,1] given minimum is at -0.4 at time 0.6
+#' min_Bessel_bridge_sampler(x = 0,
+#'                           y = 0,
+#'                           s = 0,
+#'                           t = 1,
+#'                           min = -0.4,
+#'                           tau = 0.6,
+#'                           q = 0.2)
 #'
 #' @export
 min_Bessel_bridge_sampler <- function(x, y, s, t, min, tau, q) {
@@ -148,7 +179,7 @@ min_Bessel_bridge_sampler <- function(x, y, s, t, min, tau, q) {
 
 #' Bessel Bridge path sampler given minimum
 #'
-#' This function simulates a path of a Bessel bridge at given times, given minimum occurs at time tau
+#' Simulation of a path of a Bessel bridge at given times, given minimum occurs at time tau
 #'
 #' @param x start value of Bessel bridge
 #' @param y end value of Bessel bridge
@@ -157,22 +188,29 @@ min_Bessel_bridge_sampler <- function(x, y, s, t, min, tau, q) {
 #' @param min minumum point
 #' @param tau time of minimum point
 #' @param times vector of real numbers to simulate Bessel bridge
-#' @param keep_min if TRUE (default), the minimum point is returned in the sample path
 #'
-#' @return matrix of the simulated Bessel bridge path, first row is points X, second row are corresponding times
+#' @return matrix of the simulated Bessel bridge path, first row is points X,
+#'         second row are corresponding times
 #'
 #' @examples
-#' # simulating a path at times=c(0.2, 0.4, 0.8) for a Bessel bridge starting at 0 and ending at 0 in time [0,1] given minimum is at -0.4 at time 0.6
-#' min_Bessel_bridge_path_sampler(x = 0, y = 0, s = 0, t = 1, min = -0.4, tau = 0.6, times = c(0.2, 0.4, 0.8))
+#' # simulating a path at times=c(0.2, 0.4, 0.8) for a Bessel bridge starting 
+#' # at 0 and ending at 0 in time [0,1] given minimum is at -0.4 at time 0.6
+#' min_Bessel_bridge_path_sampler(x = 0,
+#'                                y = 0,
+#'                                s = 0,
+#'                                t = 1,
+#'                                min = -0.4,
+#'                                tau = 0.6,
+#'                                times = c(0.2, 0.4, 0.8))
 #'
 #' @export
-min_Bessel_bridge_path_sampler <- function(x, y, s, t, min, tau, times, keep_min = TRUE) {
-    .Call(`_layeredBB_min_Bessel_bridge_path_sampler`, x, y, s, t, min, tau, times, keep_min)
+min_Bessel_bridge_path_sampler <- function(x, y, s, t, min, tau, times) {
+    .Call(`_layeredBB_min_Bessel_bridge_path_sampler`, x, y, s, t, min, tau, times)
 }
 
 #' Brownian Bridge maximum point sampler
 #'
-#' This function simulates a maximum point of a Brownian bridge
+#' Simulation of a maximum point of a Brownian bridge
 #'
 #' @param x start value of Brownian bridge
 #' @param y end value of Brownian bridge
@@ -184,7 +222,8 @@ min_Bessel_bridge_path_sampler <- function(x, y, s, t, min, tau, times, keep_min
 #' @return vector: the simulated maximum, 'max', and time where maximum occurs, 'tau'
 #'
 #' @examples
-#' # simulate a maximum between 0 and 1 of a Brownian bridge starting at 0 and ending at 0 in time [0,1]
+#' # simulate a maximum between 0 and 1 of a Brownian bridge starting at 
+#' # 0 and ending at 0 in time [0,1]
 #' max_sampler(x=0, y=0, s=0, t=1, low_bound = 0, up_bound = 1)
 #'
 #' @export
@@ -194,7 +233,7 @@ max_sampler <- function(x, y, s, t, low_bound, up_bound) {
 
 #' Bessel Bridge point sampler given maximum
 #'
-#' This function simulates a point of a Bessel bridge at time q, given maximum occurs at time tuu
+#' Simulation of a point of a Bessel bridge at time q, given maximum occurs at time tuu
 #'
 #' @param x start value of Bessel bridge
 #' @param y end value of Bessel bridge
@@ -207,7 +246,8 @@ max_sampler <- function(x, y, s, t, low_bound, up_bound) {
 #' @return simulated point of the Bessel bridge at time q
 #'
 #' @examples
-#' # simulating a point at q=0.2 for a Bessel bridge starting at 0 and ending at 0 in time [0,1] given maximum is at 0.4 at time 0.6
+#' # simulating a point at q=0.2 for a Bessel bridge starting at 0 and ending 
+#' # at 0 in time [0,1] given maximum is at 0.4 at time 0.6
 #' max_Bessel_bridge_sampler(x = 0, y = 0, s = 0, t = 1, max = 0.4, tau = 0.6, q = 0.2)
 #'
 #' @export
@@ -217,7 +257,7 @@ max_Bessel_bridge_sampler <- function(x, y, s, t, max, tau, q) {
 
 #' Bessel Bridge path sampler given maximum
 #'
-#' This function simulates a path of a Bessel bridge at given times, given maximum occurs at time tuu
+#' Simulation of a path of a Bessel bridge at given times, given maximum occurs at time tuu
 #'
 #' @param x start value of Bessel bridge
 #' @param y end value of Bessel bridge
@@ -226,20 +266,27 @@ max_Bessel_bridge_sampler <- function(x, y, s, t, max, tau, q) {
 #' @param max maxumum point 
 #' @param tau time of maximum point
 #' @param times vector of real numbers to simulate Bessel bridge
-#' @param keep_max if TRUE (default), the maximum point is returned in the sample path
 #' 
-#' @return matrix of the simulated Bessel bridge path, first row is points X, second row are corresponding times
+#' @return matrix of the simulated Bessel bridge path, first row is points X, 
+#'         second row are corresponding times
 #'
 #' @examples
-#' # simulating a path at times=c(0.2, 0.4, 0.8) for a Bessel bridge starting at 0 and ending at 0 in time [0,1] given maximum is at 0.4 at time 0.6
-#' max_Bessel_bridge_path_sampler(x = 0, y = 0, s = 0, t = 1, max = 0.4, tau = 0.6, times = c(0.2, 0.4, 0.8))
+#' # simulating a path at times=c(0.2, 0.4, 0.8) for a Bessel bridge starting 
+#' # at 0 and ending at 0 in time [0,1] given maximum is at 0.4 at time 0.6
+#' max_Bessel_bridge_path_sampler(x = 0,
+#'                                y = 0,
+#'                                s = 0,
+#'                                t = 1,
+#'                                max = 0.4,
+#'                                tau = 0.6,
+#'                                times = c(0.2, 0.4, 0.8))
 #'
 #' @export
-max_Bessel_bridge_path_sampler <- function(x, y, s, t, max, tau, times, keep_max = TRUE) {
-    .Call(`_layeredBB_max_Bessel_bridge_path_sampler`, x, y, s, t, max, tau, times, keep_max)
+max_Bessel_bridge_path_sampler <- function(x, y, s, t, max, tau, times) {
+    .Call(`_layeredBB_max_Bessel_bridge_path_sampler`, x, y, s, t, max, tau, times)
 }
 
-#' Sigma_Bar
+#' Sigma_Bar (Equation 141 in ST329)
 #'
 #' This function evaluates the sigma_bar function used to simulate Bessel Layers in the infinite sums
 #'
@@ -251,17 +298,17 @@ max_Bessel_bridge_path_sampler <- function(x, y, s, t, max, tau, times, keep_max
 #' @param l lower bound of Brownian bridge
 #' @param v upper bound of Brownian bridge
 #' 
-#' @return real value: sigma_bar evaluated at point j
+#' @return real value: easigma_bar evaluated at point j
 #'
 #' @examples
-#' sigma_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
+#' easigma_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
 #'
 #' @export
-sigma_bar <- function(j, x, y, s, t, l, v) {
-    .Call(`_layeredBB_sigma_bar`, j, x, y, s, t, l, v)
+easigma_bar <- function(j, x, y, s, t, l, v) {
+    .Call(`_layeredBB_easigma_bar`, j, x, y, s, t, l, v)
 }
 
-#' Sigma
+#' Sigma (Equation 140 in ST329)
 #'
 #' This function evaluates the sigma function used to simulate Bessel Layers in the infinite sums
 #'
@@ -276,14 +323,14 @@ sigma_bar <- function(j, x, y, s, t, l, v) {
 #' @return real value: sigma evaluated at point j
 #'
 #' @examples
-#' sigma(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
+#' easigma(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
 #'
 #' @export
-sigma <- function(j, x, y, s, t, l, v) {
-    .Call(`_layeredBB_sigma`, j, x, y, s, t, l, v)
+easigma <- function(j, x, y, s, t, l, v) {
+    .Call(`_layeredBB_easigma`, j, x, y, s, t, l, v)
 }
 
-#' Phi_Bar
+#' Phi_Bar (Equation 142 in ST329)
 #'
 #' This function evaluates the phi_bar function used to simulate Bessel Layers in the infinite sums
 #'
@@ -298,16 +345,16 @@ sigma <- function(j, x, y, s, t, l, v) {
 #' @return real value: phi_bar evaluated at point j
 #'
 #' @examples
-#' phi_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
+#' eaphi_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
 #'
 #' @export
-phi_bar <- function(j, x, y, s, t, l, v) {
-    .Call(`_layeredBB_phi_bar`, j, x, y, s, t, l, v)
+eaphi_bar <- function(j, x, y, s, t, l, v) {
+    .Call(`_layeredBB_eaphi_bar`, j, x, y, s, t, l, v)
 }
 
-#' Phi
+#' Phi (Equation 140 in ST329)
 #'
-#' This function evaluates the phi function used to simulate Bessel Layers in the infinite sums
+#' This function evaluates the eaphi function used to simulate Bessel Layers in the infinite sums
 #'
 #' @param j real value
 #' @param x start value of Brownian bridge
@@ -317,45 +364,43 @@ phi_bar <- function(j, x, y, s, t, l, v) {
 #' @param l lower bound of Brownian bridge
 #' @param v upper bound of Brownian bridge
 #' 
-#' @return real value: phi evaluated at point j
+#' @return real value: eaphi evaluated at point j
 #'
 #' @examples
-#' phi(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
+#' eaphi(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
 #' 
 #' @export
-phi <- function(j, x, y, s, t, l, v) {
-    .Call(`_layeredBB_phi`, j, x, y, s, t, l, v)
+eaphi <- function(j, x, y, s, t, l, v) {
+    .Call(`_layeredBB_eaphi`, j, x, y, s, t, l, v)
 }
 
-#' Psi
+#' Psi (Equation 155 and 162 in ST329)
 #'
-#' This function evaluates the psi function used to simulate Bessel Layers in the infinite sums
+#' This function evaluates the eapsi function used to simulate Bessel Layers in the infinite sums
 #'
 #' @param j real value
-#' @param x start value of Brownian bridge
-#' @param y end value of Brownian bridge
+#' @param xoy maximum of x and y where x and y are the start and end values of Brownian bridge
 #' @param s start value of Brownian bridge
 #' @param t end value of Brownian bridge
 #' @param min minimum of Brownian bridge
 #' @param v upper bound of Brownian bridge
 #' 
-#' @return real value: psi evaluated at point j
+#' @return real value: eapsi evaluated at point j
 #'
 #' @examples
-#' psi(j = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
+#' eapsi(j = 1, xoy = 0, s = 0, t = 1, min = -2, v = 1)
 #' 
 #' @export
-psi <- function(j, x, y, s, t, min, v) {
-    .Call(`_layeredBB_psi`, j, x, y, s, t, min, v)
+eapsi <- function(j, xoy, s, t, min, v) {
+    .Call(`_layeredBB_eapsi`, j, xoy, s, t, min, v)
 }
 
-#' Chi
+#' Chi (Equation 156 and 163 in ST329)
 #'
-#' This function evaluates the psi function used to simulate Bessel Layers in the infinite sums
+#' This function evaluates the chi function used to simulate Bessel Layers in the infinite sums
 #'
 #' @param j real value
-#' @param x start value of Brownian bridge
-#' @param y end value of Brownian bridge
+#' @param xoy maximum of x and y where x and y are the start and end values of Brownian bridge
 #' @param s start value of Brownian bridge
 #' @param t end value of Brownian bridge
 #' @param min minimum of Brownian bridge
@@ -364,14 +409,30 @@ psi <- function(j, x, y, s, t, min, v) {
 #' @return real value: chi evaluated at point j
 #'
 #' @examples
-#' chi(j = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
+#' eachi(j = 1, xoy = 0, s = 0, t = 1, min = -2, v = 1)
 #'
 #' @export
-chi <- function(j, x, y, s, t, min, v) {
-    .Call(`_layeredBB_chi`, j, x, y, s, t, min, v)
+eachi <- function(j, xoy, s, t, min, v) {
+    .Call(`_layeredBB_eachi`, j, xoy, s, t, min, v)
 }
 
-#' Calculate interval: [S^{gamma}_{2k+1}, S^{gamma}_{2k}]
+eagamma <- function(n, x, y, s, t, l, v) {
+    .Call(`_layeredBB_eagamma`, n, x, y, s, t, l, v)
+}
+
+eadelta1 <- function(n, x, y, s, t, min, v) {
+    .Call(`_layeredBB_eadelta1`, n, x, y, s, t, min, v)
+}
+
+eadelta2 <- function(n, x, y, s, t, min, v) {
+    .Call(`_layeredBB_eadelta2`, n, x, y, s, t, min, v)
+}
+
+eadelta <- function(n, x, y, s, t, min, v) {
+    .Call(`_layeredBB_eadelta`, n, x, y, s, t, min, v)
+}
+
+#' Calculate interval: [S^{gamma}_{2k+1}, S^{gamma}_{2k}] (Corollary 2 and Algorithm 26 in ST329)
 #'
 #' This function calculates the interval [S^{gamma}_{2k+1}, S^{gamma}_{2k}] for given k
 #'
@@ -386,14 +447,14 @@ chi <- function(j, x, y, s, t, min, v) {
 #' @return vector of two values, S^{gamma}_{2k+1} and S^{gamma}_{2k}
 #'
 #' @examples
-#' calc_SgammaK_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
+#' eagamma_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
 #'
 #' @export
-calc_SgammaK_intervals <- function(k, x, y, s, t, l, v) {
-    .Call(`_layeredBB_calc_SgammaK_intervals`, k, x, y, s, t, l, v)
+eagamma_intervals <- function(k, x, y, s, t, l, v) {
+    .Call(`_layeredBB_eagamma_intervals`, k, x, y, s, t, l, v)
 }
 
-#' Calculate interval: [S^{delta,1}_{2k+1}, S^{delta,1}_{2k}]
+#' Calculate interval: [S^{delta,1}_{2k+1}, S^{delta,1}_{2k}] (Corollary 3 in ST329)
 #'
 #' This function calculates the interval [S^{delta,1}_{2k+1}, S^{delta, 1}_{2k}] (case where min(x,y) > min)
 #'
@@ -408,16 +469,17 @@ calc_SgammaK_intervals <- function(k, x, y, s, t, l, v) {
 #' @return vector of two values, S^{delta,1}_{2k+1} and S^{delta,1}_{2k}
 #'
 #' @examples
-#' calc_SdeltaK_1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
+#' eadelta1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
 #'
 #' @export
-calc_SdeltaK_1_intervals <- function(k, x, y, s, t, min, v) {
-    .Call(`_layeredBB_calc_SdeltaK_1_intervals`, k, x, y, s, t, min, v)
+eadelta1_intervals <- function(k, x, y, s, t, min, v) {
+    .Call(`_layeredBB_eadelta1_intervals`, k, x, y, s, t, min, v)
 }
 
-#' Calculate interval: [S^{delta,2}_{2k+1}, S^{delta,2}_{2k}]
+#' Calculate interval: [S^{delta,2}_{2k+1}, S^{delta,2}_{2k}] (Corollary 4 in ST329)
 #'
-#' This function calculates the interval [S^{delta,2}_{2k+1}, S^{delta, 2}_{2k}] (case where min(x,y) == min)
+#' This function calculates the interval [S^{delta,2}_{2k+1}, S^{delta, 2}_{2k}] 
+#' (case where min(x,y) == min)
 #'
 #' @param k integer value
 #' @param x start value of Brownian bridge
@@ -431,16 +493,17 @@ calc_SdeltaK_1_intervals <- function(k, x, y, s, t, min, v) {
 #'
 #' @examples
 #' K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
-#' calc_SdeltaK_2_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
+#' eadelta2_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
 #'
 #' @export
-calc_SdeltaK_2_intervals <- function(k, x, y, s, t, min, v) {
-    .Call(`_layeredBB_calc_SdeltaK_2_intervals`, k, x, y, s, t, min, v)
+eadelta2_intervals <- function(k, x, y, s, t, min, v) {
+    .Call(`_layeredBB_eadelta2_intervals`, k, x, y, s, t, min, v)
 }
 
-#' Calculate interval: [S^{delta}_{2k+1}, S^{delta}_{2k}]
+#' Calculate interval: [S^{delta}_{2k+1}, S^{delta}_{2k}] (Algorithm 28 in ST329)
 #'
-#' This function calculates the interval [S^{delta}_{2k+1}, S^{delta}_{2k}] (case where min(x,y) > min or where min(x,y) == min)
+#' This function calculates the interval [S^{delta}_{2k+1}, S^{delta}_{2k}] 
+#' (case where min(x,y) > min or where min(x,y) == min)
 #'
 #' @param k integer value
 #' @param x start value of Brownian bridge
@@ -454,15 +517,15 @@ calc_SdeltaK_2_intervals <- function(k, x, y, s, t, min, v) {
 #'
 #' @examples
 #' # case where min(x,y ) > min
-#' calc_SdeltaK_1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
+#' eadelta1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
 #'
 #' # case where min(x,y) == min
 #' K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
-#' calc_SdeltaK_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
+#' eadelta_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
 #'
 #' @export
-calc_SdeltaK_intervals <- function(k, x, y, s, t, min, v) {
-    .Call(`_layeredBB_calc_SdeltaK_intervals`, k, x, y, s, t, min, v)
+eadelta_intervals <- function(k, x, y, s, t, min, v) {
+    .Call(`_layeredBB_eadelta_intervals`, k, x, y, s, t, min, v)
 }
 
 #' Find product of a vector
@@ -482,123 +545,95 @@ product_vector_elements <- function(vect) {
     .Call(`_layeredBB_product_vector_elements`, vect)
 }
 
-#' Gamma coin flipper
+#' Gamma coin flipper (Algorithm 26 in ST329)
 #'
 #' Flips 'Gamma coin'; uses the Cauchy sequence S^{gamma}_{k} to 
 #' determine whether or not the Brownian bridge starting at x, ending at y, between [s,t]
 #' remains in interval [l,v]
 #'
+#' @param k integer value starting index for calculating the intervals
 #' @param x start value of Brownian bridge
 #' @param y end value of Brownian bridge
 #' @param s start value of Brownian bridge
 #' @param t end value of Brownian bridge
 #' @param l lower bound of Brownian bridge
 #' @param v upper bound of Brownian bridge
-#' @param k integer value
 #'
 #' @examples
-#' gamma_coin(x = 0, y = 0, s = 0, t = 1, l = -0.5, v = 0.5, k = 1)
+#' gamma_coin(k = 0, x = 0, y = 0, s = 0, t = 1, l = -0.5, v = 0.5)
 #'
-#' @return boolean value: if T, accept probability that Brownian bridge remains in [l,v], otherwise reject
-#'
-#' @export
-gamma_coin <- function(x, y, s, t, l, v, k) {
-    .Call(`_layeredBB_gamma_coin`, x, y, s, t, l, v, k)
-}
-
-#' Gamma coin flipper for intervals
-#'
-#' Flips 'Gamma coin' for intervals; takes the product of the Cauchy sequence S^{gamma}_{k} to 
-#' determine whether or not the Brownian bridge remains in the interval [l,v]
-#' Vectors x, y, s, t should all be the same length, L, where for i = 1, ..., L, the Brownian Bridge skeleton 
-#' we have is broken up so that x[i] goes to y[i] between s[i] and t[i] - see example
-#'
-#' @param x vector of values
-#' @param y vector of values
-#' @param s vector of values
-#' @param t vector of values
-#' @param l lower bound of Brownian bridge
-#' @param v upper bound of Brownian bridge
-#' @param k integer value
-#'
-#' @examples
-#' # setting up vectors
-#' x_vect <- c(); y_vect <- c(); s_vect <- c(); t_vect <- c()
-#' brownian_bridge <- matrix(c(0, 0, -0.2, 0.4, 1, 1), ncol = 3, nrow = 2)
-#' for (i in 1:(ncol(brownian_bridge)-1)) {
-#'   x_vect[i] <- brownian_bridge[1,i]
-#'   y_vect[i] <- brownian_bridge[1,(i+1)]
-#'   s_vect[i] <- brownian_bridge[2,i]
-#'   t_vect[i] <- brownian_bridge[2,(i+1)]
-#' }
-#' 
-#' # flip gamma coin whether or not Brownian bridge remains in [-0.5, 1.5]
-#' gamma_coin_intervals(x = x_vect, y = y_vect, s = s_vect, t = t_vect, l = -0.5, v = 1.5, k = 1)
-#'
-#' @return boolean value: if T, accept probability that Brownian bridge remains in [l,v], otherwise reject
+#' @return boolean value: if T, accept probability that Brownian bridge remains 
+#'         in [l,v], otherwise reject
 #'
 #' @export
-gamma_coin_intervals <- function(x, y, s, t, l, v, k) {
-    .Call(`_layeredBB_gamma_coin_intervals`, x, y, s, t, l, v, k)
+gamma_coin <- function(k, x, y, s, t, l, v) {
+    .Call(`_layeredBB_gamma_coin`, k, x, y, s, t, l, v)
 }
 
-#' Delta coin flipper
+#' Delta coin flipper (Algorithm 28 in ST329)
 #'
 #' Flips 'Delta coin'; uses the Cauchy sequence S^{delta}_{k} to 
 #' determine whether or not the Brownian bridge with minimum, min, 
 #' starting at x, ending at y, between [s,t] remains in interval [l,v]
 #'
+#' @param k integer value starting index for calculating the intervals
 #' @param x start value of Brownian bridge
 #' @param y end value of Brownian bridge
 #' @param s start value of Brownian bridge
 #' @param t end value of Brownian bridge
 #' @param min minimum of Brownian bridge
 #' @param v upper bound of Brownian bridge
-#' @param k integer value
 #'
-#' @examples
-#'
-#' @return boolean value: if T, accept probability that Brownian bridge with minimum, min, remains in [l,v], otherwise reject
+#' @examples 
+#' delta_coin_intervals(k = 0,
+#'                      x = 0.1,
+#'                      y = 0.4,
+#'                      s = 0,
+#'                      t = 1,
+#'                      min = -0.2,
+#'                      v = 1.5)
+#'                      
+#' @return boolean value: if T, accept probability that Brownian bridge with 
+#'         minimum, min, remains in [l,v], otherwise reject
 #'
 #' @export
-delta_coin <- function(x, y, s, t, min, v, k) {
-    .Call(`_layeredBB_delta_coin`, x, y, s, t, min, v, k)
+delta_coin <- function(k, x, y, s, t, min, v) {
+    .Call(`_layeredBB_delta_coin`, k, x, y, s, t, min, v)
 }
 
-#' Delta coin flipper for intervals
+#' Delta coin flipper for intervals (used for Algorithm 33 in ST329)
 #'
 #' Flips 'Delta coin' for intervals; takes the product of the Cauchy sequence S^{delta}_{k} to 
 #' determine whether or not the Brownian bridge with minimum, min, remains in the interval [l,v]
 #' Vectors x, y, s, t should all be the same length, L, where for i = 1, ..., L, the Brownian Bridge skeleton 
 #' we have is broken up so that x[i] goes to y[i] between s[i] and t[i] - see example
 #'
-#' @param x vector of values
-#' @param y vector of values
-#' @param s vector of values
-#' @param t vector of values
+#' @param k integer value starting index for calculating the intervals
+#' @param X vector of values of Brownian bridge
+#' @param times vector of times
 #' @param min minimum of Brownian bridge
 #' @param v upper bound of Brownian bridge
-#' @param k integer value
 #'
 #' @examples
-#' # setting up vectors
-#' x_vect <- c(); y_vect <- c(); s_vect <- c(); t_vect <- c()
-#' brownian_bridge <- matrix(c(0, 0, -0.2, 0.4, 1, 1), ncol = 3, nrow = 2)
-#' for (i in 1:(ncol(brownian_bridge)-1)) {
-#'   x_vect[i] <- brownian_bridge[1,i]
-#'   y_vect[i] <- brownian_bridge[1,(i+1)]
-#'   s_vect[i] <- brownian_bridge[2,i]
-#'   t_vect[i] <- brownian_bridge[2,(i+1)]
-#' }
+#' # setting up Brownian bridge variable
+#' brownian_bridge <- matrix(c(0, 0, -0.2, 0.4, 0.3, 0.5, 1, 1),
+#'                           ncol = 4, nrow = 2)
 #' 
 #' # flip delta coin whether or not Brownian bridge remains in [-0.2, 1.5]
-#' delta_coin_intervals(x = x_vect, y = y_vect, s = s_vect, t = t_vect, min = -0.2, v = 1.5, k = 1)
+#' d <- abs(1.5 - -0.2)
+#' k <- ceiling(sqrt(1 + d^2)/(2*d))
+#' delta_coin_intervals(k = k,
+#'                      X = brownian_bridge[1,],
+#'                      times = brownian_bridge[2,],
+#'                      min = -0.2,
+#'                      v = 1.5)
 #'
-#' @return boolean value: if T, accept probability that Brownian bridge with minimum, min, remains in [l,v], otherwise reject
+#' @return boolean value: if T, accept probability that Brownian bridge with 
+#'         minimum, min, remains in [min,v], otherwise reject
 #'
 #' @export
-delta_coin_intervals <- function(x, y, s, t, min, v, k) {
-    .Call(`_layeredBB_delta_coin_intervals`, x, y, s, t, min, v, k)
+delta_coin_intervals <- function(k, X, times, min, v) {
+    .Call(`_layeredBB_delta_coin_intervals`, k, X, times, min, v)
 }
 
 #' Inverse Gaussian Sampler
@@ -654,54 +689,91 @@ find_min <- function(vect) {
     .Call(`_layeredBB_find_min`, vect)
 }
 
-#' Layered Brownian Bridge sampler
+#' Layered Brownian Bridge sampler (Algorithm 33 in ST329)
 #'
-#' This function simulates a layered Brownian Bridge given a Bessel layer, at given times
+#' Simulation of a layered Brownian Bridge given a Bessel layer at user specified times
 #'
 #' @param x start value of Brownian bridge
 #' @param y end value of Brownian bridge
 #' @param s start value of Brownian bridge
 #' @param t end value of Brownian bridge
 #' @param a vector/sequence of numbers
-#' @param l integer number denoting Bessel layer, i.e. Brownian bridge is contained in [min(x,y)-a[l], max(x,y)+a[l]]
+#' @param l integer number denoting Bessel layer, i.e. Brownian bridge 
+#'        is contained in [min(x,y)-a[l], max(x,y)+a[l]]
 #' @param times vector of real numbers to simulate Bessel bridge
+#' @param remove_m boolean to indicate whether or not simulated minimum or 
+#'        maximum is removed (default is TRUE)
 #' 
-#' @return matrix of the simulated layered Brownian bridge path, first row is points X, second row are corresponding times
+#' @return matrix of the simulated layered Brownian bridge path, 
+#'         first row is points X, second row are corresponding times
 #'
 #' @examples
 #' # simulate Bessel layer
-#' bes_layer <- bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 1.0, 0.1))
+#' bes_layer <- bessel_layer_simulation(x = 0,
+#'                                      y = 0,
+#'                                      s = 0,
+#'                                      t = 1,
+#'                                      mult = 0.5)
 #' # simulate layered Brownian bridge
-#' layered_brownian_bridge(x = 0, y = 0, s = 0, t = 1, a = bes_layer$a, l = bes_layer$l, times = seq(0.2, 0.8, 0.2))
-#'
+#' # simulated minimum or maximum is removed
+#' layered_brownian_bridge(x = 0,
+#'                         y = 0,
+#'                         s = 0,
+#'                         t = 1,
+#'                         bessel_layer = bes_layer,
+#'                         times = seq(0.2, 0.8, 0.2))
+#' # simulated minimum or maximum is kept
+#' layered_brownian_bridge(x = 0,
+#'                         y = 0,
+#'                         s = 0,
+#'                         t = 1,
+#'                         bessel_layer = bes_layer,
+#'                         times = seq(0.2, 0.8, 0.2),
+#'                         remove_m = false)
+#' 
 #' @export
-layered_brownian_bridge <- function(x, y, s, t, a, l, times) {
-    .Call(`_layeredBB_layered_brownian_bridge`, x, y, s, t, a, l, times)
+layered_brownian_bridge <- function(x, y, s, t, bessel_layer, times, remove_m = TRUE) {
+    .Call(`_layeredBB_layered_brownian_bridge`, x, y, s, t, bessel_layer, times, remove_m)
 }
 
 #' Multi-dimensional Layered Brownian Bridge sampler
 #'
-#' This function simulates a multi-dimensional layered Brownian Bridge given Bessel layers, at given times
+#' Simulation of a multi-dimensional layered Brownian Bridge given Bessel layers
+#' at user-specified times
 #'
 #' @param dim dimension of Brownian bridge
 #' @param x start value of Brownian bridge
 #' @param y end value of Brownian bridge
 #' @param s start value of Brownian bridge
 #' @param t end value of Brownian bridge
-#' @param layers a list of length dim where list[i] is the Bessel layer for component i
+#' @param bessel_layers a list of length dim where list[i] is the Bessel layer for component i
 #' @param times vector of real numbers to simulate Bessel bridge
 #' 
-#' @return matrix of the simulated layered Brownian bridge path, first dim rows are points for X in each component, 
+#' @return matrix of the simulated layered Brownian bridge path, 
+#'         first dim rows are points for X in each component, 
 #'         last row are corresponding times
 #'
 #' @examples
-#' # simulate Bessel layer for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-#' bes_layers <- multi_bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
-#' # simulate two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-#' multi_layered_brownian_bridge(dim = 2, x = c(0,0), y = c(0,0), s = 0, t = 1, layers = bes_layers, times = seq(0.2, 0.8, 0.2))
+#' # simulate Bessel layer for two-dimensional Brownian bridge starting 
+#' # and ending at (0,0) in time [0,1]
+#' bes_layers <- multi_bessel_layer_simulation(dim = 2,
+#'                                             x = c(0, 0),
+#'                                             y = c(0, 0),
+#'                                             s = 0,
+#'                                             t = 1,
+#'                                             mult = 0.5)
+#' # simulate two-dimensional Brownian bridge starting 
+#' # and ending at (0,0) in time [0,1]
+#' multi_layered_brownian_bridge(dim = 2,
+#'                               x = c(0,0),
+#'                               y = c(0,0),
+#'                               s = 0,
+#'                               t = 1,
+#'                               bessel_layers = bes_layers,
+#'                               times = seq(0.2, 0.8, 0.2))
 #'
 #' @export
-multi_layered_brownian_bridge <- function(dim, x, y, s, t, layers, times) {
-    .Call(`_layeredBB_multi_layered_brownian_bridge`, dim, x, y, s, t, layers, times)
+multi_layered_brownian_bridge <- function(dim, x, y, s, t, bessel_layers, times) {
+    .Call(`_layeredBB_multi_layered_brownian_bridge`, dim, x, y, s, t, bessel_layers, times)
 }
 

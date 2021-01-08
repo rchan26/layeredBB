@@ -2,27 +2,24 @@
 % Please edit documentation in R/RcppExports.R
 \name{delta_coin_intervals}
 \alias{delta_coin_intervals}
-\title{Delta coin flipper for intervals}
+\title{Delta coin flipper for intervals (used for Algorithm 33 in ST329)}
 \usage{
-delta_coin_intervals(x, y, s, t, min, v, k)
+delta_coin_intervals(k, X, times, min, v)
 }
 \arguments{
-\item{x}{vector of values}
+\item{k}{integer value starting index for calculating the intervals}
 
-\item{y}{vector of values}
+\item{X}{vector of values of Brownian bridge}
 
-\item{s}{vector of values}
-
-\item{t}{vector of values}
+\item{times}{vector of times}
 
 \item{min}{minimum of Brownian bridge}
 
 \item{v}{upper bound of Brownian bridge}
-
-\item{k}{integer value}
 }
 \value{
-boolean value: if T, accept probability that Brownian bridge with minimum, min, remains in [l,v], otherwise reject
+boolean value: if T, accept probability that Brownian bridge with 
+        minimum, min, remains in [min,v], otherwise reject
 }
 \description{
 Flips 'Delta coin' for intervals; takes the product of the Cauchy sequence S^{delta}_{k} to 
@@ -31,17 +28,17 @@ Vectors x, y, s, t should all be the same length, L, where for i = 1, ..., L, th
 we have is broken up so that x[i] goes to y[i] between s[i] and t[i] - see example
 }
 \examples{
-# setting up vectors
-x_vect <- c(); y_vect <- c(); s_vect <- c(); t_vect <- c()
-brownian_bridge <- matrix(c(0, 0, -0.2, 0.4, 1, 1), ncol = 3, nrow = 2)
-for (i in 1:(ncol(brownian_bridge)-1)) {
-  x_vect[i] <- brownian_bridge[1,i]
-  y_vect[i] <- brownian_bridge[1,(i+1)]
-  s_vect[i] <- brownian_bridge[2,i]
-  t_vect[i] <- brownian_bridge[2,(i+1)]
-}
+# setting up Brownian bridge variable
+brownian_bridge <- matrix(c(0, 0, -0.2, 0.4, 0.3, 0.5, 1, 1),
+                          ncol = 4, nrow = 2)
 
 # flip delta coin whether or not Brownian bridge remains in [-0.2, 1.5]
-delta_coin_intervals(x = x_vect, y = y_vect, s = s_vect, t = t_vect, min = -0.2, v = 1.5, k = 1)
+d <- abs(1.5 - -0.2)
+k <- ceiling(sqrt(1 + d^2)/(2*d))
+delta_coin_intervals(k = k,
+                     X = brownian_bridge[1,],
+                     times = brownian_bridge[2,],
+                     min = -0.2,
+                     v = 1.5)
 
 }

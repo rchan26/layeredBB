@@ -9,7 +9,7 @@
 using namespace Rcpp;
 
 // forward declaration for Brownian bridge path samplers
-Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x, 
+Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
                                                  const double &y,
                                                  const double &s, 
                                                  const double &t,
@@ -24,64 +24,62 @@ Rcpp::NumericMatrix multi_brownian_bridge(const int &dim,
                                           Rcpp::NumericVector times);
 
 // forward declaration for M_function that's used in min_sampler
-double M_function(const double &a,
-                  const double &x, 
-                  const double &y, 
-                  const double &s, 
-                  const double &t);
+double M_func(const double &a,
+              const double &x,
+              const double &y,
+              const double &s,
+              const double &t);
 
 // forward declaration for Brownian Bridge minimum point sampler
 Rcpp::NumericVector min_sampler(const double &x,
                                 const double &y,
                                 const double &s,
                                 const double &t,
-                                const double &low_bound, 
+                                const double &low_bound,
                                 const double &up_bound);
 
 // forward declaration for minimum Bessel Bridge simulation at time q
-double min_Bessel_bridge_sampler(const double &x, 
+double min_Bessel_bridge_sampler(const double &x,
                                  const double &y,
-                                 const double &s, 
+                                 const double &s,
                                  const double &t,
-                                 const double &min, 
+                                 const double &min,
                                  const double &tau,
                                  const double &q);
 
 // forward declaration for minimum Bessel Bridge path simulation
 Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x,
                                                    const double &y,
-                                                   const double &s, 
+                                                   const double &s,
                                                    const double &t,
                                                    const double &min,
                                                    const double &tau,
-                                                   Rcpp::NumericVector times,
-                                                   const bool &keep_min);
+                                                   Rcpp::NumericVector times);
 
 // forward declaration for maximum Bessel Bridge simulation at time q
-Rcpp::NumericVector max_sampler(const double &x, 
+Rcpp::NumericVector max_sampler(const double &x,
                                 const double &y,
-                                const double &s, 
+                                const double &s,
                                 const double &t,
-                                const double &low_bound, 
+                                const double &low_bound,
                                 const double &up_bound);
 
 // forward declaration for maximum Bessel Bridge simulation at time q
-double max_Bessel_bridge_sampler(const double &x, 
+double max_Bessel_bridge_sampler(const double &x,
                                  const double &y,
-                                 const double &s, 
+                                 const double &s,
                                  const double &t,
-                                 const double &max, 
+                                 const double &max,
                                  const double &tau,
                                  const double &q);
 
 // forward declaration for maximum Bessel Bridge path simulation
 Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x,
                                                    const double &y,
-                                                   const double &s, 
+                                                   const double &s,
                                                    const double &t,
                                                    const double &max,
                                                    const double &tau,
-                                                   Rcpp::NumericVector times,
-                                                   const bool &keep_max);
+                                                   Rcpp::NumericVector times);
 
 #endif

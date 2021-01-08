@@ -2,11 +2,13 @@
 % Please edit documentation in R/RcppExports.R
 \name{gamma_coin}
 \alias{gamma_coin}
-\title{Gamma coin flipper}
+\title{Gamma coin flipper (Algorithm 26 in ST329)}
 \usage{
-gamma_coin(x, y, s, t, l, v, k)
+gamma_coin(k, x, y, s, t, l, v)
 }
 \arguments{
+\item{k}{integer value starting index for calculating the intervals}
+
 \item{x}{start value of Brownian bridge}
 
 \item{y}{end value of Brownian bridge}
@@ -18,11 +20,10 @@ gamma_coin(x, y, s, t, l, v, k)
 \item{l}{lower bound of Brownian bridge}
 
 \item{v}{upper bound of Brownian bridge}
-
-\item{k}{integer value}
 }
 \value{
-boolean value: if T, accept probability that Brownian bridge remains in [l,v], otherwise reject
+boolean value: if T, accept probability that Brownian bridge remains 
+        in [l,v], otherwise reject
 }
 \description{
 Flips 'Gamma coin'; uses the Cauchy sequence S^{gamma}_{k} to 
@@ -30,6 +31,6 @@ determine whether or not the Brownian bridge starting at x, ending at y, between
 remains in interval [l,v]
 }
 \examples{
-gamma_coin(x = 0, y = 0, s = 0, t = 1, l = -0.5, v = 0.5, k = 1)
+gamma_coin(k = 0, x = 0, y = 0, s = 0, t = 1, l = -0.5, v = 0.5)
 
 }

@@ -4,7 +4,7 @@
 \alias{multi_bessel_layer_simulation}
 \title{Multiple Bessel Layer simulation}
 \usage{
-multi_bessel_layer_simulation(dim, x, y, s, t, a)
+multi_bessel_layer_simulation(dim, x, y, s, t, mult = 1)
 }
 \arguments{
 \item{dim}{dimension of Brownian bridge}
@@ -20,19 +20,28 @@ multi_bessel_layer_simulation(dim, x, y, s, t, a)
 \item{a}{vector/sequence of numbers}
 }
 \value{
-A list of length dim where list[i] is the Bessel layer for component i, which is represented in
-a list with the following items:
-\itemize{
-  \item a vector of real values
-  \item l bessel layer
+A list of length dim where list[i] is the Bessel layer for component i,
+which is represented in a list with the following items:
+\describe{
+  \item{L}{Hard lower bound}
+  \item{l}{Soft lower bound}
+  \item{u}{Soft upper bound}
+  \item{U}{Hard upper bound}
 }
-where the Bessel layer [min(x,y)-a[l], min(x,y)+a[l]]
+where the Bessel layer for compnent i is [L, U] and either the minimum 
+occurs in [L, l] or the maximum occurs in [u, U]
 }
 \description{
 Simulates a Bessel layer l for a given sequence a for each component of the Brownian bridge
 }
 \examples{
-# simulate layer information for two-dimensional Brownian bridge starting and ending at (0,0) in time [0,1]
-multi_bessel_layer_simulation(dim = 2, x = c(0, 0), y = c(0, 0), s = 0, t = 1, a = seq(0.1, 0.5, 0.1))
+# simulate layer information for two-dimensional Brownian bridge starting 
+# and ending at (0,0) in time [0,1]
+multi_bessel_layer_simulation(dim = 2,
+                              x = c(0, 0),
+                              y = c(0, 0),
+                              s = 0,
+                              t = 1,
+                              mult = 0.5)
 
 }

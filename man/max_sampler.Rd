@@ -23,10 +23,11 @@ max_sampler(x, y, s, t, low_bound, up_bound)
 vector: the simulated maximum, 'max', and time where maximum occurs, 'tau'
 }
 \description{
-This function simulates a maximum point of a Brownian bridge
+Simulation of a maximum point of a Brownian bridge
 }
 \examples{
-# simulate a maximum between 0 and 1 of a Brownian bridge starting at 0 and ending at 0 in time [0,1]
+# simulate a maximum between 0 and 1 of a Brownian bridge starting at 
+# 0 and ending at 0 in time [0,1]
 max_sampler(x=0, y=0, s=0, t=1, low_bound = 0, up_bound = 1)
 
 }

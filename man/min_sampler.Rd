@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{min_sampler}
 \alias{min_sampler}
-\title{Brownian Bridge minimum point sampler}
+\title{Brownian Bridge minimum point sampler (Algorithm 14 in ST329)}
 \usage{
 min_sampler(x, y, s, t, low_bound, up_bound)
 }
@@ -23,10 +23,11 @@ min_sampler(x, y, s, t, low_bound, up_bound)
 vector: the simulated minimum, 'min', and time where minimum occurs, 'tau'
 }
 \description{
-This function simulates a minimum point of a Brownian bridge
+Simulation of a minimum point of a Brownian bridge
 }
 \examples{
-# simulate a minimum between 0 and 1 of a Brownian bridge starting at 0 and ending at 0 in time [0,1]
+# simulate a minimum between 0 and 1 of a Brownian bridge starting 
+# at 0 and ending at 0 in time [0,1]
 min_sampler(x=0, y=0, s=0, t=1, low_bound = -1, up_bound = 0)
 
 }

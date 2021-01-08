@@ -8,86 +8,114 @@
 using namespace Rcpp;
 
 // forward declaration for functions needed to calculate the Cauchy sums
-double sigma_bar(const double &j,
-                 const double &x, 
-                 const double &y,
-                 const double &s, 
-                 const double &t,
-                 const double &l, 
-                 const double &v);
+double easigma_bar(const double &j,
+                   const double &x,
+                   const double &y,
+                   const double &s,
+                   const double &t,
+                   const double &l,
+                   const double &v);
 
-double sigma(const double &j, 
-             const double &x, 
-             const double &y, 
-             const double &s, 
-             const double &t,
-             const double &l, 
-             const double &v);
-
-double phi_bar(const double &j, 
-               const double &x, 
+double easigma(const double &j,
+               const double &x,
                const double &y,
-               const double &s, 
+               const double &s,
                const double &t,
-               const double &l, 
+               const double &l,
                const double &v);
 
-double phi(const double &j, 
-           const double &x, 
-           const double &y, 
-           const double &s, 
-           const double &t,
-           const double &l, 
-           const double &v);
+double eaphi_bar(const double &j,
+                 const double &x,
+                 const double &y,
+                 const double &s,
+                 const double &t,
+                 const double &l,
+                 const double &v);
 
-double psi(const double &j, 
-           const double &x, 
-           const double &y,
-           const double &s, 
-           const double &t,
-           const double &min, 
-           const double &v);
+double eaphi(const double &j,
+             const double &x,
+             const double &y,
+             const double &s,
+             const double &t,
+             const double &l,
+             const double &v);
 
-double chi(const double &j, 
-           const double &x, 
-           const double &y,
-           const double &s, 
-           const double &t,
-           const double &min,
-           const double &v);
+double eapsi(const double &j,
+             const double &xoy,
+             const double &s,
+             const double &t,
+             const double &min,
+             const double &v);
 
+double eachi(const double &j,
+             const double &xoy,
+             const double &s,
+             const double &t,
+             const double &min,
+             const double &v);
 
-// forward declarations for calculating the Cauchy sums (S_{2k+1}, S_{2k})
-Rcpp::NumericVector calc_SgammaK_intervals(const int &k, 
-                                           const double &x, 
-                                           const double &y,
-                                           const double &s, 
-                                           const double &t,
-                                           const double &l, 
-                                           const double &v);
+double eagamma(const int &n,
+               const double &x,
+               const double &y,
+               const double &s,
+               const double &t,
+               const double &l,
+               const double &v);
 
-Rcpp::NumericVector calc_SdeltaK_1_intervals(const int &k, 
-                                             const double &x, 
-                                             const double &y,
-                                             const double &s, 
-                                             const double &t,
-                                             const double &min, 
-                                             const double &v);
+double eadelta1(const int &n,
+                const double &x,
+                const double &y,
+                const double &s,
+                const double &t,
+                const double &min,
+                const double &v);
 
-Rcpp::NumericVector calc_SdeltaK_2_intervals(const int &k, 
-                                             const double &x, 
-                                             const double &y,
-                                             const double &s, 
-                                             const double &t,
-                                             const double &min, 
-                                             const double &v);
+double eadelta2(const int &n,
+                const double &x,
+                const double &y,
+                const double &s,
+                const double &t,
+                const double &min,
+                const double &v);
 
-Rcpp::NumericVector calc_SdeltaK_intervals(const int &k, 
-                                           const double &x, 
-                                           const double &y,
-                                           const double &s, 
-                                           const double &t,
-                                           const double &min, 
-                                           const double &v);
+double eadelta(const int &n,
+               const double &x,
+               const double &y,
+               const double &s,
+               const double &t,
+               const double &min,
+               const double &v);
+
+Rcpp::NumericVector eagamma_intervals(const int &k,
+                                      const double &x,
+                                      const double &y,
+                                      const double &s,
+                                      const double &t,
+                                      const double &l,
+                                      const double &v);
+
+Rcpp::NumericVector eadelta1_intervals(const int &k,
+                                       const double &x,
+                                       const double &y,
+                                       const double &s,
+                                       const double &t,
+                                       const double &min,
+                                       const double &v);
+
+Rcpp::NumericVector eadelta2_intervals(const int &k,
+                                       const double &x,
+                                       const double &y,
+                                       const double &s,
+                                       const double &t,
+                                       const double &min,
+                                       const double &v);
+
+Rcpp::NumericVector eadelta_intervals(const int &k,
+                                      const double &x,
+                                      const double &y,
+                                      const double &s,
+                                      const double &t,
+                                      const double &min,
+                                      const double &v);
 
 #endif

@@ -2,9 +2,9 @@
 % Please edit documentation in R/RcppExports.R
 \name{layered_brownian_bridge}
 \alias{layered_brownian_bridge}
-\title{Layered Brownian Bridge sampler}
+\title{Layered Brownian Bridge sampler (Algorithm 33 in ST329)}
 \usage{
-layered_brownian_bridge(x, y, s, t, a, l, times)
+layered_brownian_bridge(x, y, s, t, bessel_layer, times, remove_m = TRUE)
 }
 \arguments{
 \item{x}{start value of Brownian bridge}
@@ -15,22 +15,45 @@ layered_brownian_bridge(x, y, s, t, a, l, times)
 
 \item{t}{end value of Brownian bridge}
 
+\item{times}{vector of real numbers to simulate Bessel bridge}
+
+\item{remove_m}{boolean to indicate whether or not simulated minimum or 
+maximum is removed (default is TRUE)}
+
 \item{a}{vector/sequence of numbers}
 
-\item{l}{integer number denoting Bessel layer, i.e. Brownian bridge is contained in [min(x,y)-a[l], max(x,y)+a[l]]}
-
-\item{times}{vector of real numbers to simulate Bessel bridge}
+\item{l}{integer number denoting Bessel layer, i.e. Brownian bridge 
+is contained in [min(x,y)-a[l], max(x,y)+a[l]]}
 }
 \value{
-matrix of the simulated layered Brownian bridge path, first row is points X, second row are corresponding times
+matrix of the simulated layered Brownian bridge path, 
+        first row is points X, second row are corresponding times
 }
 \description{
-This function simulates a layered Brownian Bridge given a Bessel layer, at given times
+Simulation of a layered Brownian Bridge given a Bessel layer at user specified times
 }
 \examples{
 # simulate Bessel layer
-bes_layer <- bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 1.0, 0.1))
+bes_layer <- bessel_layer_simulation(x = 0,
+                                     y = 0,
+                                     s = 0,
+                                     t = 1,
+                                     mult = 0.5)
 # simulate layered Brownian bridge
-layered_brownian_bridge(x = 0, y = 0, s = 0, t = 1, a = bes_layer$a, l = bes_layer$l, times = seq(0.2, 0.8, 0.2))
+# simulated minimum or maximum is removed
+layered_brownian_bridge(x = 0,
+                        y = 0,
+                        s = 0,
+                        t = 1,
+                        bessel_layer = bes_layer,
+                        times = seq(0.2, 0.8, 0.2))
+# simulated minimum or maximum is kept
+layered_brownian_bridge(x = 0,
+                        y = 0,
+                        s = 0,
+                        t = 1,
+                        bessel_layer = bes_layer,
+                        times = seq(0.2, 0.8, 0.2),
+                        remove_m = false)
 
 }

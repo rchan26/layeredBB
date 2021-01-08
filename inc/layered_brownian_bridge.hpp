@@ -16,9 +16,9 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
                                             const double &y,
                                             const double &s, 
                                             const double &t,
-                                            const Rcpp::NumericVector &a,
-                                            int l,
-                                            const Rcpp::NumericVector &times);
+                                            const Rcpp::List &bessel_layer,
+                                            const Rcpp::NumericVector &times,
+                                            const bool &remove_m);
 
 // forward declaration multi-dimensional layared brownian bridge sampler
 Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
@@ -26,7 +26,7 @@ Rcpp::NumericMatrix multi_layered_brownian_bridge(const int &dim,
                                                   const arma::vec &y,
                                                   const double &s,
                                                   const double &t,
-                                                  const Rcpp::List &layers,
+                                                  const Rcpp::List &bessel_layers,
                                                   Rcpp::NumericVector times);
 
 #endif
