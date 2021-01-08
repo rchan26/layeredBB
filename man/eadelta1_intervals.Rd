@@ -25,7 +25,8 @@ eadelta1_intervals(k, x, y, s, t, min, v)
 vector of two values, S^{delta,1}_{2k+1} and S^{delta,1}_{2k}
 }
 \description{
-This function calculates the interval [S^{delta,1}_{2k+1}, S^{delta, 1}_{2k}] (case where min(x,y) > min)
+This function calculates the interval [S^{delta,1}_{2k+1}, S^{delta, 1}_{2k}] 
+(case where min(x,y) > min)
 }
 \examples{
 eadelta1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)

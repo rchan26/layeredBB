@@ -416,18 +416,99 @@ eachi <- function(j, xoy, s, t, min, v) {
     .Call(`_layeredBB_eachi`, j, xoy, s, t, min, v)
 }
 
+#' Gamma (Corollary 2 and Algorithm 26 in ST329) 
+#'
+#' This function evaluates the gamma function, S_{n}^{gamma},
+#' used to simulate Bessel Layers in the infinite sums
+#'
+#' @param n integer value
+#' @param x start value of Brownian bridge
+#' @param y end value of Brownian bridge
+#' @param s start value of Brownian bridge
+#' @param t end value of Brownian bridge
+#' @param l lower bound of Brownian bridge
+#' @param v upper bound of Brownian bridge
+#' 
+#' @return real value: S_{n}^{gamma} evaluated at n
+#'
+#' @examples
+#' eagamma(n = 1, x = 0, y = 0, s = 0, t = 1, l = -0.4, v = 0.8)
+#'
+#' @export
 eagamma <- function(n, x, y, s, t, l, v) {
     .Call(`_layeredBB_eagamma`, n, x, y, s, t, l, v)
 }
 
+#' Delta_1 (Corollary 3 in ST329)
+#'
+#' This function evaluates the delta_1 function, S_{n}^{delta,1}
+#' used to simulate Bessel Layers in the infinite sums
+#'
+#' @param n integer value
+#' @param x start value of Brownian bridge
+#' @param y end value of Brownian bridge
+#' @param s start value of Brownian bridge
+#' @param t end value of Brownian bridge
+#' @param min minimum of Brownian bridge
+#' @param v upper bound of Brownian bridge
+#' 
+#' @return real value: S_{n}^{delta,1} evaluated at n
+#'
+#' @examples
+#' eadelta1(n = 1, x = 0, y = 0.8, s = 0, t = 1, min = -2, v = 2)
+#'
+#' @export
 eadelta1 <- function(n, x, y, s, t, min, v) {
     .Call(`_layeredBB_eadelta1`, n, x, y, s, t, min, v)
 }
 
+#' Delta_2 (Corollary 4 in ST329)
+#'
+#' This function evaluates the delta_2function, S_{n}^{delta,2}
+#' used to simulate Bessel Layers in the infinite sums
+#'
+#' @param n integer value
+#' @param x start value of Brownian bridge
+#' @param y end value of Brownian bridge
+#' @param s start value of Brownian bridge
+#' @param t end value of Brownian bridge
+#' @param min minimum of Brownian bridge
+#' @param v upper bound of Brownian bridge
+#' 
+#' @return real value: S_{n}^{delta,2} evaluated at n
+#'
+#' @examples
+#' eadelta2(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
+#'
+#' @export
 eadelta2 <- function(n, x, y, s, t, min, v) {
     .Call(`_layeredBB_eadelta2`, n, x, y, s, t, min, v)
 }
 
+#' Delta (Corollary 3 and 4 in ST329)
+#'
+#' This function evaluates the delta function, S_{n}^{delta}
+#' used to simulate Bessel Layers in the infinite sums
+#'
+#' @param n integer value
+#' @param x start value of Brownian bridge
+#' @param y end value of Brownian bridge
+#' @param s start value of Brownian bridge
+#' @param t end value of Brownian bridge
+#' @param min minimum of Brownian bridge
+#' @param v upper bound of Brownian bridge
+#' 
+#' @return real value: S_{n}^{delta} evaluated at n
+#'
+#' @examples
+#' # example where min(x,y) > min (delta_1 case)
+#' eadelta(n = 1, x = 0,  y = 0.8, s = 0, t = 1, min = -2, v = 2)
+#' eadelta1(n = 1, x = 0, y = 0.8, s = 0, t = 1, min = -2, v = 2)
+#' # example where min(x,y) == min
+#' eadelta(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
+#' eadelta2(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
+#'
+#' @export
 eadelta <- function(n, x, y, s, t, min, v) {
     .Call(`_layeredBB_eadelta`, n, x, y, s, t, min, v)
 }
@@ -456,7 +537,8 @@ eagamma_intervals <- function(k, x, y, s, t, l, v) {
 
 #' Calculate interval: [S^{delta,1}_{2k+1}, S^{delta,1}_{2k}] (Corollary 3 in ST329)
 #'
-#' This function calculates the interval [S^{delta,1}_{2k+1}, S^{delta, 1}_{2k}] (case where min(x,y) > min)
+#' This function calculates the interval [S^{delta,1}_{2k+1}, S^{delta, 1}_{2k}] 
+#' (case where min(x,y) > min)
 #'
 #' @param k integer value
 #' @param x start value of Brownian bridge
@@ -570,6 +652,37 @@ gamma_coin <- function(k, x, y, s, t, l, v) {
     .Call(`_layeredBB_gamma_coin`, k, x, y, s, t, l, v)
 }
 
+#' Gamma coin flipper for intervals
+#'
+#' Flips 'Gamma coin' for intervals; takes the product of the Cauchy sequence S^{gamma}_{k} to
+#' determine whether or not the Brownian bridge remains in the interval [l,v]
+#'
+#' @param k integer value starting index for calculating the intervals
+#' @param X vector of values of Brownian bridge
+#' @param times vector of times
+#' @param l lower bound of Brownian bridge
+#' @param v upper bound of Brownian bridge
+#'
+#' @examples
+#' # setting up Brownian bridge variable
+#' brownian_bridge <- matrix(c(0, 0, -0.2, 0.4, 0.3, 0.5, 1, 1),
+#'                           ncol = 4, nrow = 2)
+#' 
+#' # flip delta coin whether or not Brownian bridge remains in [-0.5, 1.5]
+#' gamma_coin_intervals(k = 1,
+#'                      X = brownian_bridge[1,],
+#'                      times = brownian_bridge[2,],
+#'                      l = -0.5,
+#'                      v = 1.5)
+#'
+#' @return boolean value: if T, accept probability that Brownian bridge remains 
+#'         in [l,v], otherwise reject
+#'
+#' @export
+gamma_coin_intervals <- function(k, X, times, l, v) {
+    .Call(`_layeredBB_gamma_coin_intervals`, k, X, times, l, v)
+}
+
 #' Delta coin flipper (Algorithm 28 in ST329)
 #'
 #' Flips 'Delta coin'; uses the Cauchy sequence S^{delta}_{k} to 
@@ -605,8 +718,6 @@ delta_coin <- function(k, x, y, s, t, min, v) {
 #'
 #' Flips 'Delta coin' for intervals; takes the product of the Cauchy sequence S^{delta}_{k} to 
 #' determine whether or not the Brownian bridge with minimum, min, remains in the interval [l,v]
-#' Vectors x, y, s, t should all be the same length, L, where for i = 1, ..., L, the Brownian Bridge skeleton 
-#' we have is broken up so that x[i] goes to y[i] between s[i] and t[i] - see example
 #'
 #' @param k integer value starting index for calculating the intervals
 #' @param X vector of values of Brownian bridge

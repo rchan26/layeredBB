@@ -24,8 +24,6 @@ boolean value: if T, accept probability that Brownian bridge with
 \description{
 Flips 'Delta coin' for intervals; takes the product of the Cauchy sequence S^{delta}_{k} to 
 determine whether or not the Brownian bridge with minimum, min, remains in the interval [l,v]
-Vectors x, y, s, t should all be the same length, L, where for i = 1, ..., L, the Brownian Bridge skeleton 
-we have is broken up so that x[i] goes to y[i] between s[i] and t[i] - see example
 }
 \examples{
 # setting up Brownian bridge variable

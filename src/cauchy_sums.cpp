@@ -187,6 +187,25 @@ double eachi(const double &j,
 
 // ---------- Calculate S_{n}^{gamma} and S_{n}^{delta}
 
+//' Gamma (Corollary 2 and Algorithm 26 in ST329) 
+//'
+//' This function evaluates the gamma function, S_{n}^{gamma},
+//' used to simulate Bessel Layers in the infinite sums
+//'
+//' @param n integer value
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param l lower bound of Brownian bridge
+//' @param v upper bound of Brownian bridge
+//' 
+//' @return real value: S_{n}^{gamma} evaluated at n
+//'
+//' @examples
+//' eagamma(n = 1, x = 0, y = 0, s = 0, t = 1, l = -0.4, v = 0.8)
+//'
+//' @export
 // [[Rcpp::export]]
 double eagamma(const int &n,
                const double &x,
@@ -222,6 +241,25 @@ double eagamma(const int &n,
   }
 }
 
+//' Delta_1 (Corollary 3 in ST329)
+//'
+//' This function evaluates the delta_1 function, S_{n}^{delta,1}
+//' used to simulate Bessel Layers in the infinite sums
+//'
+//' @param n integer value
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param min minimum of Brownian bridge
+//' @param v upper bound of Brownian bridge
+//' 
+//' @return real value: S_{n}^{delta,1} evaluated at n
+//'
+//' @examples
+//' eadelta1(n = 1, x = 0, y = 0.8, s = 0, t = 1, min = -2, v = 2)
+//'
+//' @export
 // [[Rcpp::export]]
 double eadelta1(const int &n,
                 const double &x,
@@ -234,6 +272,25 @@ double eadelta1(const int &n,
   return eagamma(n,x,y,s,t,min,v) / (1 - exp(-2.0*(x-min)*(y-min)/(t-s)));
 }
 
+//' Delta_2 (Corollary 4 in ST329)
+//'
+//' This function evaluates the delta_2function, S_{n}^{delta,2}
+//' used to simulate Bessel Layers in the infinite sums
+//'
+//' @param n integer value
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param min minimum of Brownian bridge
+//' @param v upper bound of Brownian bridge
+//' 
+//' @return real value: S_{n}^{delta,2} evaluated at n
+//'
+//' @examples
+//' eadelta2(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
+//'
+//' @export
 // [[Rcpp::export]]
 double eadelta2(const int &n,
                 const double &x,
@@ -271,6 +328,30 @@ double eadelta2(const int &n,
   } 
 }
 
+//' Delta (Corollary 3 and 4 in ST329)
+//'
+//' This function evaluates the delta function, S_{n}^{delta}
+//' used to simulate Bessel Layers in the infinite sums
+//'
+//' @param n integer value
+//' @param x start value of Brownian bridge
+//' @param y end value of Brownian bridge
+//' @param s start value of Brownian bridge
+//' @param t end value of Brownian bridge
+//' @param min minimum of Brownian bridge
+//' @param v upper bound of Brownian bridge
+//' 
+//' @return real value: S_{n}^{delta} evaluated at n
+//'
+//' @examples
+//' # example where min(x,y) > min (delta_1 case)
+//' eadelta(n = 1, x = 0,  y = 0.8, s = 0, t = 1, min = -2, v = 2)
+//' eadelta1(n = 1, x = 0, y = 0.8, s = 0, t = 1, min = -2, v = 2)
+//' # example where min(x,y) == min
+//' eadelta(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
+//' eadelta2(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
+//'
+//' @export
 // [[Rcpp::export]]
 double eadelta(const int &n,
                const double &x,
@@ -342,7 +423,8 @@ Rcpp::NumericVector eagamma_intervals(const int &k,
 
 //' Calculate interval: [S^{delta,1}_{2k+1}, S^{delta,1}_{2k}] (Corollary 3 in ST329)
 //'
-//' This function calculates the interval [S^{delta,1}_{2k+1}, S^{delta, 1}_{2k}] (case where min(x,y) > min)
+//' This function calculates the interval [S^{delta,1}_{2k+1}, S^{delta, 1}_{2k}] 
+//' (case where min(x,y) > min)
 //'
 //' @param k integer value
 //' @param x start value of Brownian bridge
