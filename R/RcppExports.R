@@ -763,13 +763,13 @@ gamma_coin_intervals <- function(k, X, times, l, v) {
 #' @param v upper bound of Brownian bridge
 #'
 #' @examples 
-#' delta_coin_intervals(k = 0,
-#'                      x = 0.1,
-#'                      y = 0.4,
-#'                      s = 0,
-#'                      t = 1,
-#'                      min = -0.2,
-#'                      v = 1.5)
+#' delta_coin(k = 0,
+#'            x = 0.1,
+#'            y = 0.4,
+#'            s = 0,
+#'            t = 1,
+#'            min = -0.2,
+#'            v = 1.5)
 #'                      
 #' @return boolean value: if T, accept probability that Brownian bridge with 
 #'         minimum, min, remains in [l,v], otherwise reject

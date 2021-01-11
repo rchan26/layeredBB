@@ -31,12 +31,12 @@ determine whether or not the Brownian bridge with minimum, min,
 starting at x, ending at y, between [s,t] remains in interval [l,v]
 }
 \examples{
-delta_coin_intervals(k = 0,
-                     x = 0.1,
-                     y = 0.4,
-                     s = 0,
-                     t = 1,
-                     min = -0.2,
-                     v = 1.5)
+delta_coin(k = 0,
+           x = 0.1,
+           y = 0.4,
+           s = 0,
+           t = 1,
+           min = -0.2,
+           v = 1.5)
                      
 }

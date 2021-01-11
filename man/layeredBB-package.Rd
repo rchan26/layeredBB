@@ -22,10 +22,3 @@
   Beskos, A., Papaspiliopoulos, O., Roberts, G.O., and Fearnhead, P. 2006. Exact and computationally effcient likelihood-based estimation for discretely observed diffusion processes (with discussion). Journal of Royal Statistical Society, B. 68, pp. 333-382.
 }
 \keyword{ package }
-\examples{
-# simulate Bessel layer
-bes_layer <- bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, a = seq(0.1, 1.0, 0.1))
-# simulate layered Brownian bridge
-layered_brownian_bridge(x = 0, y = 0, s = 0, t = 1, a = bes_layer$a, l = bes_layer$l, times = seq(0.2, 0.8, 0.2))
-  
-}
