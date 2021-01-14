@@ -688,8 +688,8 @@ eadelta_intervals <- function(k, x, y, s, t, min, v) {
 #' find_max(c(1,2,3,4,5)) 
 #'
 #' @export
-product_vector_elements <- function(vect) {
-    .Call(`_layeredBB_product_vector_elements`, vect)
+product_vector <- function(vect) {
+    .Call(`_layeredBB_product_vector`, vect)
 }
 
 #' Gamma coin flipper (Algorithm 26 in ST329)
@@ -831,40 +831,6 @@ delta_coin_intervals <- function(k, X, times, min, v) {
 #' @export
 inv_gauss_sampler <- function(mu, lambda) {
     .Call(`_layeredBB_inv_gauss_sampler`, mu, lambda)
-}
-
-#' Find maximum of vector
-#'
-#' This function finds the maximum value of a numerical vector
-#'
-#' @param vect numerical vector
-#'
-#' @return maximum of vector given
-#'
-#' @examples
-#' # returns 0.8
-#' find_max(c(-0.4, 0.23, -0.4321, 0.6, 0.3, 0.8, 0.54)) 
-#'
-#' @export
-find_max <- function(vect) {
-    .Call(`_layeredBB_find_max`, vect)
-}
-
-#' Find minimum of vector
-#'
-#' This function finds the minimum value of a numerical vector
-#'
-#' @param vect numerical vector
-#'
-#' @return minimum of vector given
-#' 
-#' @examples
-#' # returns -0.4321
-#' find_min(c(-0.4, 0.23, -0.4321, 0.6, 0.3, 0.8, 0.54)) 
-#'
-#' @export
-find_min <- function(vect) {
-    .Call(`_layeredBB_find_min`, vect)
 }
 
 #' Layered Brownian Bridge sampler (Algorithm 33 in ST329)

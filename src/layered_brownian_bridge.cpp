@@ -7,55 +7,55 @@
 
 using namespace Rcpp;
 
-//' Find maximum of vector
-//'
-//' This function finds the maximum value of a numerical vector
-//'
-//' @param vect numerical vector
-//'
-//' @return maximum of vector given
-//'
-//' @examples
-//' # returns 0.8
-//' find_max(c(-0.4, 0.23, -0.4321, 0.6, 0.3, 0.8, 0.54)) 
-//'
-//' @export
-// [[Rcpp::export]]
-double find_max(const Rcpp::NumericVector vect) {
-  // finds the maximum value in a vector
-  double current_max = vect.at(0); // first element
-  for (const auto &element: vect) {
-    if (element > current_max) {
-      current_max = element;
-    }
-  }
-  return current_max;
-}
+// //' Find maximum of vector
+// //'
+// //' This function finds the maximum value of a numerical vector
+// //'
+// //' @param vect numerical vector
+// //'
+// //' @return maximum of vector given
+// //'
+// //' @examples
+// //' # returns 0.8
+// //' find_max(c(-0.4, 0.23, -0.4321, 0.6, 0.3, 0.8, 0.54)) 
+// //'
+// //' @export
+// // [[Rcpp::export]]
+// double find_max(const Rcpp::NumericVector vect) {
+//   // finds the maximum value in a vector
+//   double current_max = vect.at(0); // first element
+//   for (const auto &element: vect) {
+//     if (element > current_max) {
+//       current_max = element;
+//     }
+//   }
+//   return current_max;
+// }
 
-//' Find minimum of vector
-//'
-//' This function finds the minimum value of a numerical vector
-//'
-//' @param vect numerical vector
-//'
-//' @return minimum of vector given
-//' 
-//' @examples
-//' # returns -0.4321
-//' find_min(c(-0.4, 0.23, -0.4321, 0.6, 0.3, 0.8, 0.54)) 
-//'
-//' @export
-// [[Rcpp::export]]
-double find_min(const Rcpp::NumericVector vect) {
-  // finds the minimum value in a vector
-  double current_min = vect.at(0); // first element
-  for (const auto &element: vect) {
-    if (element < current_min) {
-      current_min = element;
-    }
-  }
-  return current_min;
-}
+// //' Find minimum of vector
+// //'
+// //' This function finds the minimum value of a numerical vector
+// //'
+// //' @param vect numerical vector
+// //'
+// //' @return minimum of vector given
+// //' 
+// //' @examples
+// //' # returns -0.4321
+// //' find_min(c(-0.4, 0.23, -0.4321, 0.6, 0.3, 0.8, 0.54)) 
+// //'
+// //' @export
+// // [[Rcpp::export]]
+// double find_min(const Rcpp::NumericVector vect) {
+//   // finds the minimum value in a vector
+//   double current_min = vect.at(0); // first element
+//   for (const auto &element: vect) {
+//     if (element < current_min) {
+//       current_min = element;
+//     }
+//   }
+//   return current_min;
+// }
 
 //' Layered Brownian Bridge sampler (Algorithm 33 in ST329)
 //'
@@ -158,7 +158,7 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
       simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t, sim_m["min"], sim_m["tau"], times);
       // check that none of the simulated points are outside of the layer: 
       // if so, resample Bessel bridge
-      while (find_max(simulated_BB(0, _)) > v2) { 
+      while (max(simulated_BB(0, _)) > v2) { 
         simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t, sim_m["min"], sim_m["tau"], times);
       }
     } else {
@@ -169,7 +169,7 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
       simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, sim_m["max"], sim_m["tau"], times);
       // check that none of the simulated points are outside of the layer: 
       // if so, resample Bessel bridge
-      while (find_min(simulated_BB(0, _)) < l2) {
+      while (min(simulated_BB(0, _)) < l2) {
         simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, sim_m["max"], sim_m["tau"], times);
       }
     }

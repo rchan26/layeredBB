@@ -404,14 +404,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// product_vector_elements
-double product_vector_elements(const Rcpp::NumericVector& vect);
-RcppExport SEXP _layeredBB_product_vector_elements(SEXP vectSEXP) {
+// product_vector
+double product_vector(const Rcpp::NumericVector& vect);
+RcppExport SEXP _layeredBB_product_vector(SEXP vectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type vect(vectSEXP);
-    rcpp_result_gen = Rcpp::wrap(product_vector_elements(vect));
+    rcpp_result_gen = Rcpp::wrap(product_vector(vect));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -491,28 +491,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// find_max
-double find_max(const Rcpp::NumericVector vect);
-RcppExport SEXP _layeredBB_find_max(SEXP vectSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type vect(vectSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_max(vect));
-    return rcpp_result_gen;
-END_RCPP
-}
-// find_min
-double find_min(const Rcpp::NumericVector vect);
-RcppExport SEXP _layeredBB_find_min(SEXP vectSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector >::type vect(vectSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_min(vect));
-    return rcpp_result_gen;
-END_RCPP
-}
 // layered_brownian_bridge
 Rcpp::NumericMatrix layered_brownian_bridge(const double& x, const double& y, const double& s, const double& t, const Rcpp::List& bessel_layer, const Rcpp::NumericVector& times, const bool& remove_m);
 RcppExport SEXP _layeredBB_layered_brownian_bridge(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP bessel_layerSEXP, SEXP timesSEXP, SEXP remove_mSEXP) {
@@ -573,14 +551,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_layeredBB_eadelta1_intervals", (DL_FUNC) &_layeredBB_eadelta1_intervals, 7},
     {"_layeredBB_eadelta2_intervals", (DL_FUNC) &_layeredBB_eadelta2_intervals, 7},
     {"_layeredBB_eadelta_intervals", (DL_FUNC) &_layeredBB_eadelta_intervals, 7},
-    {"_layeredBB_product_vector_elements", (DL_FUNC) &_layeredBB_product_vector_elements, 1},
+    {"_layeredBB_product_vector", (DL_FUNC) &_layeredBB_product_vector, 1},
     {"_layeredBB_gamma_coin", (DL_FUNC) &_layeredBB_gamma_coin, 7},
     {"_layeredBB_gamma_coin_intervals", (DL_FUNC) &_layeredBB_gamma_coin_intervals, 5},
     {"_layeredBB_delta_coin", (DL_FUNC) &_layeredBB_delta_coin, 7},
     {"_layeredBB_delta_coin_intervals", (DL_FUNC) &_layeredBB_delta_coin_intervals, 5},
     {"_layeredBB_inv_gauss_sampler", (DL_FUNC) &_layeredBB_inv_gauss_sampler, 2},
-    {"_layeredBB_find_max", (DL_FUNC) &_layeredBB_find_max, 1},
-    {"_layeredBB_find_min", (DL_FUNC) &_layeredBB_find_min, 1},
     {"_layeredBB_layered_brownian_bridge", (DL_FUNC) &_layeredBB_layered_brownian_bridge, 7},
     {"_layeredBB_multi_layered_brownian_bridge", (DL_FUNC) &_layeredBB_multi_layered_brownian_bridge, 7},
     {NULL, NULL, 0}

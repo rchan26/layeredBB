@@ -17,12 +17,12 @@ using namespace Rcpp;
 //'
 //' @export
 // [[Rcpp::export]]
-double product_vector_elements(const Rcpp::NumericVector &vect) {
-  double prod = 1;
+double product_vector(const Rcpp::NumericVector &vect) {
+  double product = 1;
   for (const auto &element: vect) {
-    prod *= element;
+    product *= element;
   }
-  return prod;
+  return product;
 }
 
 //' Gamma coin flipper (Algorithm 26 in ST329)
@@ -122,8 +122,8 @@ bool gamma_coin_intervals(int k,
     left.at(i) = current.at(0);
     right.at(i) = current.at(1);
   }
-  double left_product = product_vector_elements(left);
-  double right_product = product_vector_elements(right);
+  double left_product = product_vector(left);
+  double right_product = product_vector(right);
   // while u \in (S_{2k+1}, S_{2k}) = (left,right), we keep calculating Cauchy sums
   while (left_product < u && u < right_product) {
     k = k+1;
@@ -135,8 +135,8 @@ bool gamma_coin_intervals(int k,
       left.at(i) = right.at(i) - sigma_at_k_plus_1;
     }
     // recalculate products
-    left_product = product_vector_elements(left);
-    right_product = product_vector_elements(right);
+    left_product = product_vector(left);
+    right_product = product_vector(right);
   }
   if (u <= left_product) {
     return true;
@@ -275,8 +275,8 @@ bool delta_coin_intervals(int k,
       denom.at(i) = std::abs(X.at(i)-X.at(i+1));
     }
   }
-  double left_product = product_vector_elements(left);
-  double right_product = product_vector_elements(right);
+  double left_product = product_vector(left);
+  double right_product = product_vector(right);
   // while u \in (S_{2k+1}, S_{2k}) = (left,right), we keep calculating Cauchy sums
   while (left_product < u && u < right_product) {
     k += 1;
@@ -296,8 +296,8 @@ bool delta_coin_intervals(int k,
       }
     }
     // recalculate products
-    left_product = product_vector_elements(left);
-    right_product = product_vector_elements(right);
+    left_product = product_vector(left);
+    right_product = product_vector(right);
   }
   if (u <= left_product) {
     return true;
@@ -326,8 +326,8 @@ bool delta_coin_intervals(int k,
 //     right.at(i) = current.at(1);
 //   }
 //   // while u \in (S_{2k+1}, S_{2k}) = (left,right), we keep calculating Cauchy sums
-//   double left_product = product_vector_elements(left);
-//   double right_product = product_vector_elements(right);
+//   double left_product = product_vector(left);
+//   double right_product = product_vector(right);
 //   while (left_product < u && u < right_product) {
 //     // increase k and update the intervals
 //     k += 1;
@@ -337,8 +337,8 @@ bool delta_coin_intervals(int k,
 //       right.at(i) = current.at(1);
 //     }
 //     // recalculate products
-//     left_product = product_vector_elements(left);
-//     right_product = product_vector_elements(right);
+//     left_product = product_vector(left);
+//     right_product = product_vector(right);
 //   }
 //   if (u <= left_product) {
 //     return true;
