@@ -158,7 +158,7 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
       simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t, sim_m["min"], sim_m["tau"], times);
       // check that none of the simulated points are outside of the layer: 
       // if so, resample Bessel bridge
-      while (max(simulated_BB(0, _)) > v2) { 
+      while (Rcpp::max(simulated_BB(0, _)) > v2) { 
         simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t, sim_m["min"], sim_m["tau"], times);
       }
     } else {
@@ -169,7 +169,7 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
       simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, sim_m["max"], sim_m["tau"], times);
       // check that none of the simulated points are outside of the layer: 
       // if so, resample Bessel bridge
-      while (min(simulated_BB(0, _)) < l2) {
+      while (Rcpp::min(simulated_BB(0, _)) < l2) {
         simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, sim_m["max"], sim_m["tau"], times);
       }
     }
