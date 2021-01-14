@@ -170,7 +170,7 @@ Rcpp::NumericMatrix layered_brownian_bridge(const double &x,
         int col_index = 0;
         // want to only keep the user-specified times and the start and end time points
         Rcpp::NumericVector keep_times = times;
-        keep_times.push_back(s);
+        keep_times.push_front(s);
         keep_times.push_back(t);
         for (int j=0; j < simulated_BB.ncol(); ++j) {
           if (std::find(keep_times.begin(), keep_times.end(), simulated_BB(1,j)) != keep_times.end()) {

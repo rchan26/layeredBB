@@ -44,12 +44,10 @@ Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
                                                  Rcpp::NumericVector times)
 {
   // collect all times into one vector
-  times.insert(times.end(), s);
-  times.insert(times.end(), t);
-  // sort the vector 'times' forward in time
-  times.sort();
-  // delete any duplicates
-  times.erase(std::unique(times.begin(), times.end()), times.end());
+  times.push_front(s);
+  times.push_back(t);
+  // remove duplicates and sort times vector
+  times = Rcpp::sort_unique(times);
   Rcpp::NumericVector simulated_bb(times.size());
   // when simulating the path, want to work from left to right
   for (int i = 0; i < times.size(); ++i) {
@@ -113,12 +111,10 @@ Rcpp::NumericMatrix multi_brownian_bridge(const int &dim,
     stop("multi_brownian_bridge: size of y is not equal to dim");
   } 
   // collect all times into one vector
-  times.insert(times.end(), s);
-  times.insert(times.end(), t);
-  // sort the vector 'times' forward in time
-  times.sort();
-  // delete any duplicates
-  times.erase(std::unique(times.begin(), times.end()), times.end());
+  times.push_front(s);
+  times.push_back(t);
+  // remove duplicates and sort times vector
+  times = Rcpp::sort_unique(times);
   // for each component, we simulate a Brownian bridge
   // multi_BB is a matrix with dimensions (dim+1) x times.size()
   Rcpp::NumericMatrix multi_BB(dim+1, times.size());
@@ -321,13 +317,11 @@ Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x,
   // i.e. after using the function, simulated_bb[i] is the path at times[i]
   // this is because (times) may not include the times (s), (t), (tau)
   // collect all times into one vector
-  times.insert(times.end(), s);
-  times.insert(times.end(), t);
+  times.push_front(s);
+  times.push_back(t);
   times.insert(times.end(), tau);
-  // sort the vector 'times' forward in time
-  times.sort();
-  // delete any duplicates
-  times.erase(std::unique(times.begin(), times.end()), times.end());
+  // remove duplicates and sort times vector
+  times = Rcpp::sort_unique(times);
   // create vector to store the simulated Bessel bridge path
   Rcpp::NumericVector simulated_bb(times.size());
   // when simulating the path, want to work from left to right when left of the min

@@ -4,7 +4,7 @@
 \alias{min_Bessel_bridge_path_sampler}
 \title{Bessel Bridge path sampler given minimum}
 \usage{
-min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times)
+min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times, remove_m = FALSE)
 }
 \arguments{
 \item{x}{start value of Bessel bridge}

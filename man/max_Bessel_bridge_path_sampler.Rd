@@ -4,7 +4,7 @@
 \alias{max_Bessel_bridge_path_sampler}
 \title{Bessel Bridge path sampler given maximum}
 \usage{
-max_Bessel_bridge_path_sampler(x, y, s, t, max, tau, times)
+max_Bessel_bridge_path_sampler(x, y, s, t, max, tau, times, remove_m = FALSE)
 }
 \arguments{
 \item{x}{start value of Bessel bridge}
