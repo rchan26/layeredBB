@@ -7,56 +7,6 @@
 
 using namespace Rcpp;
 
-// //' Find maximum of vector
-// //'
-// //' This function finds the maximum value of a numerical vector
-// //'
-// //' @param vect numerical vector
-// //'
-// //' @return maximum of vector given
-// //'
-// //' @examples
-// //' # returns 0.8
-// //' find_max(c(-0.4, 0.23, -0.4321, 0.6, 0.3, 0.8, 0.54)) 
-// //'
-// //' @export
-// // [[Rcpp::export]]
-// double find_max(const Rcpp::NumericVector vect) {
-//   // finds the maximum value in a vector
-//   double current_max = vect.at(0); // first element
-//   for (const auto &element: vect) {
-//     if (element > current_max) {
-//       current_max = element;
-//     }
-//   }
-//   return current_max;
-// }
-
-// //' Find minimum of vector
-// //'
-// //' This function finds the minimum value of a numerical vector
-// //'
-// //' @param vect numerical vector
-// //'
-// //' @return minimum of vector given
-// //' 
-// //' @examples
-// //' # returns -0.4321
-// //' find_min(c(-0.4, 0.23, -0.4321, 0.6, 0.3, 0.8, 0.54)) 
-// //'
-// //' @export
-// // [[Rcpp::export]]
-// double find_min(const Rcpp::NumericVector vect) {
-//   // finds the minimum value in a vector
-//   double current_min = vect.at(0); // first element
-//   for (const auto &element: vect) {
-//     if (element < current_min) {
-//       current_min = element;
-//     }
-//   }
-//   return current_min;
-// }
-
 //' Layered Brownian Bridge sampler (Algorithm 33 in ST329)
 //'
 //' Simulation of a layered Brownian Bridge given a Bessel layer at user specified times
