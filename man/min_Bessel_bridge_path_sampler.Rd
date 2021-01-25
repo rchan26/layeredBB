@@ -4,7 +4,7 @@
 \alias{min_Bessel_bridge_path_sampler}
 \title{Bessel Bridge path sampler given minimum}
 \usage{
-min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times, remove_m = FALSE)
+min_Bessel_bridge_path_sampler(x, y, s, t, m, tau, times)
 }
 \arguments{
 \item{x}{start value of Bessel bridge}
@@ -15,15 +15,34 @@ min_Bessel_bridge_path_sampler(x, y, s, t, min, tau, times, remove_m = FALSE)
 
 \item{t}{end value of Bessel bridge}
 
-\item{min}{minumum point}
+\item{m}{minumum point}
 
 \item{tau}{time of minimum point}
 
 \item{times}{vector of real numbers to simulate Bessel bridge}
 }
 \value{
-matrix of the simulated Bessel bridge path, first row is points X,
-        second row are corresponding times
+A list with the following components
+\describe{
+  \item{full_path}{Matrix of the simulated Bessel bridge path at all 
+                   included time points, i.e. s, t and times. The times
+                   are sorted and duplicates are removed. The first row
+                   are the points of the Brownian bridge (named 'X') 
+                   second row are corresponding times (named 'times')}
+  \item{simulated_path}{Matrix of the simulated Bessel bridge path only at 
+                        the specified times passed into the function, i.e. 
+                        the times vector. The times are not sorted and
+                        duplicates are not removed. The first row
+                        are the points of the Bessel bridge (named 'X') 
+                        second row are corresponding times (named 'times')}
+  \item{remove_m_path}{Matrix of the simulated Bessel bridge path only at 
+                       all included times points excluding tau. These times
+                       are sorted and duplicates are removed. The first row
+                       are the points of the Bessel bridge (named 'X') 
+                       second row are corresponding times (named 'times'). 
+                       Note that the minimum point is included if it is 
+                       passed into the times vector}
+}
 }
 \description{
 Simulation of a path of a Bessel bridge at given times, given minimum occurs at time tau
@@ -35,9 +54,19 @@ min_Bessel_bridge_path_sampler(x = 0,
                                y = 0,
                                s = 0,
                                t = 1,
-                               min = -0.4,
+                               m = -0.4,
                                tau = 0.6,
                                times = c(0.2, 0.4, 0.8))
+
+# note that remove_m_path will still include the minimum if passed into times
+# also note that simulated_path does not remove duplicates passed into times
+min_Bessel_bridge_path_sampler(x = 0,
+                               y = 0,
+                               s = 0,
+                               t = 1,
+                               m = -0.4,
+                               tau = 0.6,
+                               times = c(0.2, 0.4, 0.6, 0.8, 0.6))
 
 # another example
 start <- runif(1, -1, 1)
@@ -52,9 +81,9 @@ path <- min_Bessel_bridge_path_sampler(x = start,
                                        y = end,
                                        s = 0,
                                        t = 1,
-                                       min = min['min'],
+                                       m = min['min'],
                                        tau = min['tau'],
-                                       times = seq(0, 1, 0.01))
+                                       times = seq(0, 1, 0.01))$full_path
 plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 lines(x = path['time',], y = path['X',])
 points(x = min['tau'], y = min['min'], col = 'red', pch = 20)

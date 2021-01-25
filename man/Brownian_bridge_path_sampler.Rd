@@ -18,29 +18,70 @@ Brownian_bridge_path_sampler(x, y, s, t, times)
 \item{times}{vector of real numbers to simulate Brownian bridge}
 }
 \value{
-matrix of the simulated Brownian bridge path, first row is points X, 
-        second row are corresponding times
+A list with the following components
+\describe{
+  \item{full_path}{Matrix of the simulated Brownian bridge path at all 
+                   included time points, i.e. s, t and times. The times
+                   are sorted and duplicates are removed. The first row
+                   are the points of the Brownian bridge (named 'X') 
+                   second row are corresponding times (named 'times')}
+  \item{simulated_path}{Matrix of the simulated Brownian bridge path only at 
+                        the specified times passed into the function, i.e. 
+                        the times vector. The times are not sorted and
+                        duplicates are not removed. The first row
+                        are the points of the Brownian bridge (named 'X') 
+                        second row are corresponding times (named 'times')}
+}
 }
 \description{
 Simulation of a path of a Brownian bridge at given times
 }
 \examples{
-# simulate a Brownian bridge path starting at 0 and ending at 0 in time [0,1]
-Brownian_bridge_path_sampler(x = 0,
-                             y = 0,
-                             s = 0,
-                             t = 1,
-                             times = seq(0, 1, 0.01))
-
-# another example
+# simulating paths for time [0,1] and plotting them
 start <- runif(1, -1, 1)
 end <- runif(1, -1, 1)
 path <- Brownian_bridge_path_sampler(x = start,
                                      y = end,
                                      s = 0,
                                      t = 1,
-                                     times = seq(0, 1, 0.01))
+                                     times = seq(0, 1, 0.01))$full_path
 plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 lines(x = path['time',], y = path['X',])
+
+# notice that simulated_path only includes points that are included in times vector
+# note that simulated_path does not remove duplicates passed into times
+Brownian_bridge_path_sampler(x = 0,
+                             y = 1,
+                             s = 0,
+                             t = 1,
+                             times = c(0.1, 0.2, 0.4, 0.6, 0.6, 0.8, 0.1))
+
+# comparing the simulated distribution of simulated points to the
+# theoretical distribution of simulated points
+# set variables
+x <- 0.53
+y <- 4.32
+s <- 0.53
+t <- 2.91
+q <- 1.72
+replicates <- 10000
+paths <- list()
+# repeatedly simulate Brownian bridge 
+for (i in 1:replicates) {
+  paths[[i]] <- Brownian_bridge_path_sampler(x = x,
+                                             y = y,
+                                             s = s,
+                                             t = t,
+                                             times = seq(s, t, 0.01))
+}
+# select the points at the specified time q
+index <- which(seq(s, t, 0.01)==q)
+simulated_points <- sapply(1:replicates, function(i) paths[[i]]$full_path['X', index])
+# calculate the theoretical mean and standard deviation of the simulated points at time q
+theoretical_mean <- x + (q-s)*(y-x)/(t-s)
+theoretical_sd <- sqrt((t-q)*(q-s)/(t-s))
+# plot distribution of the simulated points and the theoretical distribution
+plot(density(simulated_points))
+curve(dnorm(x, theoretical_mean, theoretical_sd), add = T, col = 'red')
 
 }

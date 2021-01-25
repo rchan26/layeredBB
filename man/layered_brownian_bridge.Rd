@@ -4,7 +4,7 @@
 \alias{layered_brownian_bridge}
 \title{Layered Brownian Bridge sampler (Algorithm 33 in ST329)}
 \usage{
-layered_brownian_bridge(x, y, s, t, bessel_layer, times, remove_m = TRUE)
+layered_brownian_bridge(x, y, s, t, bessel_layer, times)
 }
 \arguments{
 \item{x}{start value of Brownian bridge}
@@ -17,17 +17,33 @@ layered_brownian_bridge(x, y, s, t, bessel_layer, times, remove_m = TRUE)
 
 \item{times}{vector of real numbers to simulate Bessel bridge}
 
-\item{remove_m}{boolean to indicate whether or not simulated minimum or 
-maximum is removed (default is TRUE)}
-
 \item{a}{vector/sequence of numbers}
 
 \item{l}{integer number denoting Bessel layer, i.e. Brownian bridge 
 is contained in [min(x,y)-a[l], max(x,y)+a[l]]}
 }
 \value{
-matrix of the simulated layered Brownian bridge path, 
-        first row is points X, second row are corresponding times
+A list with the following components
+\describe{
+  \item{full_path}{Matrix of the simulated layered Brownian bridge path at 
+                   all included time points, i.e. s, t and times. The times
+                   are sorted and duplicates are removed. The first row
+                   are the points of the Brownian bridge (named 'X') 
+                   second row are corresponding times (named 'times')}
+  \item{simulated_path}{Matrix of the simulated layered Brownian bridge path 
+                        only at the specified times passed into the function, 
+                        i.e. the times vector. The times are not sorted and 
+                        duplicates are not removed. The first row 
+                        are the points of the layered Brownian bridge (named 
+                        'X') second row are corresponding times (named 
+                        'times')}
+  \item{remove_m_path}{Matrix of the simulated layered Brownian bridge path 
+                       only at all included times points excluding tau. These 
+                       times are sorted and duplicates are removed. The first
+                       row are the points of the layered Brownian bridge 
+                       (named 'X') second row are corresponding times 
+                       (named 'times')}
+}
 }
 \description{
 Simulation of a layered Brownian Bridge given a Bessel layer at user specified times
@@ -40,24 +56,25 @@ bes_layer <- bessel_layer_simulation(x = 0,
                                      t = 1,
                                      mult = 0.2)
 # simulate layered Brownian bridge
-# simulated minimum or maximum is removed
+# notice full_path has all included times and are sorted and have no duplicates
+# simulated_path only returns points that are passed into times
+# remove_m does not include the simulated minimum or maximum point
 layered_brownian_bridge(x = 0,
                         y = 0,
                         s = 0,
                         t = 1,
                         bessel_layer = bes_layer,
-                        times = seq(0.2, 0.8, 0.2))
-# simulated minimum or maximum is kept
+                        times = c(0.2, 0.4, 0.6, 0.8))
+
+# note that simulated_path does not remove duplicates passed into times
 layered_brownian_bridge(x = 0,
                         y = 0,
                         s = 0,
                         t = 1,
                         bessel_layer = bes_layer,
-                        times = seq(0.2, 0.8, 0.2),
-                        remove_m = FALSE)
+                        times = c(0.2, 0.4, 0.6, 0.8, 0.4, 0.6))
 
 # another example
-# simulated minimum or maximum is removed
 start <- runif(1, -1, 1)
 end <- runif(1, -1, 1)
 bes_layer <- bessel_layer_simulation(x = start, y = end, s = 0, t = 1, mult = 0.2)
@@ -66,28 +83,45 @@ path <- layered_brownian_bridge(x = start,
                                 s = 0,
                                 t = 1,
                                 bessel_layer = bes_layer,
-                                times = seq(0, 1, 0.01))
+                                times = seq(0, 1, 0.01))$full_path
 plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X',
      ylim = c(bes_layer$L, bes_layer$U))
 lines(x = path['time',], y = path['X',])
 abline(h=c(bes_layer$L, bes_layer$U), col = 'red')
 abline(h=c(bes_layer$l, bes_layer$u), col = 'red', lty = 2)
 
-# simulated miniumum or maximum is kept
-start <- runif(1, -1, 1)
-end <- runif(1, -1, 1)
-bes_layer <- bessel_layer_simulation(x = start, y = end, s = 0, t = 1, mult = 0.2)
-path <- layered_brownian_bridge(x = start,
-                                y = end,
-                                s = 0,
-                                t = 1,
-                                bessel_layer = bes_layer,
-                                times = seq(0, 1, 0.01),
-                                remove_m = FALSE)
-plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X',
-     ylim = c(bes_layer$L, bes_layer$U))
-lines(x = path['time',], y = path['X',])
-abline(h=c(bes_layer$L, bes_layer$U), col = 'red')
-abline(h=c(bes_layer$l, bes_layer$u), col = 'red', lty = 2)
+# compare the simulated distribution of simulated points to the
+# theoretical distribution of simulated points
+# for large Bessel layers, it should look like a unconditional Brownian bridge
+x <- 0.53
+y <- 4.32
+s <- 0.53
+t <- 2.91
+q <- 1.72
+replicates <- 10000
+paths <- list()
+large_bessel_layer <- bessel_layer_simulation(x = x,
+                                              y = y,
+                                              s = s,
+                                              t = t,
+                                              mult = 100)
+# repeatedly simulate Brownian bridge 
+for (i in 1:replicates) {
+  paths[[i]] <- layered_brownian_bridge(x = x,
+                                        y = y,
+                                        s = s,
+                                        t = t,
+                                        bessel_layer = large_bessel_layer,
+                                        times = seq(s, t, 0.01))
+}
+# select the points at the specified time q
+index <- which(seq(s, t, 0.01)==q)
+simulated_points <- sapply(1:replicates, function(i) paths[[i]]$full_path['X', index])
+# calculate the theoretical mean and standard deviation of the simulated points at time q
+theoretical_mean <- x + (q-s)*(y-x)/(t-s)
+theoretical_sd <- sqrt((t-q)*(q-s)/(t-s))
+# plot distribution of the simulated points and the theoretical distribution
+plot(density(simulated_points))
+curve(dnorm(x, theoretical_mean, theoretical_sd), add = T, col = 'red')
 
 }

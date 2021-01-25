@@ -22,9 +22,20 @@ multi_layered_brownian_bridge(dim, x, y, s, t, bessel_layers, times)
 \item{times}{vector of real numbers to simulate Bessel bridge}
 }
 \value{
-matrix of the simulated layered Brownian bridge path, 
-        first dim rows are points for X in each component, 
-        last row are corresponding times
+A list with the following components
+\describe{
+  \item{full_path}{Matrix of the simulated layered Brownian bridge path at all 
+                   included time points, i.e. s, t and times. The times
+                   are sorted and duplicates are removed. The first dim rows
+                   are the points of the Brownian bridge in each component,
+                   last row gives the corresponding times}
+  \item{simulated_path}{Matrix of the simulated layered Brownian bridge path 
+                        only at the specified times passed into the function, 
+                        i.e. the times vector. The times are not sorted and
+                        duplicates are not removed. The first dim rows
+                        are the points of the layered Brownian bridge in 
+                        each component, last row gives the corresponding times}
+}
 }
 \description{
 Simulation of a multi-dimensional layered Brownian Bridge given Bessel layers
@@ -47,6 +58,15 @@ multi_layered_brownian_bridge(dim = 2,
                               s = 0,
                               t = 1,
                               bessel_layers = bes_layers,
-                              times = seq(0.2, 0.8, 0.2))
+                              times = c(0.2, 0.4, 0.6, 0.8))
+
+# note that simulated_path does not remove duplicates passed into times
+multi_layered_brownian_bridge(dim = 2,
+                              x = c(0,0),
+                              y = c(0,0),
+                              s = 0,
+                              t = 1,
+                              bessel_layers = bes_layers,
+                              times = c(0.2, 0.4, 0.6, 0.8, 0.4, 0.6))
 
 }

@@ -4,7 +4,7 @@
 \alias{min_Bessel_bridge_sampler}
 \title{Bessel Bridge point sampler given minimum (Algorithm 15 in ST329)}
 \usage{
-min_Bessel_bridge_sampler(x, y, s, t, min, tau, q)
+min_Bessel_bridge_sampler(x, y, s, t, m, tau, q)
 }
 \arguments{
 \item{x}{start value of Bessel bridge}
@@ -15,7 +15,7 @@ min_Bessel_bridge_sampler(x, y, s, t, min, tau, q)
 
 \item{t}{end value of Bessel bridge}
 
-\item{min}{minumum point}
+\item{m}{minumum point}
 
 \item{tau}{time of minimum point}
 
@@ -34,7 +34,7 @@ min_Bessel_bridge_sampler(x = 0,
                           y = 0,
                           s = 0,
                           t = 1,
-                          min = -0.4,
+                          m = -0.4,
                           tau = 0.6,
                           q = 0.2)
 

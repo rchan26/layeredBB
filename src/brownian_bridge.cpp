@@ -1,4 +1,4 @@
-#include "../inc/brownian_bridge_min.hpp"
+#include "../inc/brownian_bridge.hpp"
 #include "../inc/inverse_gauss.hpp"
 
 using namespace Rcpp;
@@ -13,61 +13,123 @@ using namespace Rcpp;
 //' @param t end value of Brownian bridge
 //' @param times vector of real numbers to simulate Brownian bridge
 //'
-//' @return matrix of the simulated Brownian bridge path, first row is points X, 
-//'         second row are corresponding times
+//' @return A list with the following components
+//' \describe{
+//'   \item{full_path}{Matrix of the simulated Brownian bridge path at all 
+//'                    included time points, i.e. s, t and times. The times
+//'                    are sorted and duplicates are removed. The first row
+//'                    are the points of the Brownian bridge (named 'X') 
+//'                    second row are corresponding times (named 'times')}
+//'   \item{simulated_path}{Matrix of the simulated Brownian bridge path only at 
+//'                         the specified times passed into the function, i.e. 
+//'                         the times vector. The times are not sorted and
+//'                         duplicates are not removed. The first row
+//'                         are the points of the Brownian bridge (named 'X') 
+//'                         second row are corresponding times (named 'times')}
+//' }
 //'
 //' @examples 
-//' # simulate a Brownian bridge path starting at 0 and ending at 0 in time [0,1]
-//' Brownian_bridge_path_sampler(x = 0,
-//'                              y = 0,
-//'                              s = 0,
-//'                              t = 1,
-//'                              times = seq(0, 1, 0.01))
-//'
-//' # another example
+//' # simulating paths for time [0,1] and plotting them
 //' start <- runif(1, -1, 1)
 //' end <- runif(1, -1, 1)
 //' path <- Brownian_bridge_path_sampler(x = start,
 //'                                      y = end,
 //'                                      s = 0,
 //'                                      t = 1,
-//'                                      times = seq(0, 1, 0.01))
+//'                                      times = seq(0, 1, 0.01))$full_path
 //' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 //' lines(x = path['time',], y = path['X',])
+//' 
+//' # notice that simulated_path only includes points that are included in times vector
+//' # note that simulated_path does not remove duplicates passed into times
+//' Brownian_bridge_path_sampler(x = 0,
+//'                              y = 1,
+//'                              s = 0,
+//'                              t = 1,
+//'                              times = c(0.1, 0.2, 0.4, 0.6, 0.6, 0.8, 0.1))
+//'
+//' # comparing the simulated distribution of simulated points to the
+//' # theoretical distribution of simulated points
+//' # set variables
+//' x <- 0.53
+//' y <- 4.32
+//' s <- 0.53
+//' t <- 2.91
+//' q <- 1.72
+//' replicates <- 10000
+//' paths <- list()
+//' # repeatedly simulate Brownian bridge 
+//' for (i in 1:replicates) {
+//'   paths[[i]] <- Brownian_bridge_path_sampler(x = x,
+//'                                              y = y,
+//'                                              s = s,
+//'                                              t = t,
+//'                                              times = seq(s, t, 0.01))
+//' }
+//' # select the points at the specified time q
+//' index <- which(seq(s, t, 0.01)==q)
+//' simulated_points <- sapply(1:replicates, function(i) paths[[i]]$full_path['X', index])
+//' # calculate the theoretical mean and standard deviation of the simulated points at time q
+//' theoretical_mean <- x + (q-s)*(y-x)/(t-s)
+//' theoretical_sd <- sqrt((t-q)*(q-s)/(t-s))
+//' # plot distribution of the simulated points and the theoretical distribution
+//' plot(density(simulated_points))
+//' curve(dnorm(x, theoretical_mean, theoretical_sd), add = T, col = 'red')
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
-                                                 const double &y,
-                                                 const double &s, 
-                                                 const double &t,
-                                                 Rcpp::NumericVector times)
+Rcpp::List Brownian_bridge_path_sampler(const double &x,
+                                        const double &y,
+                                        const double &s, 
+                                        const double &t,
+                                        const Rcpp::NumericVector &times)
 {
-  // collect all times into one vector
-  times.push_front(s);
-  times.push_back(t);
-  // remove duplicates and sort times vector
-  times = Rcpp::sort_unique(times);
-  Rcpp::NumericVector simulated_bb(times.size());
-  // when simulating the path, want to work from left to right
-  for (int i = 0; i < times.size(); ++i) {
-    if (times.at(i) == s) {
-      simulated_bb.at(i) = x;
-    } else if (times.at(i) == t) {
-      simulated_bb.at(i) = y;
+  if (Rcpp::min(times) < s) {
+    stop("layeredBB::Brownian_bridge_path_sampler: minimum of specified times is less than s");
+  } else if (Rcpp::max(times) > t) {
+    stop("layeredBB::Brownian_bridge_path_sampler: maximum of specified times is greater than t");
+  }
+  // ----- collect all times into one vector
+  // and remove duplicates and sort full_times vector
+  Rcpp::NumericVector full_times = times;
+  full_times.push_front(s);
+  full_times.push_back(t);
+  full_times = Rcpp::sort_unique(full_times);
+  // ----- create two paths:
+  // BB at all times included
+  Rcpp::NumericMatrix full_bb(2, full_times.size());
+  full_bb.row(1) = full_times;
+  rownames(full_bb) = CharacterVector::create("X", "time");
+  // BB at specified times
+  Rcpp::NumericMatrix simulated_bb(2, times.size());
+  simulated_bb.row(1) = times;
+  rownames(simulated_bb) = CharacterVector::create("X", "time");
+  // ----- when simulating the path, want to work from left to right
+  // simulate points using the full path and fill in simulated_bb 
+  for (int i = 0; i < full_times.size(); ++i) {
+    // simulate path
+    if (full_times.at(i) == s) {
+      full_bb(0, i) = x;
+    } else if (full_times.at(i) == t) {
+      full_bb(0, i) = y;
     } else {
-      double l = times.at(i-1), q = times.at(i), r = t;
-      double W_l = simulated_bb.at(i-1), W_r = y;
+      double l = full_times.at(i-1), q = full_times.at(i), r = t;
+      double W_l = full_bb(0, i-1), W_r = y;
       double M = W_l + ((q-l)*(W_r-W_l)/(r-l));
       double S = sqrt((r-q)*(q-l)/(r-l));
-      simulated_bb.at(i) = Rcpp::rnorm(1, M, S)[0];
+      full_bb(0, i) = Rcpp::rnorm(1, M, S)[0];
+    }
+    // loop through times vector, if times.at(j) == full_times.at(i), 
+    // then we know that we just simulated a point that was specified in the
+    // times vector and add it to the simulated_bb path
+    for (int j = 0; j < times.size(); ++j) {
+      if (times.at(j) == full_times.at(i)) {
+        simulated_bb(0, j) = full_bb(0, i);
+      }
     }
   }
-  Rcpp::NumericMatrix bb(2, simulated_bb.size());
-  bb(0, _) = simulated_bb;
-  bb(1, _) = times;
-  rownames(bb) = CharacterVector::create("X", "time");
-  return bb;
+  return Rcpp::List::create(Named("full_path", full_bb),
+                            Named("simulated_path", simulated_bb));
 }
 
 //' Multi-dimensional Brownian Bridge path sampler
@@ -81,9 +143,20 @@ Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
 //' @param t end value of Brownian bridge
 //' @param times vector of real numbers to simulate Brownian bridge
 //' 
-//' @return matrix of the simulated layered Brownian bridge path, 
-//'         first dim rows are points for X in each component, 
-//'         last row are corresponding times
+//' @return A list with the following components
+//' \describe{
+//'   \item{full_path}{Matrix of the simulated Brownian bridge path at all 
+//'                    included time points, i.e. s, t and times. The times
+//'                    are sorted and duplicates are removed. The first dim rows
+//'                    are the points of the Brownian bridge in each component,
+//'                    last row gives the corresponding times}
+//'   \item{simulated_path}{Matrix of the simulated Brownian bridge path only at 
+//'                         the specified times passed into the function, i.e. 
+//'                         the times vector. The times are not sorted and
+//'                         duplicates are not removed. The first dim rows
+//'                         are the points of the Brownian bridge in each component,
+//'                         last row gives the corresponding times}
+//' }
 //'
 //' @examples
 //' # simulate two-dimensional Brownian bridge starting and ending 
@@ -93,38 +166,56 @@ Rcpp::NumericMatrix Brownian_bridge_path_sampler(const double &x,
 //'                       y = c(0,0),
 //'                       s = 0,
 //'                       t = 1,
-//'                       times = seq(0.2, 0.8, 0.2))
+//'                       times = c(0.1, 0.2, 0.4, 0.6, 0.8))
+//'                       
+//' # note that simulated_path does not remove duplicates passed into times
+//' multi_brownian_bridge(dim = 2,
+//'                       x = c(0,0),
+//'                       y = c(0,0),
+//'                       s = 0,
+//'                       t = 1,
+//'                       times = c(0.1, 0.2, 0.4, 0.6, 0.6, 0.8, 0.1))
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericMatrix multi_brownian_bridge(const int &dim,
-                                          const Rcpp::NumericVector &x,
-                                          const Rcpp::NumericVector &y,
-                                          const double &s,
-                                          const double &t,
-                                          Rcpp::NumericVector times)
+Rcpp::List multi_brownian_bridge(const int &dim,
+                                 const Rcpp::NumericVector &x,
+                                 const Rcpp::NumericVector &y,
+                                 const double &s,
+                                 const double &t,
+                                 const Rcpp::NumericVector &times)
 {
   // check that x and y match the dimensions of dim
   if (x.size() != dim) {
-    stop("multi_brownian_bridge: size of x is not equal to dim");
+    stop("layeredBB::multi_brownian_bridge: size of x is not equal to dim");
   } else if (y.size() != dim) {
-    stop("multi_brownian_bridge: size of y is not equal to dim");
+    stop("layeredBB::multi_brownian_bridge: size of y is not equal to dim");
   } 
-  // collect all times into one vector
-  times.push_front(s);
-  times.push_back(t);
-  // remove duplicates and sort times vector
-  times = Rcpp::sort_unique(times);
-  // for each component, we simulate a Brownian bridge
-  // multi_BB is a matrix with dimensions (dim+1) x times.size()
-  Rcpp::NumericMatrix multi_BB(dim+1, times.size());
-  multi_BB(dim, _) = times;
+  // ----- collect all times into one vector
+  // and remove duplicates and sort full_times vector
+  Rcpp::NumericVector full_times = times;
+  full_times.push_front(s);
+  full_times.push_back(t);
+  full_times = Rcpp::sort_unique(full_times);
+  // ----- for each component, we simulate a Brownian bridge
+  // BB at all times included
+  Rcpp::NumericMatrix multi_full_bb(dim+1, full_times.size());
+  multi_full_bb.row(dim) = full_times;
+  // BB at specified times
+  Rcpp::NumericMatrix multi_simulated_bb(dim+1, times.size());
+  multi_simulated_bb.row(dim) = times;
   // loop through the components and simulate a Brownian bridge
   for (int d=0; d < dim; ++d) {
-    Rcpp::NumericMatrix component_BB = Brownian_bridge_path_sampler(x.at(d), y.at(d), s, t, times);
-    multi_BB(d, _) = component_BB(0, _);
+    Rcpp::List component_BB = Brownian_bridge_path_sampler(x.at(d), y.at(d), s, t, times);
+    // fill in full path BB
+    Rcpp::NumericMatrix full_path = component_BB["full_path"];
+    multi_full_bb.row(d) = full_path.row(0);
+    // fill in simulated BB
+    Rcpp::NumericMatrix simulated_path = component_BB["simulated_path"];
+    multi_simulated_bb.row(d) = simulated_path.row(0);
   }
-  return(multi_BB);
+  return Rcpp::List::create(Named("full_path", multi_full_bb),
+                            Named("simulated_path", multi_simulated_bb));
 }
 
 double M_func(const double &a,
@@ -171,11 +262,10 @@ Rcpp::NumericVector min_sampler(const double &x,
                                 const double &low_bound,
                                 const double &up_bound)
 {
-  // function simulates a minimum of a Brownian bridge between (low_bound) and (up_bound)
   if (low_bound > up_bound) {
-    stop("layeredBB::min_sampler: low_bound > up_bound");
+    stop("layeredBB::min_sampler: low_bound > up_bound. Must have low_bound < up_bound <= min(x,y)");
   } else if (up_bound > std::min(x, y)) {
-    stop("layeredBB::min_sampler: up_bound > min(x, y)");
+    stop("layeredBB::min_sampler: up_bound > min(x, y). Must have low_bound < up_bound <= min(x,y)");
   }
   // set simulated minimum value
   double u1 = Rcpp::runif(1, M_func(low_bound,x,y,s,t), M_func(up_bound,x,y,s,t))[0];
@@ -203,7 +293,7 @@ Rcpp::NumericVector min_sampler(const double &x,
 //' @param y end value of Bessel bridge
 //' @param s start value of Bessel bridge
 //' @param t end value of Bessel bridge
-//' @param min minumum point
+//' @param m minumum point
 //' @param tau time of minimum point
 //' @param q time of simulation
 //'
@@ -216,7 +306,7 @@ Rcpp::NumericVector min_sampler(const double &x,
 //'                           y = 0,
 //'                           s = 0,
 //'                           t = 1,
-//'                           min = -0.4,
+//'                           m = -0.4,
 //'                           tau = 0.6,
 //'                           q = 0.2)
 //'
@@ -226,10 +316,37 @@ double min_Bessel_bridge_sampler(const double &x,
                                  const double &y,
                                  const double &s,
                                  const double &t,
-                                 const double &min,
+                                 const double &m,
                                  const double &tau,
                                  const double &q)
 {
+  // check requested simulation time q is in [s,t]
+  if (q < s) {
+    stop("layeredBB::min_Bessel_bridge_sampler: requested simulation time q < s");
+  } else if (q > t) {
+    stop("layeredBB::min_Bessel_bridge_sampler: requested simulation time q > t");
+  } 
+  // check tau is between [s,t]
+  if (tau < s) {
+    stop("layeredBB::min_Bessel_bridge_sampler: time of minimum tau < s");
+  } else if (tau > t) {
+    stop("layeredBB::min_Bessel_bridge_sampler: time of minimum tau > t");
+  }
+  // if tau == s or tau == t
+  // check that they are consistent with the given points for m, x, y
+  if (tau == s) {
+    if (m != x) {
+      stop("layeredBB::min_Bessel_bridge_sampler: tau == s and minimum point m != x");
+    } 
+  } else if (tau == t) {
+    if (m != y) {
+      stop("layeredBB::min_Bessel_bridge_sampler: tau == t and minimum point m != y");
+    }
+  }
+  // check m <= min(x,y)
+  if (m > std::min(x,y)) {
+    stop("layeredBB::min_Bessel_bridge_sampler: m > min(x,y). Must have m <= min(x,y)");
+  }
   // function simulates a Bessel bridge at a given time (q) with minimum (min) at time (tau)
   // cases where we already know the location at time q
   if (q == s) {
@@ -237,7 +354,7 @@ double min_Bessel_bridge_sampler(const double &x,
   } else if (q == t) {
     return y;
   } else if (q == tau) {
-    return min;
+    return m;
   }
   // set variable r
   double r;
@@ -252,8 +369,8 @@ double min_Bessel_bridge_sampler(const double &x,
   // simulate normal random variables
   Rcpp::NumericVector b = rnorm(3, 0.0, sqrt(fabs(tau-q)*fabs(q-r))/fabs(tau-r));
   // set simulated value and return
-  double term1 = ((Wr-min)*fabs(tau-q)/(pow(fabs(tau-r), 1.5))) + b.at(0);
-  return min + sqrt(fabs(tau-r)*(term1*term1 + b.at(1)*b.at(1) + b.at(2)*b.at(2)));
+  double term1 = ((Wr-m)*fabs(tau-q)/(pow(fabs(tau-r), 1.5))) + b.at(0);
+  return m + sqrt(fabs(tau-r)*(term1*term1 + b.at(1)*b.at(1) + b.at(2)*b.at(2)));
 }
 
 //' Bessel Bridge path sampler given minimum
@@ -264,12 +381,31 @@ double min_Bessel_bridge_sampler(const double &x,
 //' @param y end value of Bessel bridge
 //' @param s start value of Bessel bridge
 //' @param t end value of Bessel bridge
-//' @param min minumum point
+//' @param m minumum point
 //' @param tau time of minimum point
 //' @param times vector of real numbers to simulate Bessel bridge
 //'
-//' @return matrix of the simulated Bessel bridge path, first row is points X,
-//'         second row are corresponding times
+//' @return A list with the following components
+//' \describe{
+//'   \item{full_path}{Matrix of the simulated Bessel bridge path at all 
+//'                    included time points, i.e. s, t and times. The times
+//'                    are sorted and duplicates are removed. The first row
+//'                    are the points of the Brownian bridge (named 'X') 
+//'                    second row are corresponding times (named 'times')}
+//'   \item{simulated_path}{Matrix of the simulated Bessel bridge path only at 
+//'                         the specified times passed into the function, i.e. 
+//'                         the times vector. The times are not sorted and
+//'                         duplicates are not removed. The first row
+//'                         are the points of the Bessel bridge (named 'X') 
+//'                         second row are corresponding times (named 'times')}
+//'   \item{remove_m_path}{Matrix of the simulated Bessel bridge path only at 
+//'                        all included times points excluding tau. These times
+//'                        are sorted and duplicates are removed. The first row
+//'                        are the points of the Bessel bridge (named 'X') 
+//'                        second row are corresponding times (named 'times'). 
+//'                        Note that the minimum point is included if it is 
+//'                        passed into the times vector}
+//' }
 //'
 //' @examples
 //' # simulating a path at times=c(0.2, 0.4, 0.8) for a Bessel bridge starting 
@@ -278,9 +414,19 @@ double min_Bessel_bridge_sampler(const double &x,
 //'                                y = 0,
 //'                                s = 0,
 //'                                t = 1,
-//'                                min = -0.4,
+//'                                m = -0.4,
 //'                                tau = 0.6,
 //'                                times = c(0.2, 0.4, 0.8))
+//' 
+//' # note that remove_m_path will still include the minimum if passed into times
+//' # also note that simulated_path does not remove duplicates passed into times
+//' min_Bessel_bridge_path_sampler(x = 0,
+//'                                y = 0,
+//'                                s = 0,
+//'                                t = 1,
+//'                                m = -0.4,
+//'                                tau = 0.6,
+//'                                times = c(0.2, 0.4, 0.6, 0.8, 0.6))
 //' 
 //' # another example
 //' start <- runif(1, -1, 1)
@@ -295,78 +441,153 @@ double min_Bessel_bridge_sampler(const double &x,
 //'                                        y = end,
 //'                                        s = 0,
 //'                                        t = 1,
-//'                                        min = min['min'],
+//'                                        m = min['min'],
 //'                                        tau = min['tau'],
-//'                                        times = seq(0, 1, 0.01))
+//'                                        times = seq(0, 1, 0.01))$full_path
 //' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 //' lines(x = path['time',], y = path['X',])
 //' points(x = min['tau'], y = min['min'], col = 'red', pch = 20)
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericMatrix min_Bessel_bridge_path_sampler(const double &x,
-                                                   const double &y,
-                                                   const double &s,
-                                                   const double &t,
-                                                   const double &min,
-                                                   const double &tau,
-                                                   Rcpp::NumericVector times)
+Rcpp::List min_Bessel_bridge_path_sampler(const double &x,
+                                          const double &y,
+                                          const double &s,
+                                          const double &t,
+                                          const double &m,
+                                          const double &tau,
+                                          const Rcpp::NumericVector &times)
 {
-  // function simulates a Bessel bridge sample path with minimum (min) at time (tau)
-  // (times) get altered in this function to match the indices of the simulated path
-  // i.e. after using the function, simulated_bb[i] is the path at times[i]
-  // this is because (times) may not include the times (s), (t), (tau)
-  // collect all times into one vector
-  times.push_front(s);
-  times.push_back(t);
-  times.insert(times.end(), tau);
-  // remove duplicates and sort times vector
-  times = Rcpp::sort_unique(times);
-  // create vector to store the simulated Bessel bridge path
-  Rcpp::NumericVector simulated_bb(times.size());
+  // check requested simulation times are in [s,t]
+  if (Rcpp::min(times) < s) {
+    stop("layeredBB::min_Bessel_bridge_path_sampler: minimum of specified times is less than s");
+  } else if (Rcpp::max(times) > t) {
+    stop("layeredBB::min_Bessel_bridge_path_sampler: maximum of specified times is greater than t");
+  } 
+  // check tau is between [s,t]
+  if (tau < s) {
+    stop("layeredBB::min_Bessel_bridge_path_sampler: time of minimum tau < s");
+  } else if (tau > t) {
+    stop("layeredBB::min_Bessel_bridge_path_sampler: time of minimum tau > t");
+  }
+  // if tau == s or tau == t
+  // check that they are consistent with the given points for m, x, y
+  if (tau == s) {
+    if (m != x) {
+      stop("layeredBB::min_Bessel_bridge_path_sampler: tau == s and minimum point m != x");
+    } 
+  } else if (tau == t) {
+    if (m != y) {
+      stop("layeredBB::min_Bessel_bridge_path_sampler:: tau == t and minimum point m != y");
+    }
+  }
+  // check m <= min(x,y)
+  if (m > std::min(x,y)) {
+    stop("layeredBB::min_Bessel_bridge_path_sampler: m > min(x,y). Must have m <= min(x,y)");
+  }
+  // ----- collect all times into one vector
+  // and remove duplicates and sort full_times vector
+  Rcpp::NumericVector full_times = times;
+  full_times.push_front(s);
+  full_times.push_back(t);
+  full_times.push_back(tau);
+  full_times = Rcpp::sort_unique(full_times);
+  // ----- create variable for all times besides the time of the minimum tau
+  // and remove duplicates and sort full_times vector
+  Rcpp::NumericVector remove_m_times = times;
+  remove_m_times.push_front(s);
+  remove_m_times.push_back(t);
+  remove_m_times = Rcpp::sort_unique(remove_m_times);
+  // ----- create three paths:
+  // BB at all times included
+  Rcpp::NumericMatrix full_bb(2, full_times.size());
+  full_bb.row(1) = full_times;
+  rownames(full_bb) = CharacterVector::create("X", "time");
+  // BB at specified times
+  Rcpp::NumericMatrix simulated_bb(2, times.size());
+  simulated_bb.row(1) = times;
+  rownames(simulated_bb) = CharacterVector::create("X", "time");
+  // BB at times minus the minimum point
+  Rcpp::NumericMatrix remove_m_bb(2, remove_m_times.size());
+  remove_m_bb.row(1) = remove_m_times;
+  rownames(remove_m_bb) = CharacterVector::create("X", "time");
   // when simulating the path, want to work from left to right when left of the min
   // and work from right to left when right of the min
   // this is so we can use the Markov property
-  for (int i = 0; times.at(i) <= tau; ++i) {
-    // simulate the point at each time
-    if (times.at(i) == s) {
-      simulated_bb.at(i) = x;
-    } else if (times.at(i) == tau) {
-      simulated_bb.at(i) = min;
+  for (int i = 0; i < full_times.size(); ++i) {
+    if (full_times.at(i) <= tau) {
+      // simulate the point at each time
+      if (full_times.at(i) == s) {
+        full_bb(0, i) = x;
+      } else if (full_times.at(i) == tau) {
+        full_bb(0, i) = m;
+      } else if (full_times.at(i) == t) {
+        full_bb(0, i) = y;
+      } else {
+        // if left of tau, then we simulate the next point normally, 
+        // starting from the previous point to the end
+        full_bb(0, i) = min_Bessel_bridge_sampler(full_bb(0, i-1),
+                                                  y,
+                                                  full_times.at(i-1),
+                                                  t,
+                                                  m,
+                                                  tau,
+                                                  full_times.at(i));
+      }
+      // loop through times vector, if times.at(j) == full_times.at(i), 
+      // then we know that we just simulated a point that was specified in the
+      // times vector and add it to the simulated_bb path
+      for (int j = 0; j < times.size(); ++j) {
+        if (times.at(j) == full_times.at(i)) {
+          simulated_bb(0, j) = full_bb(0, i);
+        }
+      }
+      // do same for remove_m path
+      for (int j = 0; j < remove_m_times.size(); ++j) {
+        if (remove_m_times.at(j) == full_times.at(i)) {
+          remove_m_bb(0, j) = full_bb(0, i);
+        }
+      }
     } else {
-      // if left of tau, then we simulate the next point normally, 
-      // starting from the previous point to the end
-      simulated_bb.at(i) = min_Bessel_bridge_sampler(simulated_bb.at(i-1),
-                                                     y,
-                                                     times.at(i-1),
-                                                     t,
-                                                     min,
-                                                     tau,
-                                                     times.at(i));
+      break;
     }
   }
-  for (int i = times.size()-1; times.at(i) > tau; --i) {
-    // simulate the point at each time
-    if (times.at(i) == t) {
-      simulated_bb.at(i) = y;
+  for (int i = full_times.size()-1; i > 0; --i) {
+    if (full_times.at(i) > tau) {
+      // simulate the point at each time
+      if (full_times.at(i) == t) {
+        full_bb(0, i) = y;
+      } else {
+        // reflect it by taking the absolute value of the (time wanted - t)
+        full_bb(0, i) = min_Bessel_bridge_sampler(full_bb(0, i+1),
+                                                  x,
+                                                  fabs(full_times.at(i+1)-t),
+                                                  fabs(s-t), 
+                                                  m,
+                                                  fabs(tau-t),
+                                                  fabs(full_times.at(i)-t));
+      }
+      // loop through times vector, if times.at(j) == full_times.at(i), 
+      // then we know that we just simulated a point that was specified in the
+      // times vector and add it to the simulated_bb path
+      for (int j = 0; j < times.size(); ++j) {
+        if (times.at(j) == full_times.at(i)) {
+          simulated_bb(0, j) = full_bb(0, i);
+        }
+      }
+      // do same for remove_m path
+      for (int j = 0; j < remove_m_times.size(); ++j) {
+        if (remove_m_times.at(j) == full_times.at(i)) {
+          remove_m_bb(0, j) = full_bb(0, i);
+        }
+      }
     } else {
-      // reflect it by taking the absolute value of the (time wanted - t)
-      simulated_bb.at(i) = min_Bessel_bridge_sampler(simulated_bb.at(i+1),
-                                                     x,
-                                                     fabs(times.at(i+1)-t),
-                                                     fabs(s-t), 
-                                                     min,
-                                                     fabs(tau-t),
-                                                     fabs(times.at(i)-t));
+      break;
     }
   }
-  // creating matrix to store the path and the corresponding times
-  Rcpp::NumericMatrix bb(2, simulated_bb.size());
-  bb(0, _) = simulated_bb;
-  bb(1, _) = times;
-  // setting rownames
-  rownames(bb) = CharacterVector::create("X", "time");
-  return bb;
+  return Rcpp::List::create(Named("full_path", full_bb),
+                            Named("simulated_path", simulated_bb),
+                            Named("remove_m_path", remove_m_bb));
 }
 
 //' Brownian Bridge maximum point sampler
@@ -403,9 +624,11 @@ Rcpp::NumericVector max_sampler(const double &x,
                                 const double &low_bound,
                                 const double &up_bound)
 {
-  // function simulates a maximum of a Brownian bridge between (low_bound) and (up_bound)
-  // first element returned is the simulated maximum
-  // second element returned is the simulated time which the maximum occurs
+  if (low_bound > up_bound) {
+    stop("layeredBB::max_sampler: low_bound > up_bound. Must have max(x,y) <= low_bound < up_bound");
+  } else if (low_bound < std::max(x,y)) {
+    stop("layeredBB::max_sampler: low_bound < max(x,y). Must have max(x,y) <= low_bound < up_bound");
+  }
   // reflect the problem to simulate a minimum
   Rcpp::NumericVector sim_min = min_sampler(-x, -y, s, t, -up_bound, -low_bound);
   // reflect on x-axis
@@ -421,7 +644,7 @@ Rcpp::NumericVector max_sampler(const double &x,
 //' @param y end value of Bessel bridge
 //' @param s start value of Bessel bridge
 //' @param t end value of Bessel bridge
-//' @param max maxumum point 
+//' @param m maxumum point 
 //' @param tau time of maximum point
 //' @param q time of simulation
 //' 
@@ -430,7 +653,13 @@ Rcpp::NumericVector max_sampler(const double &x,
 //' @examples
 //' # simulating a point at q=0.2 for a Bessel bridge starting at 0 and ending 
 //' # at 0 in time [0,1] given maximum is at 0.4 at time 0.6
-//' max_Bessel_bridge_sampler(x = 0, y = 0, s = 0, t = 1, max = 0.4, tau = 0.6, q = 0.2)
+//' max_Bessel_bridge_sampler(x = 0,
+//'                           y = 0,
+//'                           s = 0,
+//'                           t = 1,
+//'                           m = 0.4,
+//'                           tau = 0.6,
+//'                           q = 0.2)
 //'
 //' @export
 // [[Rcpp::export]]
@@ -438,14 +667,40 @@ double max_Bessel_bridge_sampler(const double &x,
                                  const double &y,
                                  const double &s,
                                  const double &t,
-                                 const double &max,
+                                 const double &m,
                                  const double &tau,
                                  const double &q)
 {
-  // function simulates a Bessel bridge at a given time (q) with minimum (min) at time (tau)
+  // check requested simulation time q is in [s,t]
+  if (q < s) {
+    stop("layeredBB::max_Bessel_bridge_sampler: requested simulation time q < s");
+  } else if (q > t) {
+    stop("layeredBB::max_Bessel_bridge_sampler: requested simulation time q > t");
+  } 
+  // check tau is between [s,t]
+  if (tau < s) {
+    stop("layeredBB::max_Bessel_bridge_sampler: time of maximum tau < s");
+  } else if (tau > t) {
+    stop("layeredBB::max_Bessel_bridge_sampler: time of maximum tau > t");
+  }
+  // if tau == s or tau == t
+  // check that they are consistent with the given points for m, x, y
+  if (tau == s) {
+    if (m != x) {
+      stop("layeredBB::max_Bessel_bridge_sampler: tau == s and maximum point m != x");
+    } 
+  } else if (tau == t) {
+    if (m != y) {
+      stop("layeredBB::max_Bessel_bridge_sampler:: tau == t and maximum point m != y");
+    }
+  }
+  // check m >= max(x,y)
+  if (m < std::max(x,y)) {
+    stop("layeredBB::max_Bessel_bridge_sampler: m < max(x,y). Must have m >= max(x,y)");
+  }
   // reflect the problem to simulate a Bessel bridge with a given minimum point
   // reflect on x-axis
-  return -min_Bessel_bridge_sampler(-x, -y, s, t, -max, tau, q);
+  return -min_Bessel_bridge_sampler(-x, -y, s, t, -m, tau, q);
 }
 
 //' Bessel Bridge path sampler given maximum
@@ -456,24 +711,53 @@ double max_Bessel_bridge_sampler(const double &x,
 //' @param y end value of Bessel bridge
 //' @param s start value of Bessel bridge
 //' @param t end value of Bessel bridge
-//' @param max maxumum point 
+//' @param m maxumum point 
 //' @param tau time of maximum point
 //' @param times vector of real numbers to simulate Bessel bridge
 //' 
-//' @return matrix of the simulated Bessel bridge path, first row is points X, 
-//'         second row are corresponding times
+//' @return A list with the following components
+//' \describe{
+//'   \item{full_path}{Matrix of the simulated Bessel bridge path at all 
+//'                    included time points, i.e. s, t and times. The times
+//'                    are sorted and duplicates are removed. The first row
+//'                    are the points of the Brownian bridge (named 'X') 
+//'                    second row are corresponding times (named 'times')}
+//'   \item{simulated_path}{Matrix of the simulated Bessel bridge path only at 
+//'                         the specified times passed into the function, i.e. 
+//'                         the times vector. The times are not sorted and
+//'                         duplicates are not removed. The first row
+//'                         are the points of the Bessel bridge (named 'X') 
+//'                         second row are corresponding times (named 'times')}
+//'   \item{remove_m_path}{Matrix of the simulated Bessel bridge path only at 
+//'                        all included times points excluding tau. These times
+//'                        are sorted and duplicates are removed. The first row
+//'                        are the points of the Bessel bridge (named 'X') 
+//'                        second row are corresponding times (named 'times'). 
+//'                        Note that the maximum point is included if it is 
+//'                        passed into the times vector}
+//' }
 //'
 //' @examples
-//' # simulating a path at times=c(0.2, 0.4, 0.8) for a Bessel bridge starting 
+//' # simulating a path at times = c(0.2, 0.4, 0.8) for a Bessel bridge starting 
 //' # at 0 and ending at 0 in time [0,1] given maximum is at 0.4 at time 0.6
 //' max_Bessel_bridge_path_sampler(x = 0,
 //'                                y = 0,
 //'                                s = 0,
 //'                                t = 1,
-//'                                max = 0.4,
+//'                                m = 0.4,
 //'                                tau = 0.6,
 //'                                times = c(0.2, 0.4, 0.8))
-//'                                
+//'
+//' # note that remove_m_path will still include the minimum if passed into times
+//' # also note that simulated_path does not remove duplicates passed into times
+//' max_Bessel_bridge_path_sampler(x = 0,
+//'                                y = 0,
+//'                                s = 0,
+//'                                t = 1,
+//'                                m = 0.4,
+//'                                tau = 0.6,
+//'                                times = c(0.2, 0.4, 0.6, 0.8, 0.6))
+//'
 //' # another example
 //' start <- runif(1, -1, 1)
 //' end <- runif(1, -1, 1)
@@ -487,32 +771,68 @@ double max_Bessel_bridge_sampler(const double &x,
 //'                                        y = end,
 //'                                        s = 0,
 //'                                        t = 1,
-//'                                        max = max['max'],
+//'                                        m = max['max'],
 //'                                        tau = max['tau'],
-//'                                        times = seq(0, 1, 0.01))
+//'                                        times = seq(0, 1, 0.01))$full_path
 //' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 //' lines(x = path['time',], y = path['X',])
 //' points(x = max['tau'], y = max['max'], col = 'red', pch = 20)
 //'
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericMatrix max_Bessel_bridge_path_sampler(const double &x,
-                                                   const double &y,
-                                                   const double &s,
-                                                   const double &t,
-                                                   const double &max,
-                                                   const double &tau,
-                                                   Rcpp::NumericVector times)
+Rcpp::List max_Bessel_bridge_path_sampler(const double &x,
+                                          const double &y,
+                                          const double &s,
+                                          const double &t,
+                                          const double &m,
+                                          const double &tau,
+                                          const Rcpp::NumericVector &times)
 {
-  // function simulates a Bessel bridge sample path with maximum (max) at time (tau)
-  // (times) get altered in this function to match the indices of the simulated path
-  // i.e. after using the function, simulated_bb[i] is the path at times[i]
-  // this is because (times) may not include the times (s), (t), (tau)
-  // reflect the problem to simulate a Bessel bright path with a given minimum point
-  Rcpp::NumericMatrix sim_path = min_Bessel_bridge_path_sampler(-x, -y, s, t, -max, tau, times);
-  // reflect on x-axis
-  for (int i=0; i < sim_path.ncol(); ++i) {
-    sim_path(0, i) = -sim_path(0, i);
+  // check requested simulation times are in [s,t]
+  if (Rcpp::min(times) < s) {
+    stop("layeredBB::max_Bessel_bridge_path_sampler: minimum of specified times is less than s");
+  } else if (Rcpp::max(times) > t) {
+    stop("layeredBB::max_Bessel_bridge_path_sampler: maximum of specified times is greater than t");
+  } 
+  // check tau is between [s,t]
+  if (tau < s) {
+    stop("layeredBB::max_Bessel_bridge_path_sampler: time of maximum tau < s");
+  } else if (tau > t) {
+    stop("layeredBB::max_Bessel_bridge_path_sampler: time of maximum tau > t");
   }
-  return sim_path;
+  // if tau == s or tau == t
+  // check that they are consistent with the given points for m, x, y
+  if (tau == s) {
+    if (m != x) {
+      stop("layeredBB::max_Bessel_bridge_path_sampler: tau == s and maximum point m != x");
+    } 
+  } else if (tau == t) {
+    if (m != y) {
+      stop("layeredBB::max_Bessel_bridge_path_sampler:: tau == t and maximum point m != y");
+    }
+  }
+  // check m >= max(x,y)
+  if (m < std::max(x,y)) {
+    stop("layeredBB::max_Bessel_bridge_path_sampler: m < max(x,y). Must have m >= max(x,y)");
+  }
+  // reflect the problem to simulate a Bessel bright path with a given minimum point
+  Rcpp::List minimim_BB = min_Bessel_bridge_path_sampler(-x, -y, s, t, -m, tau, times);
+  Rcpp::NumericMatrix full_path = minimim_BB["full_path"];
+  Rcpp::NumericMatrix simulated_path = minimim_BB["simulated_path"];
+  Rcpp::NumericMatrix remove_m_path = minimim_BB["remove_m_path"];
+  // reflect on x-axis for full_path
+  for (int i=0; i < full_path.ncol(); ++i) {
+    full_path(0, i) = -full_path(0, i);
+  }
+  // reflect on x-axis for simulated_path
+  for (int i=0; i < simulated_path.ncol(); ++i) {
+    simulated_path(0, i) = -simulated_path(0, i);
+  }
+  // reflect on x-axis for remove_m_path
+  for (int i=0; i < remove_m_path.ncol(); ++i) {
+    remove_m_path(0, i) = -remove_m_path(0, i);
+  }
+  return Rcpp::List::create(Named("full_path", full_path),
+                            Named("simulated_path", simulated_path),
+                            Named("remove_m_path", remove_m_path));
 }

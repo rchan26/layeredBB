@@ -4,7 +4,7 @@
 \alias{max_Bessel_bridge_sampler}
 \title{Bessel Bridge point sampler given maximum}
 \usage{
-max_Bessel_bridge_sampler(x, y, s, t, max, tau, q)
+max_Bessel_bridge_sampler(x, y, s, t, m, tau, q)
 }
 \arguments{
 \item{x}{start value of Bessel bridge}
@@ -15,7 +15,7 @@ max_Bessel_bridge_sampler(x, y, s, t, max, tau, q)
 
 \item{t}{end value of Bessel bridge}
 
-\item{max}{maxumum point}
+\item{m}{maxumum point}
 
 \item{tau}{time of maximum point}
 
@@ -30,6 +30,12 @@ Simulation of a point of a Bessel bridge at time q, given maximum occurs at time
 \examples{
 # simulating a point at q=0.2 for a Bessel bridge starting at 0 and ending 
 # at 0 in time [0,1] given maximum is at 0.4 at time 0.6
-max_Bessel_bridge_sampler(x = 0, y = 0, s = 0, t = 1, max = 0.4, tau = 0.6, q = 0.2)
+max_Bessel_bridge_sampler(x = 0,
+                          y = 0,
+                          s = 0,
+                          t = 1,
+                          m = 0.4,
+                          tau = 0.6,
+                          q = 0.2)
 
 }
