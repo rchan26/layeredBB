@@ -66,12 +66,14 @@ bool gamma_coin(const double &u,
 {
   if ((u < 0) || (u > 1)) {
     stop("layeredBB::gamma_coin: u must be in interval [0,1]");
-  } else if (l > std::min(x,y)) {
-    stop("layeredBB::gamma_coin: l > min(x,y). Must have l <= min(x,y)");
-  } else if (v < std::max(x,y)) {
-    stop("layeredBB::gamma_coin: v < max(x,y). Must have v >= max(x,y)");
   } else if (s >= t) {
     stop("layeredBB::gamma_coin: s >= t. Must have s < t");
+  }
+  // save commputation by returning false is already outside layer
+  if (std::min(x,y) < l) {
+    return false;
+  } else if (std::max(x,y) > v) {
+    return false;
   }
   // calculate the current interval (S_{2k+1}^{gamma}, S_{2k}^{gamma}) at k
   Rcpp::NumericVector current = eagamma_intervals(k,x,y,s,t,l,v);
@@ -134,10 +136,12 @@ bool gamma_coin_intervals(const double &u,
     stop("layeredBB::gamma_coin_intervals: vector lengths of X and times are not equal");
   } else if ((u < 0) || (u > 1)) {
     stop("layeredBB::gamma_coin_intervals: u must be in interval [0,1]");
-  } else if (l > Rcpp::min(X)) {
-    stop("layeredBB::gamma_coin_intervals: l > min(X). Must have l <= mix(X)");
-  } else if (v > Rcpp::max(X)) {
-    stop("layeredBB::gamma_coin_intervals: v > max(X). Must have v >= max(X)");
+  }
+  // save commputation by returning false is already outside layer
+  if (Rcpp::min(X) < l) {
+    return false;
+  } else if (Rcpp::max(X) > v) {
+    return false;
   }
   int n = X.size()-1;
   Rcpp::NumericVector left(n), right(n);
@@ -210,12 +214,14 @@ bool delta_coin(const double &u,
 {
   if ((u < 0) || (u > 1)) {
     stop("layeredBB::delta_coin: u must be in interval [0,1]");
-  } else if (min > std::min(x,y)) {
-    stop("layeredBB::delta_coin: min > min(x,y). Must have min <= min(x,y)");
-  } else if (v < std::max(x,y)) {
-    stop("layeredBB::delta_coin: v < max(x,y). Must have v >= max(x,y)");
   } else if (s >= t) {
     stop("layeredBB::delta_coin: s >= t. Must have s < t");
+  }
+  // save commputation by returning false is already outside layer
+  if (std::min(x,y) < min) {
+    return false;
+  } else if (std::max(x,y) > v) {
+    return false;
   }
   // calculate the current interval (S_{2k+1}^{delta}, S_{2k}^{delta})
   Rcpp::NumericVector current = eadelta_intervals(k,x,y,s,t,min,v);
@@ -294,11 +300,13 @@ bool delta_coin_intervals(const double &u,
     stop("layeredBB::delta_coin_intervals: vector lengths of X and times are not equal");
   } else if ((u < 0) || (u > 1)) {
     stop("layeredBB::delta_coin_intervals: u must be in interval [0,1]");
-  } else if (min > Rcpp::min(X)) {
-    stop("layeredBB::delta_coin_intervals: min > min(X). Must have min <= mix(X)");
-  } else if (v > Rcpp::max(X)) {
-    stop("layeredBB::delta_coin_intervals: v > max(X). Must have v >= max(X)");
-  } 
+  }
+  // save commputation by returning false is already outside layer
+  if (Rcpp::min(X) < min) {
+    return false;
+  } else if (Rcpp::max(X) > v) {
+    return false;
+  }
   int n = X.size()-1;
   Rcpp::NumericVector left(n), right(n);
   for (int i=0; i < n; ++i) {

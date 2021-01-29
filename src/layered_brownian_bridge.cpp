@@ -309,7 +309,7 @@ Rcpp::List multi_layered_brownian_bridge(const int &dim,
   multi_simulated_bb.row(dim) = times;
   // loop through the components and simulate a layered Brownian bridge
   // we keep the simulated values at the times we want
-  // we 'throw away' auxiliary information about the maximum and minimum simualted
+  // we 'throw away' auxiliary information about the maximum and minimum simulated
   for (int d=0; d < dim; ++d) {
     // getting layer information for component d
     const Rcpp::List &sublist = bessel_layers[d];
