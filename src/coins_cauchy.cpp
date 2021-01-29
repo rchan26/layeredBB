@@ -31,6 +31,7 @@ double product_vector(const Rcpp::NumericVector &vect) {
 //' determine whether or not the Brownian bridge starting at x, ending at y, between [s,t]
 //' remains in interval [l,v]
 //'
+//' @param u simulated value from random U[0,1] 
 //' @param k integer value starting index for calculating the intervals
 //' @param x start value of Brownian bridge
 //' @param y end value of Brownian bridge
@@ -40,14 +41,22 @@ double product_vector(const Rcpp::NumericVector &vect) {
 //' @param v upper bound of Brownian bridge
 //'
 //' @examples
-//' gamma_coin(k = 0, x = 0, y = 0, s = 0, t = 1, l = -0.5, v = 0.5)
+//' gamma_coin(u = runif(1, 0, 1),
+//'            k = 0,
+//'            x = 0,
+//'            y = 0,
+//'            s = 0,
+//'            t = 1,
+//'            l = -0.5,
+//'            v = 0.5)
 //'
 //' @return boolean value: if T, accept probability that Brownian bridge remains 
 //'         in [l,v], otherwise reject
 //'
 //' @export
 // [[Rcpp::export]]
-bool gamma_coin(int k,
+bool gamma_coin(const double &u,
+                int k,
                 const double &x,
                 const double &y,
                 const double &s,
@@ -55,7 +64,15 @@ bool gamma_coin(int k,
                 const double &l,
                 const double &v)
 {
-  double u = Rcpp::runif(1, 0.0, 1.0)[0];
+  if ((u < 0) || (u > 1)) {
+    stop("layeredBB::gamma_coin: u must be in interval [0,1]");
+  } else if (l > std::min(x,y)) {
+    stop("layeredBB::gamma_coin: l > min(x,y). Must have l <= min(x,y)");
+  } else if (v < std::max(x,y)) {
+    stop("layeredBB::gamma_coin: v < max(x,y). Must have v >= max(x,y)");
+  } else if (s >= t) {
+    stop("layeredBB::gamma_coin: s >= t. Must have s < t");
+  }
   // calculate the current interval (S_{2k+1}^{gamma}, S_{2k}^{gamma}) at k
   Rcpp::NumericVector current = eagamma_intervals(k,x,y,s,t,l,v);
   // set left = S_{2k+1}^{gamma} and right = S_{2k}^{gamma}
@@ -81,6 +98,7 @@ bool gamma_coin(int k,
 //' Flips 'Gamma coin' for intervals; takes the product of the Cauchy sequence S^{gamma}_{k} to
 //' determine whether or not the Brownian bridge remains in the interval [l,v]
 //'
+//' @param u simulated value from random U[0,1] 
 //' @param k integer value starting index for calculating the intervals
 //' @param X vector of values of Brownian bridge
 //' @param times vector of times
@@ -93,7 +111,8 @@ bool gamma_coin(int k,
 //'                           ncol = 4, nrow = 2)
 //' 
 //' # flip delta coin whether or not Brownian bridge remains in [-0.5, 1.5]
-//' gamma_coin_intervals(k = 1,
+//' gamma_coin_intervals(u = runif(1, 0, 1),
+//'                      k = 1,
 //'                      X = brownian_bridge[1,],
 //'                      times = brownian_bridge[2,],
 //'                      l = -0.5,
@@ -104,17 +123,22 @@ bool gamma_coin(int k,
 //'
 //' @export
 // [[Rcpp::export]]
-bool gamma_coin_intervals(int k,
+bool gamma_coin_intervals(const double &u,
+                          int k,
                           const Rcpp::NumericVector &X,
                           const Rcpp::NumericVector &times,
                           const double &l,
                           const double &v)
 {
-  // check if vector lengths are all the same
   if (X.size() != times.size()) {
-    stop("layeredBB::gamma_coin_intervals: vector lengths are not equal");
+    stop("layeredBB::gamma_coin_intervals: vector lengths of X and times are not equal");
+  } else if ((u < 0) || (u > 1)) {
+    stop("layeredBB::gamma_coin_intervals: u must be in interval [0,1]");
+  } else if (l > Rcpp::min(X)) {
+    stop("layeredBB::gamma_coin_intervals: l > min(X). Must have l <= mix(X)");
+  } else if (v > Rcpp::max(X)) {
+    stop("layeredBB::gamma_coin_intervals: v > max(X). Must have v >= max(X)");
   }
-  double u = Rcpp::runif(1, 0.0, 1.0)[0];
   int n = X.size()-1;
   Rcpp::NumericVector left(n), right(n);
   for (int i=0; i < n; ++i) {
@@ -151,6 +175,7 @@ bool gamma_coin_intervals(int k,
 //' determine whether or not the Brownian bridge with minimum, min, 
 //' starting at x, ending at y, between [s,t] remains in interval [l,v]
 //'
+//' @param u simulated value from random U[0,1] 
 //' @param k integer value starting index for calculating the intervals
 //' @param x start value of Brownian bridge
 //' @param y end value of Brownian bridge
@@ -160,7 +185,8 @@ bool gamma_coin_intervals(int k,
 //' @param v upper bound of Brownian bridge
 //'
 //' @examples 
-//' delta_coin(k = 0,
+//' delta_coin(u = runif(1, 0, 1),
+//'            k = 0,
 //'            x = 0.1,
 //'            y = 0.4,
 //'            s = 0,
@@ -173,7 +199,8 @@ bool gamma_coin_intervals(int k,
 //'
 //' @export
 // [[Rcpp::export]]
-bool delta_coin(int k,
+bool delta_coin(const double &u,
+                int k,
                 const double &x,
                 const double &y,
                 const double &s,
@@ -181,7 +208,15 @@ bool delta_coin(int k,
                 const double &min,
                 const double &v)
 {
-  double u = Rcpp::runif(1, 0.0, 1.0)[0];
+  if ((u < 0) || (u > 1)) {
+    stop("layeredBB::delta_coin: u must be in interval [0,1]");
+  } else if (min > std::min(x,y)) {
+    stop("layeredBB::delta_coin: min > min(x,y). Must have min <= min(x,y)");
+  } else if (v < std::max(x,y)) {
+    stop("layeredBB::delta_coin: v < max(x,y). Must have v >= max(x,y)");
+  } else if (s >= t) {
+    stop("layeredBB::delta_coin: s >= t. Must have s < t");
+  }
   // calculate the current interval (S_{2k+1}^{delta}, S_{2k}^{delta})
   Rcpp::NumericVector current = eadelta_intervals(k,x,y,s,t,min,v);
   // set left = S_{2k+1}^{delta} and right = S_{2k}^{delta}
@@ -221,6 +256,7 @@ bool delta_coin(int k,
 //' Flips 'Delta coin' for intervals; takes the product of the Cauchy sequence S^{delta}_{k} to 
 //' determine whether or not the Brownian bridge with minimum, min, remains in the interval [l,v]
 //'
+//' @param u simulated value from random U[0,1] 
 //' @param k integer value starting index for calculating the intervals
 //' @param X vector of values of Brownian bridge
 //' @param times vector of times
@@ -235,7 +271,8 @@ bool delta_coin(int k,
 //' # flip delta coin whether or not Brownian bridge remains in [-0.2, 1.5]
 //' d <- abs(1.5 - -0.2)
 //' k <- ceiling(sqrt(1 + d^2)/(2*d))
-//' delta_coin_intervals(k = k,
+//' delta_coin_intervals(u = runif(1, 0, 1),
+//'                      k = k,
 //'                      X = brownian_bridge[1,],
 //'                      times = brownian_bridge[2,],
 //'                      min = -0.2,
@@ -246,17 +283,22 @@ bool delta_coin(int k,
 //'
 //' @export
 // [[Rcpp::export]]
-bool delta_coin_intervals(int k,
+bool delta_coin_intervals(const double &u,
+                          int k,
                           const Rcpp::NumericVector &X,
                           const Rcpp::NumericVector &times,
                           const double &min,
                           const double &v)
 {
-  // check if vector lengths are all the same
   if (X.size() != times.size()) {
-    stop("layeredBB::delta_coin_intervals: vector lengths are not equal");
-  }
-  double u = Rcpp::runif(1, 0.0, 1.0)[0];
+    stop("layeredBB::delta_coin_intervals: vector lengths of X and times are not equal");
+  } else if ((u < 0) || (u > 1)) {
+    stop("layeredBB::delta_coin_intervals: u must be in interval [0,1]");
+  } else if (min > Rcpp::min(X)) {
+    stop("layeredBB::delta_coin_intervals: min > min(X). Must have min <= mix(X)");
+  } else if (v > Rcpp::max(X)) {
+    stop("layeredBB::delta_coin_intervals: v > max(X). Must have v >= max(X)");
+  } 
   int n = X.size()-1;
   Rcpp::NumericVector left(n), right(n);
   for (int i=0; i < n; ++i) {

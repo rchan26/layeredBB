@@ -4,9 +4,11 @@
 \alias{delta_coin}
 \title{Delta coin flipper (Algorithm 28 in ST329)}
 \usage{
-delta_coin(k, x, y, s, t, min, v)
+delta_coin(u, k, x, y, s, t, min, v)
 }
 \arguments{
+\item{u}{simulated value from random U[0,1]}
+
 \item{k}{integer value starting index for calculating the intervals}
 
 \item{x}{start value of Brownian bridge}
@@ -31,7 +33,8 @@ determine whether or not the Brownian bridge with minimum, min,
 starting at x, ending at y, between [s,t] remains in interval [l,v]
 }
 \examples{
-delta_coin(k = 0,
+delta_coin(u = runif(1, 0, 1),
+           k = 0,
            x = 0.1,
            y = 0.4,
            s = 0,

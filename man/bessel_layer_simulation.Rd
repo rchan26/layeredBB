@@ -32,6 +32,10 @@ the maximum occurs in [u, U]
 Simulates a Bessel layer l for a given sequence a
 }
 \examples{
-bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, mult = 0.5)
+bessel_layer_simulation(x = 0,
+                        y = 0,
+                        s = 0,
+                        t = 1,
+                        mult = 0.5)
 
 }

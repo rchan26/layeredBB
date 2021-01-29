@@ -9,7 +9,8 @@ using namespace Rcpp;
 
 double product_vector_elements(const Rcpp::NumericVector &vect);
 
-bool gamma_coin(int k,
+bool gamma_coin(const double &u,
+                int k,
                 const double &x,
                 const double &y,
                 const double &s,
@@ -17,13 +18,15 @@ bool gamma_coin(int k,
                 const double &l,
                 const double &v);
 
-bool gamma_coin_intervals(int k,
+bool gamma_coin_intervals(const double &u,
+                          int k,
                           const Rcpp::NumericVector &X,
                           const Rcpp::NumericVector &times,
                           const double &l,
                           const double &v);
 
-bool delta_coin(int k,
+bool delta_coin(const double &u,
+                int k,
                 const double &x,
                 const double &y,
                 const double &s,
@@ -31,7 +34,8 @@ bool delta_coin(int k,
                 const double &min,
                 const double &v);
 
-bool delta_coin_intervals(int k,
+bool delta_coin_intervals(const double &u,
+                          int k,
                           const Rcpp::NumericVector &X,
                           const Rcpp::NumericVector &times,
                           const double &min,

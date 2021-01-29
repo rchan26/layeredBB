@@ -4,9 +4,11 @@
 \alias{gamma_coin}
 \title{Gamma coin flipper (Algorithm 26 in ST329)}
 \usage{
-gamma_coin(k, x, y, s, t, l, v)
+gamma_coin(u, k, x, y, s, t, l, v)
 }
 \arguments{
+\item{u}{simulated value from random U[0,1]}
+
 \item{k}{integer value starting index for calculating the intervals}
 
 \item{x}{start value of Brownian bridge}
@@ -31,6 +33,13 @@ determine whether or not the Brownian bridge starting at x, ending at y, between
 remains in interval [l,v]
 }
 \examples{
-gamma_coin(k = 0, x = 0, y = 0, s = 0, t = 1, l = -0.5, v = 0.5)
+gamma_coin(u = runif(1, 0, 1),
+           k = 0,
+           x = 0,
+           y = 0,
+           s = 0,
+           t = 1,
+           l = -0.5,
+           v = 0.5)
 
 }

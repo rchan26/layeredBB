@@ -4,9 +4,11 @@
 \alias{delta_coin_intervals}
 \title{Delta coin flipper for intervals (used for Algorithm 33 in ST329)}
 \usage{
-delta_coin_intervals(k, X, times, min, v)
+delta_coin_intervals(u, k, X, times, min, v)
 }
 \arguments{
+\item{u}{simulated value from random U[0,1]}
+
 \item{k}{integer value starting index for calculating the intervals}
 
 \item{X}{vector of values of Brownian bridge}
@@ -33,7 +35,8 @@ brownian_bridge <- matrix(c(0, 0, -0.2, 0.4, 0.3, 0.5, 1, 1),
 # flip delta coin whether or not Brownian bridge remains in [-0.2, 1.5]
 d <- abs(1.5 - -0.2)
 k <- ceiling(sqrt(1 + d^2)/(2*d))
-delta_coin_intervals(k = k,
+delta_coin_intervals(u = runif(1, 0, 1),
+                     k = k,
                      X = brownian_bridge[1,],
                      times = brownian_bridge[2,],
                      min = -0.2,

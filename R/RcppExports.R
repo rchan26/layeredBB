@@ -12,7 +12,11 @@
 #' @param a vector/sequence of numbers
 #'
 #' @examples
-#' bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, mult = 0.5)
+#' bessel_layer_simulation(x = 0,
+#'                         y = 0,
+#'                         s = 0,
+#'                         t = 1,
+#'                         mult = 0.5)
 #' 
 #' @return 
 #' A list with the following items:
@@ -822,6 +826,7 @@ product_vector <- function(vect) {
 #' determine whether or not the Brownian bridge starting at x, ending at y, between [s,t]
 #' remains in interval [l,v]
 #'
+#' @param u simulated value from random U[0,1] 
 #' @param k integer value starting index for calculating the intervals
 #' @param x start value of Brownian bridge
 #' @param y end value of Brownian bridge
@@ -831,14 +836,21 @@ product_vector <- function(vect) {
 #' @param v upper bound of Brownian bridge
 #'
 #' @examples
-#' gamma_coin(k = 0, x = 0, y = 0, s = 0, t = 1, l = -0.5, v = 0.5)
+#' gamma_coin(u = runif(1, 0, 1),
+#'            k = 0,
+#'            x = 0,
+#'            y = 0,
+#'            s = 0,
+#'            t = 1,
+#'            l = -0.5,
+#'            v = 0.5)
 #'
 #' @return boolean value: if T, accept probability that Brownian bridge remains 
 #'         in [l,v], otherwise reject
 #'
 #' @export
-gamma_coin <- function(k, x, y, s, t, l, v) {
-    .Call(`_layeredBB_gamma_coin`, k, x, y, s, t, l, v)
+gamma_coin <- function(u, k, x, y, s, t, l, v) {
+    .Call(`_layeredBB_gamma_coin`, u, k, x, y, s, t, l, v)
 }
 
 #' Gamma coin flipper for intervals
@@ -846,6 +858,7 @@ gamma_coin <- function(k, x, y, s, t, l, v) {
 #' Flips 'Gamma coin' for intervals; takes the product of the Cauchy sequence S^{gamma}_{k} to
 #' determine whether or not the Brownian bridge remains in the interval [l,v]
 #'
+#' @param u simulated value from random U[0,1] 
 #' @param k integer value starting index for calculating the intervals
 #' @param X vector of values of Brownian bridge
 #' @param times vector of times
@@ -858,7 +871,8 @@ gamma_coin <- function(k, x, y, s, t, l, v) {
 #'                           ncol = 4, nrow = 2)
 #' 
 #' # flip delta coin whether or not Brownian bridge remains in [-0.5, 1.5]
-#' gamma_coin_intervals(k = 1,
+#' gamma_coin_intervals(u = runif(1, 0, 1),
+#'                      k = 1,
 #'                      X = brownian_bridge[1,],
 #'                      times = brownian_bridge[2,],
 #'                      l = -0.5,
@@ -868,8 +882,8 @@ gamma_coin <- function(k, x, y, s, t, l, v) {
 #'         in [l,v], otherwise reject
 #'
 #' @export
-gamma_coin_intervals <- function(k, X, times, l, v) {
-    .Call(`_layeredBB_gamma_coin_intervals`, k, X, times, l, v)
+gamma_coin_intervals <- function(u, k, X, times, l, v) {
+    .Call(`_layeredBB_gamma_coin_intervals`, u, k, X, times, l, v)
 }
 
 #' Delta coin flipper (Algorithm 28 in ST329)
@@ -878,6 +892,7 @@ gamma_coin_intervals <- function(k, X, times, l, v) {
 #' determine whether or not the Brownian bridge with minimum, min, 
 #' starting at x, ending at y, between [s,t] remains in interval [l,v]
 #'
+#' @param u simulated value from random U[0,1] 
 #' @param k integer value starting index for calculating the intervals
 #' @param x start value of Brownian bridge
 #' @param y end value of Brownian bridge
@@ -887,7 +902,8 @@ gamma_coin_intervals <- function(k, X, times, l, v) {
 #' @param v upper bound of Brownian bridge
 #'
 #' @examples 
-#' delta_coin(k = 0,
+#' delta_coin(u = runif(1, 0, 1),
+#'            k = 0,
 #'            x = 0.1,
 #'            y = 0.4,
 #'            s = 0,
@@ -899,8 +915,8 @@ gamma_coin_intervals <- function(k, X, times, l, v) {
 #'         minimum, min, remains in [l,v], otherwise reject
 #'
 #' @export
-delta_coin <- function(k, x, y, s, t, min, v) {
-    .Call(`_layeredBB_delta_coin`, k, x, y, s, t, min, v)
+delta_coin <- function(u, k, x, y, s, t, min, v) {
+    .Call(`_layeredBB_delta_coin`, u, k, x, y, s, t, min, v)
 }
 
 #' Delta coin flipper for intervals (used for Algorithm 33 in ST329)
@@ -908,6 +924,7 @@ delta_coin <- function(k, x, y, s, t, min, v) {
 #' Flips 'Delta coin' for intervals; takes the product of the Cauchy sequence S^{delta}_{k} to 
 #' determine whether or not the Brownian bridge with minimum, min, remains in the interval [l,v]
 #'
+#' @param u simulated value from random U[0,1] 
 #' @param k integer value starting index for calculating the intervals
 #' @param X vector of values of Brownian bridge
 #' @param times vector of times
@@ -922,7 +939,8 @@ delta_coin <- function(k, x, y, s, t, min, v) {
 #' # flip delta coin whether or not Brownian bridge remains in [-0.2, 1.5]
 #' d <- abs(1.5 - -0.2)
 #' k <- ceiling(sqrt(1 + d^2)/(2*d))
-#' delta_coin_intervals(k = k,
+#' delta_coin_intervals(u = runif(1, 0, 1),
+#'                      k = k,
 #'                      X = brownian_bridge[1,],
 #'                      times = brownian_bridge[2,],
 #'                      min = -0.2,
@@ -932,8 +950,8 @@ delta_coin <- function(k, x, y, s, t, min, v) {
 #'         minimum, min, remains in [min,v], otherwise reject
 #'
 #' @export
-delta_coin_intervals <- function(k, X, times, min, v) {
-    .Call(`_layeredBB_delta_coin_intervals`, k, X, times, min, v)
+delta_coin_intervals <- function(u, k, X, times, min, v) {
+    .Call(`_layeredBB_delta_coin_intervals`, u, k, X, times, min, v)
 }
 
 #' Inverse Gaussian Sampler

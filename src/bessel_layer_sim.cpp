@@ -15,7 +15,11 @@ using namespace Rcpp;
 //' @param a vector/sequence of numbers
 //'
 //' @examples
-//' bessel_layer_simulation(x = 0, y = 0, s = 0, t = 1, mult = 0.5)
+//' bessel_layer_simulation(x = 0,
+//'                         y = 0,
+//'                         s = 0,
+//'                         t = 1,
+//'                         mult = 0.5)
 //' 
 //' @return 
 //' A list with the following items:
@@ -36,14 +40,18 @@ Rcpp::List bessel_layer_simulation(const double &x,
                                    const double &t,
                                    const double &mult = 1)
 {
+  if (s >= t) {
+    stop("layeredBB::bessel_layer_simulation: s >= t. Must have s < t");
+  }
   int l = 1;
+  const double u = Rcpp::runif(1, 0.0, 1.0)[0];
   double xandy = std::min(x, y);
   double xoy = std::max(x, y);
   double layer_size = sqrt(t-s)*mult;
   while (true) {
     // flip gamma coin to determine if BB stays within the interval:
     // [min(x,y) - layer_size*l, max(x,y) + layer_size*l]
-    if (gamma_coin(1, x, y, s, t, xandy - layer_size*l, xoy + layer_size*l)) {
+    if (gamma_coin(u, 1, x, y, s, t, xandy - layer_size*l, xoy + layer_size*l)) {
       return List::create(Named("L", xandy - layer_size*l),
                           Named("l", xandy - layer_size*(l-1)),
                           Named("u", xoy + layer_size*(l-1)),
@@ -97,9 +105,11 @@ Rcpp::List multi_bessel_layer_simulation(const int &dim,
 {
   // check that x and y match the dimensions of dim
   if (x.size() != dim) {
-    stop("layeredBB::multi_bessel_layer_simulation: size of x is not equal to dim");
+    stop("layeredBB::multi_bessel_layer_simulation: length of x is not equal to dim");
   } else if (y.size() != dim) {
-    stop("layeredBB::multi_bessel_layer_simulation: size of y is not equal to dim");
+    stop("layeredBB::multi_bessel_layer_simulation: length of y is not equal to dim");
+  } else if (s >= t) {
+    stop("layeredBB::multi_bessel_layer_simulation: s >= t. Must have s < t");
   }
   // for each component, we simulate a Bessel layer and store as value in list
   Rcpp::List layers(dim);

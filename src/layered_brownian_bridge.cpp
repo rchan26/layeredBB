@@ -127,25 +127,30 @@ Rcpp::List layered_brownian_bridge(const double &x,
                                    const Rcpp::List &bessel_layer,
                                    const Rcpp::NumericVector &times)
 {
+  if (Rcpp::min(times) < s) {
+    stop("layeredBB::layered_brownian_bridge: minimum of specified times is less than s");
+  } else if (Rcpp::max(times) > t) {
+    stop("layeredBB::layered_brownian_bridge: maximum of specified times is greater than t");
+  } 
   while (true) {
     // add in line to abort C++ if user has pressed Ctrl/Cmd+C or Escape in R
     Rcpp::checkUserInterrupt();
-    double u = Rcpp::runif(1, 0.0, 1.0)[0];
+    const Rcpp::NumericVector u = Rcpp::runif(2, 0.0, 1.0);
     double l1, l2, v1, v2;
     Rcpp::List simulated_BB;
-    if (u < 0.5) {
+    if (u[0] < 0.5) {
       Rcpp::NumericVector sim_m = min_sampler(x, y, s, t, bessel_layer["L"], bessel_layer["l"]);
       l1 = sim_m["min"], l2 = sim_m["min"];
       v1 = bessel_layer["u"], v2 = bessel_layer["U"];
       // simulate Bessel bridge conditional on the minimum point at intermediate points
       simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t, sim_m["min"], sim_m["tau"], times);
-      Rcpp::NumericMatrix full_path = simulated_BB["full_path"];
+      const Rcpp::NumericMatrix &full_path = simulated_BB["full_path"];
       // check that none of the simulated points are outside of the layer: 
       // if so, resample Bessel bridge
       if (Rcpp::max(full_path.row(0)) > v2) {
         while (true) {
           simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t, sim_m["min"], sim_m["tau"], times);
-          Rcpp::NumericMatrix full_path = simulated_BB["full_path"];
+          const Rcpp::NumericMatrix &full_path = simulated_BB["full_path"];
           if (Rcpp::max(full_path.row(0)) <= v2) {
             break;
           }
@@ -157,13 +162,13 @@ Rcpp::List layered_brownian_bridge(const double &x,
       v1 = sim_m["max"], v2 = sim_m["max"];
       // simulate Bessel bridge conditional on the maximum at intermediate points
       simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, sim_m["max"], sim_m["tau"], times);
-      Rcpp::NumericMatrix full_path = simulated_BB["full_path"];
+      const Rcpp::NumericMatrix &full_path = simulated_BB["full_path"];
       // check that none of the simulated points are outside of the layer: 
       // if so, resample Bessel bridge
       if (Rcpp::min(full_path.row(0)) < l2) {
         while (true) {
           simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, sim_m["max"], sim_m["tau"], times);
-          Rcpp::NumericMatrix full_path = simulated_BB["full_path"];
+          const Rcpp::NumericMatrix &full_path = simulated_BB["full_path"];
           if (Rcpp::min(full_path.row(0)) >= l2) {
             break;
           }
@@ -171,20 +176,20 @@ Rcpp::List layered_brownian_bridge(const double &x,
       }
     }
     // checking if BB remains in [l1, v1]
-    Rcpp::NumericMatrix full_path = simulated_BB["full_path"];
+    const Rcpp::NumericMatrix &full_path = simulated_BB["full_path"];
     double d1 = fabs(v1-l1);
     int j = ceil(sqrt(t-s + d1*d1) / (2*d1));
     // decide whether or not to accept simmulated Brownian bridge
-    if (u < 0.5) {
+    if (u[0] < 0.5) {
       // flip delta coin #1
-      if (delta_coin_intervals(j, full_path.row(0), full_path.row(1), l1, v1)) {
+      if (delta_coin_intervals(u[1], j, full_path.row(0), full_path.row(1), l1, v1)) {
         return simulated_BB;
       } else {
         // checking if BB remains in [l2, v2]
         double d2 = fabs(v2-l2);
         int k = ceil(sqrt(t-s + d2*d2) / (2*d2));
         // flip detla coin #2
-        if (delta_coin_intervals(k, full_path.row(0), full_path.row(1), l2, v2)) {
+        if (delta_coin_intervals(u[1], k, full_path.row(0), full_path.row(1), l2, v2)) {
           if (Rcpp::runif(1, 0.0, 1.0)[0] < 0.5) {
             return simulated_BB;
           }
@@ -192,14 +197,14 @@ Rcpp::List layered_brownian_bridge(const double &x,
       }
     } else {
       // flip delta coin #1
-      if (delta_coin_intervals(j, -full_path.row(0), full_path.row(1), -v1, -l1)) {
+      if (delta_coin_intervals(u[1], j, -full_path.row(0), full_path.row(1), -v1, -l1)) {
         return simulated_BB;
       } else {
         // checking if BB remains in [l2, v2]
         double d2 = fabs(v2-l2);
         int k = ceil(sqrt(t-s + d2*d2) / (2*d2));
         // flip detla coin #2
-        if (delta_coin_intervals(k, -full_path.row(0), full_path.row(1), -v2, -l2)) {
+        if (delta_coin_intervals(u[1], k, -full_path.row(0), full_path.row(1), -v2, -l2)) {
           if (Rcpp::runif(1, 0.0, 1.0)[0] < 0.5) {
             return simulated_BB;
           }
@@ -277,12 +282,16 @@ Rcpp::List multi_layered_brownian_bridge(const int &dim,
 {
   // check that x and y match the dimensions of dim
   if (x.size() != dim) {
-    stop("multi_layered_brownian_bridge: size of x is not equal to dim");
+    stop("layeredBB::multi_layered_brownian_bridge: size of x is not equal to dim");
   } else if (y.size() != dim) {
-    stop("multi_layered_brownian_bridge: size of y is not equal to dim");
+    stop("layeredBB::multi_layered_brownian_bridge: size of y is not equal to dim");
   } else if (bessel_layers.size() != dim) {
-    stop("multi_layered_brownian_bridge: size of bessel_layers is not equal to dim");
-  }
+    stop("layeredBB::multi_layered_brownian_bridge: size of bessel_layers is not equal to dim");
+  } else if (Rcpp::min(times) < s) {
+    stop("layeredBB::multi_layered_brownian_bridge: minimum of specified times is less than s");
+  } else if (Rcpp::max(times) > t) {
+    stop("layeredBB::multi_layered_brownian_bridge: maximum of specified times is greater than t");
+  } 
   // ----- collect all times into one vector
   // and remove duplicates and sort full_times vector
   Rcpp::NumericVector full_times = times;
@@ -303,14 +312,14 @@ Rcpp::List multi_layered_brownian_bridge(const int &dim,
   // we 'throw away' auxiliary information about the maximum and minimum simualted
   for (int d=0; d < dim; ++d) {
     // getting layer information for component d
-    Rcpp::List sublist = bessel_layers[d];
+    const Rcpp::List &sublist = bessel_layers[d];
     // simulate layered Brownian bridge for component d
     Rcpp::List component_BB = layered_brownian_bridge(x.at(d), y.at(d), s, t, sublist, times);
     // fill in full path BB with the remove_m_path (i.e. path without simulated minimum or maximum point)
-    Rcpp::NumericMatrix remove_m_path = component_BB["remove_m_path"];
+    const Rcpp::NumericMatrix &remove_m_path = component_BB["remove_m_path"];
     multi_full_bb.row(d) = remove_m_path.row(0);
     // fill in simulated BB
-    Rcpp::NumericMatrix simulated_path = component_BB["simulated_path"];
+    const Rcpp::NumericMatrix &simulated_path = component_BB["simulated_path"];
     multi_simulated_bb.row(d) = simulated_path.row(0);
   }
   return Rcpp::List::create(Named("full_path", multi_full_bb),

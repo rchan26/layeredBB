@@ -225,7 +225,7 @@ double M_func(const double &a,
               const double &t)
 {
   // M function that is used to simulate a minimum of a Brownian bridge
-  return exp(-2.0*(a-x)*(a-y)/(t-s));
+  return exp((-2.0*(a-x)*(a-y))/(t-s));
 }
 
 //' Brownian Bridge minimum point sampler (Algorithm 14 in ST329)
@@ -268,20 +268,21 @@ Rcpp::NumericVector min_sampler(const double &x,
     stop("layeredBB::min_sampler: up_bound > min(x, y). Must have low_bound < up_bound <= min(x,y)");
   }
   // set simulated minimum value
-  double u1 = Rcpp::runif(1, M_func(low_bound,x,y,s,t), M_func(up_bound,x,y,s,t))[0];
-  double min = x - (0.5*(sqrt((y-x)*(y-x)-2.0*(t-s)*log(u1)) - y + x));
+  const double u1 = Rcpp::runif(1, M_func(low_bound,x,y,s,t), M_func(up_bound,x,y,s,t))[0];
+  const double m = x - (0.5 * (sqrt((y-x)*(y-x) - 2.0*(t-s)*log(u1)) - y + x));
   // simulating from Inverse Gaussian to set V and tau
   double mu, lambda, V;
-  if (Rcpp::runif(1, 0.0, 1.0)[0] < (x-min)/(x+y-(2.0*min))) {
-    mu = (y-min)/(x-min);
-    lambda = (y-min)*(y-min)/(t-s);
+  double condition = (x - m) / (x + y - (2.0*m));
+  if (Rcpp::runif(1, 0.0, 1.0)[0] < condition) {
+    mu = (y-m)/(x-m);
+    lambda = (y-m)*(y-m)/(t-s);
     V = inv_gauss_sampler(mu, lambda);
   } else {
-    mu = (x-min)/(y-min);
-    lambda = (x-min)*(x-min)/(t-s);
+    mu = (x-m)/(y-m);
+    lambda = (x-m)*(x-m)/(t-s);
     V = 1.0 / inv_gauss_sampler(mu, lambda);
   }
-  return Rcpp::NumericVector::create(Named("min", min), 
+  return Rcpp::NumericVector::create(Named("min", m), 
                                      Named("tau", ((s*V)+t)/(1.0+V)));
 }
 
@@ -367,10 +368,10 @@ double min_Bessel_bridge_sampler(const double &x,
     Wr = y;
   }
   // simulate normal random variables
-  Rcpp::NumericVector b = rnorm(3, 0.0, sqrt(fabs(tau-q)*fabs(q-r))/fabs(tau-r));
+  const Rcpp::NumericVector b = rnorm(3, 0.0, (sqrt(fabs(tau-q) * fabs(q-r)) / fabs(tau-r)));
   // set simulated value and return
-  double term1 = ((Wr-m)*fabs(tau-q)/(pow(fabs(tau-r), 1.5))) + b.at(0);
-  return m + sqrt(fabs(tau-r)*(term1*term1 + b.at(1)*b.at(1) + b.at(2)*b.at(2)));
+  const double term1 = ((Wr-m)*fabs(tau-q)/(pow(fabs(tau-r), 1.5))) + b.at(0);
+  return m + sqrt(fabs(tau-r) * (term1*term1 + b.at(1)*b.at(1) + b.at(2)*b.at(2)));
 }
 
 //' Bessel Bridge path sampler given minimum

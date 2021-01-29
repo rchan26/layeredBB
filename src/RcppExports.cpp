@@ -416,11 +416,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // gamma_coin
-bool gamma_coin(int k, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
-RcppExport SEXP _layeredBB_gamma_coin(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
+bool gamma_coin(const double& u, int k, const double& x, const double& y, const double& s, const double& t, const double& l, const double& v);
+RcppExport SEXP _layeredBB_gamma_coin(SEXP uSEXP, SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP lSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const double& >::type u(uSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< const double& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
@@ -428,31 +429,33 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type l(lSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(gamma_coin(k, x, y, s, t, l, v));
+    rcpp_result_gen = Rcpp::wrap(gamma_coin(u, k, x, y, s, t, l, v));
     return rcpp_result_gen;
 END_RCPP
 }
 // gamma_coin_intervals
-bool gamma_coin_intervals(int k, const Rcpp::NumericVector& X, const Rcpp::NumericVector& times, const double& l, const double& v);
-RcppExport SEXP _layeredBB_gamma_coin_intervals(SEXP kSEXP, SEXP XSEXP, SEXP timesSEXP, SEXP lSEXP, SEXP vSEXP) {
+bool gamma_coin_intervals(const double& u, int k, const Rcpp::NumericVector& X, const Rcpp::NumericVector& times, const double& l, const double& v);
+RcppExport SEXP _layeredBB_gamma_coin_intervals(SEXP uSEXP, SEXP kSEXP, SEXP XSEXP, SEXP timesSEXP, SEXP lSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const double& >::type u(uSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type times(timesSEXP);
     Rcpp::traits::input_parameter< const double& >::type l(lSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(gamma_coin_intervals(k, X, times, l, v));
+    rcpp_result_gen = Rcpp::wrap(gamma_coin_intervals(u, k, X, times, l, v));
     return rcpp_result_gen;
 END_RCPP
 }
 // delta_coin
-bool delta_coin(int k, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
-RcppExport SEXP _layeredBB_delta_coin(SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
+bool delta_coin(const double& u, int k, const double& x, const double& y, const double& s, const double& t, const double& min, const double& v);
+RcppExport SEXP _layeredBB_delta_coin(SEXP uSEXP, SEXP kSEXP, SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP minSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const double& >::type u(uSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< const double& >::type x(xSEXP);
     Rcpp::traits::input_parameter< const double& >::type y(ySEXP);
@@ -460,22 +463,23 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type t(tSEXP);
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(delta_coin(k, x, y, s, t, min, v));
+    rcpp_result_gen = Rcpp::wrap(delta_coin(u, k, x, y, s, t, min, v));
     return rcpp_result_gen;
 END_RCPP
 }
 // delta_coin_intervals
-bool delta_coin_intervals(int k, const Rcpp::NumericVector& X, const Rcpp::NumericVector& times, const double& min, const double& v);
-RcppExport SEXP _layeredBB_delta_coin_intervals(SEXP kSEXP, SEXP XSEXP, SEXP timesSEXP, SEXP minSEXP, SEXP vSEXP) {
+bool delta_coin_intervals(const double& u, int k, const Rcpp::NumericVector& X, const Rcpp::NumericVector& times, const double& min, const double& v);
+RcppExport SEXP _layeredBB_delta_coin_intervals(SEXP uSEXP, SEXP kSEXP, SEXP XSEXP, SEXP timesSEXP, SEXP minSEXP, SEXP vSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const double& >::type u(uSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type times(timesSEXP);
     Rcpp::traits::input_parameter< const double& >::type min(minSEXP);
     Rcpp::traits::input_parameter< const double& >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(delta_coin_intervals(k, X, times, min, v));
+    rcpp_result_gen = Rcpp::wrap(delta_coin_intervals(u, k, X, times, min, v));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -551,10 +555,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_layeredBB_eadelta2_intervals", (DL_FUNC) &_layeredBB_eadelta2_intervals, 7},
     {"_layeredBB_eadelta_intervals", (DL_FUNC) &_layeredBB_eadelta_intervals, 7},
     {"_layeredBB_product_vector", (DL_FUNC) &_layeredBB_product_vector, 1},
-    {"_layeredBB_gamma_coin", (DL_FUNC) &_layeredBB_gamma_coin, 7},
-    {"_layeredBB_gamma_coin_intervals", (DL_FUNC) &_layeredBB_gamma_coin_intervals, 5},
-    {"_layeredBB_delta_coin", (DL_FUNC) &_layeredBB_delta_coin, 7},
-    {"_layeredBB_delta_coin_intervals", (DL_FUNC) &_layeredBB_delta_coin_intervals, 5},
+    {"_layeredBB_gamma_coin", (DL_FUNC) &_layeredBB_gamma_coin, 8},
+    {"_layeredBB_gamma_coin_intervals", (DL_FUNC) &_layeredBB_gamma_coin_intervals, 6},
+    {"_layeredBB_delta_coin", (DL_FUNC) &_layeredBB_delta_coin, 8},
+    {"_layeredBB_delta_coin_intervals", (DL_FUNC) &_layeredBB_delta_coin_intervals, 6},
     {"_layeredBB_inv_gauss_sampler", (DL_FUNC) &_layeredBB_inv_gauss_sampler, 2},
     {"_layeredBB_layered_brownian_bridge", (DL_FUNC) &_layeredBB_layered_brownian_bridge, 6},
     {"_layeredBB_multi_layered_brownian_bridge", (DL_FUNC) &_layeredBB_multi_layered_brownian_bridge, 7},
