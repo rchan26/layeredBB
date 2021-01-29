@@ -190,7 +190,11 @@ Rcpp::List multi_brownian_bridge(const int &dim,
     stop("layeredBB::multi_brownian_bridge: size of x is not equal to dim");
   } else if (y.size() != dim) {
     stop("layeredBB::multi_brownian_bridge: size of y is not equal to dim");
-  } 
+  } else if (Rcpp::min(times) < s) {
+    stop("layeredBB::multi_brownian_bridge: minimum of specified times is less than s");
+  } else if (Rcpp::max(times) > t) {
+    stop("layeredBB::multi_brownian_bridge: maximum of specified times is greater than t");
+  }
   // ----- collect all times into one vector
   // and remove duplicates and sort full_times vector
   Rcpp::NumericVector full_times = times;
