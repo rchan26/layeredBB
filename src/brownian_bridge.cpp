@@ -84,7 +84,9 @@ Rcpp::List Brownian_bridge_path_sampler(const double &x,
                                         const double &t,
                                         const Rcpp::NumericVector &times)
 {
-  if (Rcpp::min(times) < s) {
+  if (t <= s) {
+    stop("layeredBB::Brownian_bridge_path_sampler: t <= s. Must have s < t");
+  } if (Rcpp::min(times) < s) {
     stop("layeredBB::Brownian_bridge_path_sampler: minimum of specified times is less than s");
   } else if (Rcpp::max(times) > t) {
     stop("layeredBB::Brownian_bridge_path_sampler: maximum of specified times is greater than t");
@@ -186,7 +188,9 @@ Rcpp::List multi_brownian_bridge(const int &dim,
                                  const Rcpp::NumericVector &times)
 {
   // check that x and y match the dimensions of dim
-  if (x.size() != dim) {
+  if (t <= s) {
+    stop("layeredBB::multi_brownian_bridge: t <= s. Must have s < t");
+  } else if (x.size() != dim) {
     stop("layeredBB::multi_brownian_bridge: size of x is not equal to dim");
   } else if (y.size() != dim) {
     stop("layeredBB::multi_brownian_bridge: size of y is not equal to dim");
@@ -269,7 +273,9 @@ Rcpp::NumericVector min_sampler(const double &x,
   if (low_bound > up_bound) {
     stop("layeredBB::min_sampler: low_bound > up_bound. Must have low_bound < up_bound <= min(x,y)");
   } else if (up_bound > std::min(x, y)) {
-    stop("layeredBB::min_sampler: up_bound > min(x, y). Must have low_bound < up_bound <= min(x,y)");
+    stop("layeredBB::min_sampler: up_bound > min(x,y). Must have low_bound < up_bound <= min(x,y)");
+  } else if (t <= s) {
+    stop("layeredBB::min_sampler: t <= s. Must have s < t");
   }
   // set simulated minimum value
   const double u1 = Rcpp::runif(1, M_func(low_bound,x,y,s,t), M_func(up_bound,x,y,s,t))[0];
@@ -325,6 +331,10 @@ double min_Bessel_bridge_sampler(const double &x,
                                  const double &tau,
                                  const double &q)
 {
+  // check that s < t
+  if (t <= s) {
+    stop("layeredBB::min_Bessel_bridge_sampler: t <= s. Must have s < t");
+  }
   // check requested simulation time q is in [s,t]
   if (q < s) {
     stop("layeredBB::min_Bessel_bridge_sampler: requested simulation time q < s");
@@ -463,6 +473,10 @@ Rcpp::List min_Bessel_bridge_path_sampler(const double &x,
                                           const double &tau,
                                           const Rcpp::NumericVector &times)
 {
+  // check that s < t
+  if (t <= s) {
+    stop("layeredBB::min_Bessel_bridge_path_sampler: t <= s. Must have s < t");
+  }
   // check requested simulation times are in [s,t]
   if (Rcpp::min(times) < s) {
     stop("layeredBB::min_Bessel_bridge_path_sampler: minimum of specified times is less than s");
@@ -633,6 +647,8 @@ Rcpp::NumericVector max_sampler(const double &x,
     stop("layeredBB::max_sampler: low_bound > up_bound. Must have max(x,y) <= low_bound < up_bound");
   } else if (low_bound < std::max(x,y)) {
     stop("layeredBB::max_sampler: low_bound < max(x,y). Must have max(x,y) <= low_bound < up_bound");
+  } else if (t <= s) {
+    stop("layeredBB::max_sampler: t <= s. Must have s < t");
   }
   // reflect the problem to simulate a minimum
   Rcpp::NumericVector sim_min = min_sampler(-x, -y, s, t, -up_bound, -low_bound);
@@ -676,6 +692,10 @@ double max_Bessel_bridge_sampler(const double &x,
                                  const double &tau,
                                  const double &q)
 {
+  // check that s < t
+  if (t <= s) {
+    stop("layeredBB::max_Bessel_bridge_sampler: t <= s. Must have s < t");
+  }
   // check requested simulation time q is in [s,t]
   if (q < s) {
     stop("layeredBB::max_Bessel_bridge_sampler: requested simulation time q < s");
@@ -793,6 +813,10 @@ Rcpp::List max_Bessel_bridge_path_sampler(const double &x,
                                           const double &tau,
                                           const Rcpp::NumericVector &times)
 {
+  // check that s < t
+  if (t <= s) {
+    stop("layeredBB::max_Bessel_bridge_path_sampler: t <= s. Must have s < t");
+  }
   // check requested simulation times are in [s,t]
   if (Rcpp::min(times) < s) {
     stop("layeredBB::max_Bessel_bridge_path_sampler: minimum of specified times is less than s");

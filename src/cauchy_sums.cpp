@@ -215,6 +215,7 @@ double eagamma(const int &n,
                const double &l,
                const double &v)
 {
+  // check if x or y already outside bounds
   if (std::min(x,y) < l) {
     return 0;
   } else if (std::max(x,y) > v) {
@@ -269,6 +270,10 @@ double eadelta1(const int &n,
                 const double &min,
                 const double &v)
 {
+  // check if min(x,y) == min. If so, should be using eadelta2, so return NaN
+  if (std::min(x,y) == min) {
+    return R_NaN;
+  }
   return eagamma(n,x,y,s,t,min,v) / (1 - exp(-2.0*(x-min)*(y-min)/(t-s)));
 }
 
@@ -300,10 +305,15 @@ double eadelta2(const int &n,
                 const double &min,
                 const double &v)
 {
+  // check if x or y already outside bounds
   if (std::min(x,y) < min) {
     return 0;
   } else if (std::max(x,y) > v) {
     return 0;
+  }
+  // check if min(x,y) > min. If so, should be using eadelta2, so return NaN
+  if (std::min(x,y) > min) {
+    return R_NaN;
   }
   double xoy = std::max(x,y);
   double denom = xoy - min;
@@ -361,6 +371,7 @@ double eadelta(const int &n,
                const double &min,
                const double &v)
 {
+  // check if x or y already outside bounds
   if (std::max(x,y) > v) {
     return 0;
   } 
@@ -449,6 +460,10 @@ Rcpp::NumericVector eadelta1_intervals(const int &k,
                                        const double &min,
                                        const double &v)
 {
+  // check if min(x,y) == min. If so, should be using eadelta2_intervals, so return c(NaN, NaN)
+  if (std::min(x,y) == min) {
+    return Rcpp::NumericVector::create(R_NaN, R_NaN);
+  }
   double denom = 1 - exp(-2.0*(x-min)*(y-min)/(t-s));
   Rcpp::NumericVector eagamma = eagamma_intervals(k,x,y,s,t,min,v);
   return Rcpp::NumericVector::create(eagamma.at(0)/denom, eagamma.at(1)/denom);
@@ -483,6 +498,17 @@ Rcpp::NumericVector eadelta2_intervals(const int &k,
                                        const double &min,
                                        const double &v)
 {
+  // check if x or y already outside bounds
+  if (std::min(x,y) < min) {
+    return Rcpp::NumericVector::create(0.0, 0.0);
+  } else if (std::max(x,y) > v) {
+    return Rcpp::NumericVector::create(0.0, 0.0);
+  } 
+  // check if min(x,y) > min. If so, should be using eadelta1_intervals, so return c(NaN, NaN)
+  if (std::min(x,y) > min) {
+    return Rcpp::NumericVector::create(R_NaN, R_NaN);
+  }
+  // check that given k is large enough
   double D = std::abs(v-min);
   double K = sqrt(t-s + D*D) / (2*D);
   if (k < K) {

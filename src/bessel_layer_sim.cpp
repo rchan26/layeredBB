@@ -42,6 +42,8 @@ Rcpp::List bessel_layer_simulation(const double &x,
 {
   if (s >= t) {
     stop("layeredBB::bessel_layer_simulation: s >= t. Must have s < t");
+  } else if (mult <= 0) {
+    stop("layeredBB::bessel_layer_simulation: mult <= 0. Must have mult > 0");
   }
   int l = 1;
   const double u = Rcpp::runif(1, 0.0, 1.0)[0];
@@ -110,6 +112,8 @@ Rcpp::List multi_bessel_layer_simulation(const int &dim,
     stop("layeredBB::multi_bessel_layer_simulation: length of y is not equal to dim");
   } else if (s >= t) {
     stop("layeredBB::multi_bessel_layer_simulation: s >= t. Must have s < t");
+  } else if (mult <= 0) {
+    stop("layeredBB::multi_bessel_layer_simulation: mult <= 0. Must have mult > 0");
   }
   // for each component, we simulate a Bessel layer and store as value in list
   Rcpp::List layers(dim);

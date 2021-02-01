@@ -127,11 +127,13 @@ Rcpp::List layered_brownian_bridge(const double &x,
                                    const Rcpp::List &bessel_layer,
                                    const Rcpp::NumericVector &times)
 {
-  if (Rcpp::min(times) < s) {
+  if (t <= s) {
+    stop("layeredBB::layered_brownian_bridge: t <= s. Must have s < t");
+  } else if (Rcpp::min(times) < s) {
     stop("layeredBB::layered_brownian_bridge: minimum of specified times is less than s");
   } else if (Rcpp::max(times) > t) {
     stop("layeredBB::layered_brownian_bridge: maximum of specified times is greater than t");
-  } 
+  }
   while (true) {
     // add in line to abort C++ if user has pressed Ctrl/Cmd+C or Escape in R
     Rcpp::checkUserInterrupt();
@@ -281,7 +283,9 @@ Rcpp::List multi_layered_brownian_bridge(const int &dim,
                                          const Rcpp::NumericVector &times)
 {
   // check that x and y match the dimensions of dim
-  if (x.size() != dim) {
+  if (t <= s) {
+    stop("layeredBB::multi_layered_brownian_bridge: t <= s. Must have s < t");
+  } if (x.size() != dim) {
     stop("layeredBB::multi_layered_brownian_bridge: size of x is not equal to dim");
   } else if (y.size() != dim) {
     stop("layeredBB::multi_layered_brownian_bridge: size of y is not equal to dim");
