@@ -228,6 +228,7 @@ test_that("Check eagamma_intervals returns expected results", {
   expect_equal(length(returned), 2)
   expect_equal(returned[1], S_2k_plus_1)
   expect_equal(returned[2], S_2k)
+  expect_true(returned[1] <= returned[2])
   # if l < min(x,y) and v > max(x,y)
   l <- min(x,y)-1
   v <- max(x,y)+1
@@ -238,6 +239,7 @@ test_that("Check eagamma_intervals returns expected results", {
   expect_equal(length(returned), 2)
   expect_equal(returned[1], S_2k_plus_1)
   expect_equal(returned[2], S_2k)
+  expect_true(returned[1] <= returned[2])
   # if min(x,y) < l (already outside layer), should return c(0,0)
   # expect c(0,0) if x < l
   returned <- eagamma_intervals(k = k, x = l-1, y = y, s = times[1], t = times[2], l = l, v = v)
@@ -270,6 +272,7 @@ test_that("Check eadelta1_intervals returns expected results", {
   expect_false(any(is.na(returned), is.nan(returned), is.infinite(returned)))
   expect_equal(returned[1], S_2k_plus_1)
   expect_equal(returned[2], S_2k)
+  expect_true(returned[1] <= returned[2])
   # if v > max(x,y), should work normally
   v <- max(x,y)+1
   returned <- eadelta1_intervals(k = k, x = x, y = y, s = times[1], t = times[2], min = min, v = v)
@@ -280,6 +283,7 @@ test_that("Check eadelta1_intervals returns expected results", {
   expect_false(any(is.na(returned), is.nan(returned), is.infinite(returned)))
   expect_equal(returned[1], S_2k_plus_1)
   expect_equal(returned[2], S_2k)
+  expect_true(returned[1] <= returned[2])
   # if min == min(x,y), should return c(NaN, NaN) (should be using eadelta2_intervals in this case)
   returned <- eadelta1_intervals(k = k, x = x, y = y, s = times[1], t = times[2], min = min(x,y), v = v)
   expect_equal(returned, c(NaN, NaN))
@@ -317,6 +321,7 @@ test_that("Check eadelta2_intervals returns expected results", {
   expect_false(any(is.na(returned), is.nan(returned), is.infinite(returned)))
   expect_equal(returned[1], S_2k_plus_1)
   expect_equal(returned[2], S_2k)
+  expect_true(returned[1] <= returned[2])
   # if v > max(x,y), should work normally
   v <- max(x,y)+1
   D <- abs(v-min)
@@ -330,6 +335,7 @@ test_that("Check eadelta2_intervals returns expected results", {
   expect_false(any(is.na(returned), is.nan(returned), is.infinite(returned)))
   expect_equal(returned[1], S_2k_plus_1)
   expect_equal(returned[2], S_2k)
+  expect_true(returned[1] <= returned[2])
   # if min < min(x,y), should return an NaN (should be using eadelta1 in this case)
   returned <- eadelta2_intervals(k = k, x = x, y = y, s = times[1], t = times[2], min = min(x,y)-1, v = v)
   expect_equal(returned, c(NaN, NaN))

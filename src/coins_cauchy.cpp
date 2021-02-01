@@ -69,7 +69,7 @@ bool gamma_coin(const double &u,
   } else if (s >= t) {
     stop("layeredBB::gamma_coin: s >= t. Must have s < t");
   }
-  // save commputation by returning false is already outside layer
+  // save commputation by returning false if already outside layer
   if (std::min(x,y) < l) {
     return false;
   } else if (std::max(x,y) > v) {
@@ -137,7 +137,7 @@ bool gamma_coin_intervals(const double &u,
   } else if ((u < 0) || (u > 1)) {
     stop("layeredBB::gamma_coin_intervals: u must be in interval [0,1]");
   }
-  // save commputation by returning false is already outside layer
+  // save commputation by returning false if already outside layer
   if (Rcpp::min(X) < l) {
     return false;
   } else if (Rcpp::max(X) > v) {
@@ -217,7 +217,7 @@ bool delta_coin(const double &u,
   } else if (s >= t) {
     stop("layeredBB::delta_coin: s >= t. Must have s < t");
   }
-  // save commputation by returning false is already outside layer
+  // save commputation by returning false if already outside layer
   if (std::min(x,y) < min) {
     return false;
   } else if (std::max(x,y) > v) {
@@ -301,7 +301,7 @@ bool delta_coin_intervals(const double &u,
   } else if ((u < 0) || (u > 1)) {
     stop("layeredBB::delta_coin_intervals: u must be in interval [0,1]");
   }
-  // save commputation by returning false is already outside layer
+  // save commputation by returning false if already outside layer
   if (Rcpp::min(X) < min) {
     return false;
   } else if (Rcpp::max(X) > v) {
