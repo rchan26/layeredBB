@@ -9,19 +9,35 @@ devtools::install_github('rchan26/layeredBB')
 Here is an example to use in a cluster using `parallel`:
 
 ```
-  # load in package
-  library(layeredBB)
+# load in package
+library(layeredBB)
 
-  # creating parallel cluster with maximum number of cores
-  n_cores <- parallel::detectCores()
-  cl <- parallel::makeCluster(n_cores)
-  
-  # export functions from layeredBB into the cluster environment
-  parallel::clusterExport(cl, varlist = ls("package:layeredBB"))
-  
-  ##### do some stuff in cluster using layeredBB functions ######
-  
-  # stop cluster
-  parallel::stopCluster(cl)
+# creating parallel cluster with maximum number of cores
+n_cores <- parallel::detectCores()
+cl <- parallel::makeCluster(n_cores)
+
+# export functions from layeredBB into the cluster environment
+parallel::clusterExport(cl, varlist = ls("package:layeredBB"))
+
+##### do some stuff in cluster using layeredBB functions ######
+
+# stop cluster
+parallel::stopCluster(cl)
 ```
 
+## Development workflow
+
+If any code has been modified, call:
+
+```
+Rcpp::compileAttributes()
+pkgbuild::compile_dll()
+devtools::document()
+devtools::install()
+```
+
+Then can test the package by calling:
+
+```
+devtools::test()
+```
