@@ -6,14 +6,32 @@ test_that("Brownian bridge maximum point sampler returns errors if arguments are
   low_bound <- max(x,y) + 1
   up_bound <- max(x,y) + 2
   times <- sort(runif(2, 0, 10))
-  # should have error if low_bound > up_bound (must have max(x,y) <= low_bound < up_bound)
+  # should have error if low_bound >= up_bound (must have max(x,y) <= low_bound < up_bound)
+  # expect error if low_bound > up_bound
   expect_error(max_sampler(x = x,
                            y = y,
                            s = times[1],
                            t = times[2],
                            low_bound = up_bound,
                            up_bound = low_bound),
-               "layeredBB::max_sampler: low_bound > up_bound. Must have max(x,y) <= low_bound < up_bound",
+               "layeredBB::max_sampler: low_bound >= up_bound. Must have max(x,y) <= low_bound < up_bound",
+               fixed = TRUE)
+  # expect error if low_bound == up_bound
+  expect_error(max_sampler(x = x,
+                           y = y,
+                           s = times[1],
+                           t = times[2],
+                           low_bound = low_bound,
+                           up_bound = low_bound),
+               "layeredBB::max_sampler: low_bound >= up_bound. Must have max(x,y) <= low_bound < up_bound",
+               fixed = TRUE)
+  expect_error(max_sampler(x = x,
+                           y = y,
+                           s = times[1],
+                           t = times[2],
+                           low_bound = up_bound,
+                           up_bound = up_bound),
+               "layeredBB::max_sampler: low_bound >= up_bound. Must have max(x,y) <= low_bound < up_bound",
                fixed = TRUE)
   # should have error if low_bound < max(x,y) (must have max(x,y) <= low_bound < up_bound)
   expect_error(max_sampler(x = x,

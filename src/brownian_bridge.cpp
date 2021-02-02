@@ -270,8 +270,8 @@ Rcpp::NumericVector min_sampler(const double &x,
                                 const double &low_bound,
                                 const double &up_bound)
 {
-  if (low_bound > up_bound) {
-    stop("layeredBB::min_sampler: low_bound > up_bound. Must have low_bound < up_bound <= min(x,y)");
+  if (low_bound >= up_bound) {
+    stop("layeredBB::min_sampler: low_bound >= up_bound. Must have low_bound < up_bound <= min(x,y)");
   } else if (up_bound > std::min(x, y)) {
     stop("layeredBB::min_sampler: up_bound > min(x,y). Must have low_bound < up_bound <= min(x,y)");
   } else if (t <= s) {
@@ -279,20 +279,20 @@ Rcpp::NumericVector min_sampler(const double &x,
   }
   // set simulated minimum value
   const double u1 = Rcpp::runif(1, M_func(low_bound,x,y,s,t), M_func(up_bound,x,y,s,t))[0];
-  const double m = x - (0.5 * (sqrt((y-x)*(y-x) - 2.0*(t-s)*log(u1)) - y + x));
+  const double m = x - (0.5*(sqrt((y-x)*(y-x) - 2.0*(t-s)*log(u1)) - y + x));
   // simulating from Inverse Gaussian to set V and tau
   double mu, lambda, V;
-  double condition = (x - m) / (x + y - (2.0*m));
+  const double condition = (x - m) / (x + y - (2.0*m));
   if (Rcpp::runif(1, 0.0, 1.0)[0] < condition) {
     mu = (y-m)/(x-m);
-    lambda = (y-m)*(y-m)/(t-s);
+    lambda = ((y-m)*(y-m))/(t-s);
     V = inv_gauss_sampler(mu, lambda);
   } else {
     mu = (x-m)/(y-m);
-    lambda = (x-m)*(x-m)/(t-s);
+    lambda = ((x-m)*(x-m))/(t-s);
     V = 1.0 / inv_gauss_sampler(mu, lambda);
   }
-  return Rcpp::NumericVector::create(Named("min", m), 
+  return Rcpp::NumericVector::create(Named("min", m),
                                      Named("tau", ((s*V)+t)/(1.0+V)));
 }
 
@@ -384,7 +384,7 @@ double min_Bessel_bridge_sampler(const double &x,
   // simulate normal random variables
   const Rcpp::NumericVector b = rnorm(3, 0.0, (sqrt(fabs(tau-q) * fabs(q-r)) / fabs(tau-r)));
   // set simulated value and return
-  const double term1 = ((Wr-m)*fabs(tau-q)/(pow(fabs(tau-r), 1.5))) + b.at(0);
+  const double term1 = ((Wr-m)*fabs(tau-q)/pow(fabs(tau-r), 1.5)) + b.at(0);
   return m + sqrt(fabs(tau-r) * (term1*term1 + b.at(1)*b.at(1) + b.at(2)*b.at(2)));
 }
 
@@ -643,8 +643,8 @@ Rcpp::NumericVector max_sampler(const double &x,
                                 const double &low_bound,
                                 const double &up_bound)
 {
-  if (low_bound > up_bound) {
-    stop("layeredBB::max_sampler: low_bound > up_bound. Must have max(x,y) <= low_bound < up_bound");
+  if (low_bound >= up_bound) {
+    stop("layeredBB::max_sampler: low_bound >= up_bound. Must have max(x,y) <= low_bound < up_bound");
   } else if (low_bound < std::max(x,y)) {
     stop("layeredBB::max_sampler: low_bound < max(x,y). Must have max(x,y) <= low_bound < up_bound");
   } else if (t <= s) {

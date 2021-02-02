@@ -47,19 +47,20 @@ Rcpp::List bessel_layer_simulation(const double &x,
   }
   int l = 1;
   const double u = Rcpp::runif(1, 0.0, 1.0)[0];
-  double xandy = std::min(x, y);
-  double xoy = std::max(x, y);
-  double layer_size = sqrt(t-s)*mult;
+  const double xandy = std::min(x, y);
+  const double xoy = std::max(x, y);
+  const double layer_size = sqrt(t-s)*mult;
   while (true) {
     // flip gamma coin to determine if BB stays within the interval:
     // [min(x,y) - layer_size*l, max(x,y) + layer_size*l]
-    if (gamma_coin(u, 1, x, y, s, t, xandy - layer_size*l, xoy + layer_size*l)) {
+    if (gamma_coin(u, 0, x, y, s, t, xandy - layer_size*l, xoy + layer_size*l)) {
       return List::create(Named("L", xandy - layer_size*l),
                           Named("l", xandy - layer_size*(l-1)),
                           Named("u", xoy + layer_size*(l-1)),
                           Named("U", xoy + layer_size*l));
+    } else {
+      l += 1;
     }
-    l += 1;
   }
 }
 

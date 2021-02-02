@@ -6,14 +6,32 @@ test_that("Brownian bridge minimum point sampler returns errors if arguments are
   low_bound <- min(x,y) - 2
   up_bound <- min(x,y) - 1
   times <- sort(runif(2, 0, 10))
-  # should have error if low_bound > up_bound (must have low_bound < up_bound <= min(x,y))
+  # should have error if low_bound >= up_bound (must have low_bound < up_bound <= min(x,y))
+  # expect error if low_bound > up_bound
   expect_error(min_sampler(x = x,
                            y = y,
                            s = times[1],
                            t = times[2],
                            low_bound = up_bound,
                            up_bound = low_bound),
-               "layeredBB::min_sampler: low_bound > up_bound. Must have low_bound < up_bound <= min(x,y)",
+               "layeredBB::min_sampler: low_bound >= up_bound. Must have low_bound < up_bound <= min(x,y)",
+               fixed = TRUE)
+  # expect error if low_bound == up_bound
+  expect_error(min_sampler(x = x,
+                           y = y,
+                           s = times[1],
+                           t = times[2],
+                           low_bound = low_bound,
+                           up_bound = low_bound),
+               "layeredBB::min_sampler: low_bound >= up_bound. Must have low_bound < up_bound <= min(x,y)",
+               fixed = TRUE)
+  expect_error(min_sampler(x = x,
+                           y = y,
+                           s = times[1],
+                           t = times[2],
+                           low_bound = up_bound,
+                           up_bound = up_bound),
+               "layeredBB::min_sampler: low_bound >= up_bound. Must have low_bound < up_bound <= min(x,y)",
                fixed = TRUE)
   # should have error up_bound > min(x,y) (must have low_bound < up_bound <= min(x,y))
   expect_error(min_sampler(x = x,

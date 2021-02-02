@@ -22,11 +22,10 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 double inv_gauss_sampler(const double &mu, const double &lambda)
 {
-  double v = Rcpp::rnorm(1, 0.0, 1.0)[0];
-  double y = v*v;
-  double x = mu + (mu*mu*y)/(2*lambda) - (mu/(2*lambda))*sqrt(4*mu*lambda*y + mu*mu*y*y);
-  double u = Rcpp::runif(1, 0.0, 1.0)[0];
-  if (u <= (mu)/(mu+x)) {
+  const double v = Rcpp::rnorm(1, 0.0, 1.0)[0];
+  const double y = v*v;
+  const double x = mu + ((mu*mu*y)/(2*lambda)) - ((mu/(2*lambda))*sqrt(4*mu*lambda*y + mu*mu*y*y));
+  if (Rcpp::runif(1, 0.0, 1.0)[0] <= (mu)/(mu+x)) {
     return x;
   } else {
     return (mu*mu) / x;

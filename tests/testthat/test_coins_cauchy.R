@@ -230,12 +230,15 @@ test_that("Delta coin flipper returns errors if arguments are outside constraint
 
 test_that("Delta coin flipper returns expected results", {
   u <- runif(1, 0, 1)
-  k <- sample(x = 1:10, size = 1)
   x <- rnorm(1, 0, 10)
   y <- rnorm(1, 0, 10)
   times <- sort(runif(2, 0, 10))
   min <- min(x,y) - 1
   v <- max(x,y) + 1
+  # calculate k
+  D <- abs(v-min)
+  k_min <- sqrt(times[2]-times[1] + D^2) / (2*D)
+  k <- max(sample(x = 1:10, size = 1), ceiling(k_min))
   returned <- delta_coin(u = u,
                          k = k,
                          x = x,
@@ -247,6 +250,11 @@ test_that("Delta coin flipper returns expected results", {
   expect_is(returned, "logical")
   expect_equal(length(returned), 1)
   # should work if min == min(x,y) too
+  min <- min(x,y)
+  # calculate k
+  D <- abs(v-min)
+  k_min <- sqrt(times[2]-times[1] + D^2) / (2*D)
+  k <- max(sample(x = 1:10, size = 1), ceiling(k_min))
   returned <- delta_coin(u = u,
                          k = k,
                          x = x,
@@ -257,7 +265,13 @@ test_that("Delta coin flipper returns expected results", {
                          v = v)
   expect_is(returned, "logical")
   expect_equal(length(returned), 1)
-  # should work if v == max(x,y)
+  # should work if v == max(x,y) and min < min(x,y)
+  min <- min(x,y) - 1
+  v <- max(x,y)
+  # calculate k
+  D <- abs(v-min)
+  k_min <- sqrt(times[2]-times[1] + D^2) / (2*D)
+  k <- max(sample(x = 1:10, size = 1), ceiling(k_min))
   returned <- delta_coin(u = u,
                          k = k,
                          x = x,
@@ -265,10 +279,15 @@ test_that("Delta coin flipper returns expected results", {
                          s = times[1],
                          t = times[2],
                          min = min,
-                         v = max(x,y))
+                         v = v)
   expect_is(returned, "logical")
   expect_equal(length(returned), 1)
   # should work if min == min(x,y) and v == max(x,y)
+  min <- min(x,y)
+  # calculate k
+  D <- abs(v-min)
+  k_min <- sqrt(times[2]-times[1] + D^2) / (2*D)
+  k <- max(sample(x = 1:10, size = 1), ceiling(k_min))
   returned <- delta_coin(u = u,
                          k = k,
                          x = x,
