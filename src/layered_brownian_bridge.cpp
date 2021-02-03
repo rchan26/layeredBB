@@ -142,40 +142,14 @@ Rcpp::List layered_brownian_bridge(const double &x,
     Rcpp::List simulated_BB;
     if (u[0] < 0.5) {
       Rcpp::NumericVector sim_m = min_sampler(x, y, s, t, bessel_layer["L"], bessel_layer["l"]);
-      l1 = sim_m["min"], l2 = sim_m["min"];
-      v1 = bessel_layer["u"], v2 = bessel_layer["U"];
-      // simulate Bessel bridge conditional on the minimum point at intermediate points
+      l1 = sim_m["min"], l2 = sim_m["min"], v1 = bessel_layer["u"], v2 = bessel_layer["U"];
+      // simulate Bessel bridge conditional on the simulated minimum at intermediate points
       simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t, sim_m["min"], sim_m["tau"], times);
-      const Rcpp::NumericMatrix &full_path = simulated_BB["full_path"];
-      // check that none of the simulated points are outside of the layer: 
-      // if so, resample Bessel bridge
-      if (Rcpp::max(full_path.row(0)) > v2) {
-        while (true) {
-          simulated_BB = min_Bessel_bridge_path_sampler(x, y, s, t, sim_m["min"], sim_m["tau"], times);
-          const Rcpp::NumericMatrix &full_path = simulated_BB["full_path"];
-          if (Rcpp::max(full_path.row(0)) <= v2) {
-            break;
-          }
-        }
-      }
     } else {
       Rcpp::NumericVector sim_m = max_sampler(x, y, s, t, bessel_layer["u"], bessel_layer["U"]);
-      l1 = bessel_layer["l"], l2 = bessel_layer["L"];
-      v1 = sim_m["max"], v2 = sim_m["max"];
-      // simulate Bessel bridge conditional on the maximum at intermediate points
+      l1 = bessel_layer["l"], l2 = bessel_layer["L"], v1 = sim_m["max"], v2 = sim_m["max"];
+      // simulate Bessel bridge conditional on the simulated maximum at intermediate points
       simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, sim_m["max"], sim_m["tau"], times);
-      const Rcpp::NumericMatrix &full_path = simulated_BB["full_path"];
-      // check that none of the simulated points are outside of the layer: 
-      // if so, resample Bessel bridge
-      if (Rcpp::min(full_path.row(0)) < l2) {
-        while (true) {
-          simulated_BB = max_Bessel_bridge_path_sampler(x, y, s, t, sim_m["max"], sim_m["tau"], times);
-          const Rcpp::NumericMatrix &full_path = simulated_BB["full_path"];
-          if (Rcpp::min(full_path.row(0)) >= l2) {
-            break;
-          }
-        }
-      }
     }
     // checking if BB remains in [l1, v1]
     const Rcpp::NumericMatrix &full_path = simulated_BB["full_path"];
