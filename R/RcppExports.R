@@ -209,6 +209,9 @@ multi_brownian_bridge <- function(dim, x, y, s, t, times) {
 #' @param t end value of Brownian bridge
 #' @param low_bound Lower bound of minimum point (low_bound < up_bound <= min(x,y))
 #' @param up_bound Upper bound of minimum point (low_bound < up_bound <= min(x,y))
+#' @param checks logical value to determine if arguments that are passed into 
+#'        the function are checked. Things that are checked include that 
+#'        low_bound < up_bound <= min(x,y) and that s < t
 #'
 #' @return vector: the simulated minimum, 'min', and time where minimum occurs, 'tau'
 #'
@@ -225,8 +228,8 @@ multi_brownian_bridge <- function(dim, x, y, s, t, times) {
 #'      xlab = 'Time', ylab = 'X')
 #'
 #' @export
-min_sampler <- function(x, y, s, t, low_bound, up_bound) {
-    .Call(`_layeredBB_min_sampler`, x, y, s, t, low_bound, up_bound)
+min_sampler <- function(x, y, s, t, low_bound, up_bound, checks = TRUE) {
+    .Call(`_layeredBB_min_sampler`, x, y, s, t, low_bound, up_bound, checks)
 }
 
 #' Bessel Bridge point sampler given minimum (Algorithm 15 in ST329)
@@ -240,6 +243,10 @@ min_sampler <- function(x, y, s, t, low_bound, up_bound) {
 #' @param m minumum point
 #' @param tau time of minimum point
 #' @param q time of simulation
+#' @param checks logical value to determine if arguments that are passed into 
+#'        the function are checked. Things that are checked include that
+#'        s < t, that q is in [s,t], that tau is in [s,t], that if tau == s
+#'        or tau == t, then m == x or m == y, respectively, and that m <= min(x,y)
 #'
 #' @return simulated point of the Bessel bridge at time q
 #'
@@ -255,8 +262,8 @@ min_sampler <- function(x, y, s, t, low_bound, up_bound) {
 #'                           q = 0.2)
 #'
 #' @export
-min_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q) {
-    .Call(`_layeredBB_min_Bessel_bridge_sampler`, x, y, s, t, m, tau, q)
+min_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q, checks = TRUE) {
+    .Call(`_layeredBB_min_Bessel_bridge_sampler`, x, y, s, t, m, tau, q, checks)
 }
 
 #' Bessel Bridge path sampler given minimum
@@ -270,6 +277,11 @@ min_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q) {
 #' @param m minumum point
 #' @param tau time of minimum point
 #' @param times vector of real numbers to simulate Bessel bridge
+#' @param checks logical value to determine if arguments that are passed into 
+#'        the function are checked. Things that are checked include that 
+#'        s < t, that requested simulation times are in [s,t], that if 
+#'        tau == s or tau == t, then m == x or m == y, respectively, and 
+#'        that m <= min(x,y)
 #'
 #' @return A list with the following components
 #' \describe{
@@ -335,8 +347,8 @@ min_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q) {
 #' points(x = min['tau'], y = min['min'], col = 'red', pch = 20)
 #'
 #' @export
-min_Bessel_bridge_path_sampler <- function(x, y, s, t, m, tau, times) {
-    .Call(`_layeredBB_min_Bessel_bridge_path_sampler`, x, y, s, t, m, tau, times)
+min_Bessel_bridge_path_sampler <- function(x, y, s, t, m, tau, times, checks = TRUE) {
+    .Call(`_layeredBB_min_Bessel_bridge_path_sampler`, x, y, s, t, m, tau, times, checks)
 }
 
 #' Brownian Bridge maximum point sampler
@@ -349,6 +361,9 @@ min_Bessel_bridge_path_sampler <- function(x, y, s, t, m, tau, times) {
 #' @param t end value of Brownian bridge
 #' @param low_bound Lower bound of maximum point (max(x,y) <= low_bound < up_bound)
 #' @param up_bound Upper bound of maximum point (max(x,y) <= low_bound < up_bound)
+#' @param checks logical value to determine if arguments that are passed into 
+#'        the function are checked. Things that are checked include that 
+#'        max(x,y) <= low_bound < up_bound and that s < t
 #'
 #' @return vector: the simulated maximum, 'max', and time where maximum occurs, 'tau'
 #'
@@ -365,8 +380,8 @@ min_Bessel_bridge_path_sampler <- function(x, y, s, t, m, tau, times) {
 #'      xlab = 'Time', ylab = 'X')
 #'
 #' @export
-max_sampler <- function(x, y, s, t, low_bound, up_bound) {
-    .Call(`_layeredBB_max_sampler`, x, y, s, t, low_bound, up_bound)
+max_sampler <- function(x, y, s, t, low_bound, up_bound, checks = TRUE) {
+    .Call(`_layeredBB_max_sampler`, x, y, s, t, low_bound, up_bound, checks)
 }
 
 #' Bessel Bridge point sampler given maximum
@@ -380,6 +395,10 @@ max_sampler <- function(x, y, s, t, low_bound, up_bound) {
 #' @param m maxumum point 
 #' @param tau time of maximum point
 #' @param q time of simulation
+#' @param checks logical value to determine if arguments that are passed into 
+#'        the function are checked. Things that are checked include that
+#'        s < t, that q is in [s,t], that tau is in [s,t], that if tau == s
+#'        or tau == t, then m == x or m == y, respectively, and that m >= min(x,y)
 #' 
 #' @return simulated point of the Bessel bridge at time q
 #'
@@ -395,8 +414,8 @@ max_sampler <- function(x, y, s, t, low_bound, up_bound) {
 #'                           q = 0.2)
 #'
 #' @export
-max_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q) {
-    .Call(`_layeredBB_max_Bessel_bridge_sampler`, x, y, s, t, m, tau, q)
+max_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q, checks = TRUE) {
+    .Call(`_layeredBB_max_Bessel_bridge_sampler`, x, y, s, t, m, tau, q, checks)
 }
 
 #' Bessel Bridge path sampler given maximum
@@ -410,6 +429,11 @@ max_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q) {
 #' @param m maxumum point 
 #' @param tau time of maximum point
 #' @param times vector of real numbers to simulate Bessel bridge
+#' @param checks logical value to determine if arguments that are passed into 
+#'        the function are checked. Things that are checked include that 
+#'        s < t, that requested simulation times are in [s,t], that if 
+#'        tau == s or tau == t, then m == x or m == y, respectively, and 
+#'        that m >= max(x,y)
 #' 
 #' @return A list with the following components
 #' \describe{
@@ -475,8 +499,8 @@ max_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q) {
 #' points(x = max['tau'], y = max['max'], col = 'red', pch = 20)
 #'
 #' @export
-max_Bessel_bridge_path_sampler <- function(x, y, s, t, m, tau, times) {
-    .Call(`_layeredBB_max_Bessel_bridge_path_sampler`, x, y, s, t, m, tau, times)
+max_Bessel_bridge_path_sampler <- function(x, y, s, t, m, tau, times, checks = TRUE) {
+    .Call(`_layeredBB_max_Bessel_bridge_path_sampler`, x, y, s, t, m, tau, times, checks)
 }
 
 #' Sigma_Bar (Equation 141 in ST329)

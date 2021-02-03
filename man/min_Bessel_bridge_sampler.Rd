@@ -4,7 +4,7 @@
 \alias{min_Bessel_bridge_sampler}
 \title{Bessel Bridge point sampler given minimum (Algorithm 15 in ST329)}
 \usage{
-min_Bessel_bridge_sampler(x, y, s, t, m, tau, q)
+min_Bessel_bridge_sampler(x, y, s, t, m, tau, q, checks = TRUE)
 }
 \arguments{
 \item{x}{start value of Bessel bridge}
@@ -20,6 +20,11 @@ min_Bessel_bridge_sampler(x, y, s, t, m, tau, q)
 \item{tau}{time of minimum point}
 
 \item{q}{time of simulation}
+
+\item{checks}{logical value to determine if arguments that are passed into 
+the function are checked. Things that are checked include that
+s < t, that q is in [s,t], that tau is in [s,t], that if tau == s
+or tau == t, then m == x or m == y, respectively, and that m <= min(x,y)}
 }
 \value{
 simulated point of the Bessel bridge at time q

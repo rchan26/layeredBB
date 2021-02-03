@@ -4,7 +4,7 @@
 \alias{max_sampler}
 \title{Brownian Bridge maximum point sampler}
 \usage{
-max_sampler(x, y, s, t, low_bound, up_bound)
+max_sampler(x, y, s, t, low_bound, up_bound, checks = TRUE)
 }
 \arguments{
 \item{x}{start value of Brownian bridge}
@@ -18,6 +18,10 @@ max_sampler(x, y, s, t, low_bound, up_bound)
 \item{low_bound}{Lower bound of maximum point (max(x,y) <= low_bound < up_bound)}
 
 \item{up_bound}{Upper bound of maximum point (max(x,y) <= low_bound < up_bound)}
+
+\item{checks}{logical value to determine if arguments that are passed into 
+the function are checked. Things that are checked include that 
+max(x,y) <= low_bound < up_bound and that s < t}
 }
 \value{
 vector: the simulated maximum, 'max', and time where maximum occurs, 'tau'

@@ -4,7 +4,7 @@
 \alias{min_sampler}
 \title{Brownian Bridge minimum point sampler (Algorithm 14 in ST329)}
 \usage{
-min_sampler(x, y, s, t, low_bound, up_bound)
+min_sampler(x, y, s, t, low_bound, up_bound, checks = TRUE)
 }
 \arguments{
 \item{x}{start value of Brownian bridge}
@@ -18,6 +18,10 @@ min_sampler(x, y, s, t, low_bound, up_bound)
 \item{low_bound}{Lower bound of minimum point (low_bound < up_bound <= min(x,y))}
 
 \item{up_bound}{Upper bound of minimum point (low_bound < up_bound <= min(x,y))}
+
+\item{checks}{logical value to determine if arguments that are passed into 
+the function are checked. Things that are checked include that 
+low_bound < up_bound <= min(x,y) and that s < t}
 }
 \value{
 vector: the simulated minimum, 'min', and time where minimum occurs, 'tau'

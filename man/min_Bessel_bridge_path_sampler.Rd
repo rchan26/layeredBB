@@ -4,7 +4,7 @@
 \alias{min_Bessel_bridge_path_sampler}
 \title{Bessel Bridge path sampler given minimum}
 \usage{
-min_Bessel_bridge_path_sampler(x, y, s, t, m, tau, times)
+min_Bessel_bridge_path_sampler(x, y, s, t, m, tau, times, checks = TRUE)
 }
 \arguments{
 \item{x}{start value of Bessel bridge}
@@ -20,6 +20,12 @@ min_Bessel_bridge_path_sampler(x, y, s, t, m, tau, times)
 \item{tau}{time of minimum point}
 
 \item{times}{vector of real numbers to simulate Bessel bridge}
+
+\item{checks}{logical value to determine if arguments that are passed into 
+the function are checked. Things that are checked include that 
+s < t, that requested simulation times are in [s,t], that if 
+tau == s or tau == t, then m == x or m == y, respectively, and 
+that m <= min(x,y)}
 }
 \value{
 A list with the following components

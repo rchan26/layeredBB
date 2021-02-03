@@ -232,8 +232,10 @@ bool delta_coin(const double &u,
   double denom;
   double xoy;
   if (std::min(x,y) > min) {
+    // delta_1
     denom = 1 - exp(-2.0*(x-min)*(y-min)/(t-s));
-  } else if (std::min(x,y) == min) {
+  } else {
+    // delta_2
     xoy = std::max(x,y);
     denom = std::abs(x-y);
   }
@@ -243,9 +245,11 @@ bool delta_coin(const double &u,
   while (left < u && u < right) {
     k = k+1;
     if (std::min(x,y) > min) {
+      // delta_1
       right = right - ((easigma(k,x,y,s,t,min,v) - eaphi(k,x,y,s,t,min,v)) / denom);
       left = right - (easigma(k+1,x,y,s,t,min,v) / denom);
-    } else if (std::min(x,y) == min) {
+    } else {
+      // delta_2
       right = right - ((eapsi(k,xoy,s,t,min,v) - eachi(k,xoy,s,t,min,v)) / denom);
       left = right - (eapsi(k+1,xoy,s,t,min,v) / denom);
     }   
@@ -320,8 +324,10 @@ bool delta_coin_intervals(const double &u,
   for (int i=0; i < n; ++i) {
     xoy.at(i) = std::max(X.at(i), X.at(i+1));
     if (std::min(X.at(i),X.at(i+1)) > min) {
+      // delta_1
       denom.at(i) = 1 - exp(-2.0*(X.at(i)-min)*(X.at(i+1)-min)/(times.at(i+1)-times.at(i)));
-    } else if (std::min(X.at(i), X.at(i+1)) == min) {
+    } else {
+      // delta_2
       denom.at(i) = std::abs(X.at(i)-X.at(i+1));
     }
   }
@@ -332,12 +338,14 @@ bool delta_coin_intervals(const double &u,
     k += 1;
     for (int i=0; i < n; ++i) {
       if (std::min(X.at(i), X.at(i+1)) > min) {
+        // delta_1
         double sigma_at_k = easigma(k, X.at(i), X.at(i+1), times.at(i), times.at(i+1), min, v);
         double phi_at_k = eaphi(k, X.at(i), X.at(i+1), times.at(i), times.at(i+1), min, v);
         double sigma_at_k_plus_1 = easigma(k+1, X.at(i), X.at(i+1), times.at(i), times.at(i+1), min, v);
         right.at(i) = right.at(i) - ((sigma_at_k - phi_at_k) / denom.at(i));
         left.at(i) = right.at(i) - (sigma_at_k_plus_1 / denom.at(i));
-      } else if (std::min(X.at(i), X.at(i+1)) == min) {
+      } else {
+        // delta_2
         double eapsi_at_k = eapsi(k, xoy.at(i), times.at(i), times.at(i+1), min, v);
         double chi_at_k = eachi(k, xoy.at(i), times.at(i), times.at(i+1), min, v);
         double eapsi_at_k_plus_1 = eapsi(k+1, xoy.at(i), times.at(i), times.at(i+1), min, v);

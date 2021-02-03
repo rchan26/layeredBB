@@ -246,6 +246,9 @@ double M_func(const double &a,
 //' @param t end value of Brownian bridge
 //' @param low_bound Lower bound of minimum point (low_bound < up_bound <= min(x,y))
 //' @param up_bound Upper bound of minimum point (low_bound < up_bound <= min(x,y))
+//' @param checks logical value to determine if arguments that are passed into 
+//'        the function are checked. Things that are checked include that 
+//'        low_bound < up_bound <= min(x,y) and that s < t
 //'
 //' @return vector: the simulated minimum, 'min', and time where minimum occurs, 'tau'
 //'
@@ -268,14 +271,17 @@ Rcpp::NumericVector min_sampler(const double &x,
                                 const double &s,
                                 const double &t,
                                 const double &low_bound,
-                                const double &up_bound)
+                                const double &up_bound,
+                                const bool &checks = true)
 {
-  if (low_bound >= up_bound) {
-    stop("layeredBB::min_sampler: low_bound >= up_bound. Must have low_bound < up_bound <= min(x,y)");
-  } else if (up_bound > std::min(x, y)) {
-    stop("layeredBB::min_sampler: up_bound > min(x,y). Must have low_bound < up_bound <= min(x,y)");
-  } else if (t <= s) {
-    stop("layeredBB::min_sampler: t <= s. Must have s < t");
+  if (checks) {
+    if (low_bound >= up_bound) {
+      stop("layeredBB::min_sampler: low_bound >= up_bound. Must have low_bound < up_bound <= min(x,y)");
+    } else if (up_bound > std::min(x, y)) {
+      stop("layeredBB::min_sampler: up_bound > min(x,y). Must have low_bound < up_bound <= min(x,y)");
+    } else if (t <= s) {
+      stop("layeredBB::min_sampler: t <= s. Must have s < t");
+    }
   }
   // set simulated minimum value
   const double u1 = Rcpp::runif(1, M_func(low_bound,x,y,s,t), M_func(up_bound,x,y,s,t))[0];
@@ -307,6 +313,10 @@ Rcpp::NumericVector min_sampler(const double &x,
 //' @param m minumum point
 //' @param tau time of minimum point
 //' @param q time of simulation
+//' @param checks logical value to determine if arguments that are passed into 
+//'        the function are checked. Things that are checked include that
+//'        s < t, that q is in [s,t], that tau is in [s,t], that if tau == s
+//'        or tau == t, then m == x or m == y, respectively, and that m <= min(x,y)
 //'
 //' @return simulated point of the Bessel bridge at time q
 //'
@@ -329,38 +339,41 @@ double min_Bessel_bridge_sampler(const double &x,
                                  const double &t,
                                  const double &m,
                                  const double &tau,
-                                 const double &q)
+                                 const double &q,
+                                 const bool &checks = true)
 {
-  // check that s < t
-  if (t <= s) {
-    stop("layeredBB::min_Bessel_bridge_sampler: t <= s. Must have s < t");
-  }
-  // check requested simulation time q is in [s,t]
-  if (q < s) {
-    stop("layeredBB::min_Bessel_bridge_sampler: requested simulation time q < s");
-  } else if (q > t) {
-    stop("layeredBB::min_Bessel_bridge_sampler: requested simulation time q > t");
-  } 
-  // check tau is between [s,t]
-  if (tau < s) {
-    stop("layeredBB::min_Bessel_bridge_sampler: time of minimum tau < s");
-  } else if (tau > t) {
-    stop("layeredBB::min_Bessel_bridge_sampler: time of minimum tau > t");
-  }
-  // if tau == s or tau == t
-  // check that they are consistent with the given points for m, x, y
-  if (tau == s) {
-    if (m != x) {
-      stop("layeredBB::min_Bessel_bridge_sampler: tau == s and minimum point m != x");
-    } 
-  } else if (tau == t) {
-    if (m != y) {
-      stop("layeredBB::min_Bessel_bridge_sampler: tau == t and minimum point m != y");
+  if (checks) {
+    // check that s < t
+    if (t <= s) {
+      stop("layeredBB::min_Bessel_bridge_sampler: t <= s. Must have s < t");
     }
-  }
-  // check m <= min(x,y)
-  if (m > std::min(x,y)) {
-    stop("layeredBB::min_Bessel_bridge_sampler: m > min(x,y). Must have m <= min(x,y)");
+    // check requested simulation time q is in [s,t]
+    if (q < s) {
+      stop("layeredBB::min_Bessel_bridge_sampler: requested simulation time q < s");
+    } else if (q > t) {
+      stop("layeredBB::min_Bessel_bridge_sampler: requested simulation time q > t");
+    } 
+    // check tau is between [s,t]
+    if (tau < s) {
+      stop("layeredBB::min_Bessel_bridge_sampler: time of minimum tau < s");
+    } else if (tau > t) {
+      stop("layeredBB::min_Bessel_bridge_sampler: time of minimum tau > t");
+    }
+    // if tau == s or tau == t
+    // check that they are consistent with the given points for m, x, y
+    if (tau == s) {
+      if (m != x) {
+        stop("layeredBB::min_Bessel_bridge_sampler: tau == s and minimum point m != x");
+      } 
+    } else if (tau == t) {
+      if (m != y) {
+        stop("layeredBB::min_Bessel_bridge_sampler: tau == t and minimum point m != y");
+      }
+    }
+    // check m <= min(x,y)
+    if (m > std::min(x,y)) {
+      stop("layeredBB::min_Bessel_bridge_sampler: m > min(x,y). Must have m <= min(x,y)");
+    }
   }
   // function simulates a Bessel bridge at a given time (q) with minimum (min) at time (tau)
   // cases where we already know the location at time q
@@ -399,6 +412,11 @@ double min_Bessel_bridge_sampler(const double &x,
 //' @param m minumum point
 //' @param tau time of minimum point
 //' @param times vector of real numbers to simulate Bessel bridge
+//' @param checks logical value to determine if arguments that are passed into 
+//'        the function are checked. Things that are checked include that 
+//'        s < t, that requested simulation times are in [s,t], that if 
+//'        tau == s or tau == t, then m == x or m == y, respectively, and 
+//'        that m <= min(x,y)
 //'
 //' @return A list with the following components
 //' \describe{
@@ -471,38 +489,55 @@ Rcpp::List min_Bessel_bridge_path_sampler(const double &x,
                                           const double &t,
                                           const double &m,
                                           const double &tau,
-                                          const Rcpp::NumericVector &times)
+                                          const Rcpp::NumericVector &times,
+                                          const bool &checks = true)
 {
-  // check that s < t
-  if (t <= s) {
-    stop("layeredBB::min_Bessel_bridge_path_sampler: t <= s. Must have s < t");
-  }
-  // check requested simulation times are in [s,t]
-  if (Rcpp::min(times) < s) {
-    stop("layeredBB::min_Bessel_bridge_path_sampler: minimum of specified times is less than s");
-  } else if (Rcpp::max(times) > t) {
-    stop("layeredBB::min_Bessel_bridge_path_sampler: maximum of specified times is greater than t");
-  } 
-  // check tau is between [s,t]
-  if (tau < s) {
-    stop("layeredBB::min_Bessel_bridge_path_sampler: time of minimum tau < s");
-  } else if (tau > t) {
-    stop("layeredBB::min_Bessel_bridge_path_sampler: time of minimum tau > t");
-  }
-  // if tau == s or tau == t
-  // check that they are consistent with the given points for m, x, y
-  if (tau == s) {
-    if (m != x) {
-      stop("layeredBB::min_Bessel_bridge_path_sampler: tau == s and minimum point m != x");
-    } 
-  } else if (tau == t) {
-    if (m != y) {
-      stop("layeredBB::min_Bessel_bridge_path_sampler:: tau == t and minimum point m != y");
+  if (checks) {
+    // check that s < t
+    if (t <= s) {
+      stop("layeredBB::min_Bessel_bridge_path_sampler: t <= s. Must have s < t");
     }
-  }
-  // check m <= min(x,y)
-  if (m > std::min(x,y)) {
-    stop("layeredBB::min_Bessel_bridge_path_sampler: m > min(x,y). Must have m <= min(x,y)");
+    // check requested simulation times are in [s,t]
+    if (Rcpp::min(times) < s) {
+      stop("layeredBB::min_Bessel_bridge_path_sampler: minimum of specified times is less than s");
+    } else if (Rcpp::max(times) > t) {
+      stop("layeredBB::min_Bessel_bridge_path_sampler: maximum of specified times is greater than t");
+    } 
+    // check tau is between [s,t]
+    if (tau < s) {
+      stop("layeredBB::min_Bessel_bridge_path_sampler: time of minimum tau < s");
+    } else if (tau > t) {
+      stop("layeredBB::min_Bessel_bridge_path_sampler: time of minimum tau > t");
+    }
+    // if tau == s or tau == t
+    // check that they are consistent with the given points for m, x, y
+    if (tau == s) {
+      Rcout << "x: " << x << "\n";
+      Rcout << "y: " << y << "\n";
+      Rcout << "s: " << s << "\n";
+      Rcout << "t: " << t << "\n";
+      Rcout << "m: " << m << "\n";
+      Rcout << "tau: " << tau << "\n";
+      if (m != x) {
+        Rcout << "m != x \n";
+        stop("layeredBB::min_Bessel_bridge_path_sampler: tau == s and minimum point m != x");
+      } 
+    } else if (tau == t) {
+      Rcout << "x: " << x << "\n";
+      Rcout << "y: " << y << "\n";
+      Rcout << "s: " << s << "\n";
+      Rcout << "t: " << t << "\n";
+      Rcout << "m: " << m << "\n";
+      Rcout << "tau: " << tau << "\n";
+      if (m != y) {
+        Rcout << "m != y \n";
+        stop("layeredBB::min_Bessel_bridge_path_sampler:: tau == t and minimum point m != y");
+      }
+    }
+    // check m <= min(x,y)
+    if (m > std::min(x,y)) {
+      stop("layeredBB::min_Bessel_bridge_path_sampler: m > min(x,y). Must have m <= min(x,y)");
+    }
   }
   // ----- collect all times into one vector
   // and remove duplicates and sort full_times vector
@@ -619,6 +654,9 @@ Rcpp::List min_Bessel_bridge_path_sampler(const double &x,
 //' @param t end value of Brownian bridge
 //' @param low_bound Lower bound of maximum point (max(x,y) <= low_bound < up_bound)
 //' @param up_bound Upper bound of maximum point (max(x,y) <= low_bound < up_bound)
+//' @param checks logical value to determine if arguments that are passed into 
+//'        the function are checked. Things that are checked include that 
+//'        max(x,y) <= low_bound < up_bound and that s < t
 //'
 //' @return vector: the simulated maximum, 'max', and time where maximum occurs, 'tau'
 //'
@@ -641,17 +679,20 @@ Rcpp::NumericVector max_sampler(const double &x,
                                 const double &s,
                                 const double &t,
                                 const double &low_bound,
-                                const double &up_bound)
+                                const double &up_bound,
+                                const bool &checks = true)
 {
-  if (low_bound >= up_bound) {
-    stop("layeredBB::max_sampler: low_bound >= up_bound. Must have max(x,y) <= low_bound < up_bound");
-  } else if (low_bound < std::max(x,y)) {
-    stop("layeredBB::max_sampler: low_bound < max(x,y). Must have max(x,y) <= low_bound < up_bound");
-  } else if (t <= s) {
-    stop("layeredBB::max_sampler: t <= s. Must have s < t");
+  if (checks) {
+    if (low_bound >= up_bound) {
+      stop("layeredBB::max_sampler: low_bound >= up_bound. Must have max(x,y) <= low_bound < up_bound");
+    } else if (low_bound < std::max(x,y)) {
+      stop("layeredBB::max_sampler: low_bound < max(x,y). Must have max(x,y) <= low_bound < up_bound");
+    } else if (t <= s) {
+      stop("layeredBB::max_sampler: t <= s. Must have s < t");
+    }
   }
   // reflect the problem to simulate a minimum
-  Rcpp::NumericVector sim_min = min_sampler(-x, -y, s, t, -up_bound, -low_bound);
+  Rcpp::NumericVector sim_min = min_sampler(-x, -y, s, t, -up_bound, -low_bound, false);
   // reflect on x-axis
   return Rcpp::NumericVector::create(Named("max", -sim_min["min"]), 
                                      Named("tau", sim_min["tau"]));
@@ -668,6 +709,10 @@ Rcpp::NumericVector max_sampler(const double &x,
 //' @param m maxumum point 
 //' @param tau time of maximum point
 //' @param q time of simulation
+//' @param checks logical value to determine if arguments that are passed into 
+//'        the function are checked. Things that are checked include that
+//'        s < t, that q is in [s,t], that tau is in [s,t], that if tau == s
+//'        or tau == t, then m == x or m == y, respectively, and that m >= min(x,y)
 //' 
 //' @return simulated point of the Bessel bridge at time q
 //'
@@ -690,42 +735,45 @@ double max_Bessel_bridge_sampler(const double &x,
                                  const double &t,
                                  const double &m,
                                  const double &tau,
-                                 const double &q)
+                                 const double &q,
+                                 const bool &checks = true)
 {
-  // check that s < t
-  if (t <= s) {
-    stop("layeredBB::max_Bessel_bridge_sampler: t <= s. Must have s < t");
-  }
-  // check requested simulation time q is in [s,t]
-  if (q < s) {
-    stop("layeredBB::max_Bessel_bridge_sampler: requested simulation time q < s");
-  } else if (q > t) {
-    stop("layeredBB::max_Bessel_bridge_sampler: requested simulation time q > t");
-  } 
-  // check tau is between [s,t]
-  if (tau < s) {
-    stop("layeredBB::max_Bessel_bridge_sampler: time of maximum tau < s");
-  } else if (tau > t) {
-    stop("layeredBB::max_Bessel_bridge_sampler: time of maximum tau > t");
-  }
-  // if tau == s or tau == t
-  // check that they are consistent with the given points for m, x, y
-  if (tau == s) {
-    if (m != x) {
-      stop("layeredBB::max_Bessel_bridge_sampler: tau == s and maximum point m != x");
-    } 
-  } else if (tau == t) {
-    if (m != y) {
-      stop("layeredBB::max_Bessel_bridge_sampler:: tau == t and maximum point m != y");
+  if (checks) {
+    // check that s < t
+    if (t <= s) {
+      stop("layeredBB::max_Bessel_bridge_sampler: t <= s. Must have s < t");
     }
-  }
-  // check m >= max(x,y)
-  if (m < std::max(x,y)) {
-    stop("layeredBB::max_Bessel_bridge_sampler: m < max(x,y). Must have m >= max(x,y)");
+    // check requested simulation time q is in [s,t]
+    if (q < s) {
+      stop("layeredBB::max_Bessel_bridge_sampler: requested simulation time q < s");
+    } else if (q > t) {
+      stop("layeredBB::max_Bessel_bridge_sampler: requested simulation time q > t");
+    } 
+    // check tau is between [s,t]
+    if (tau < s) {
+      stop("layeredBB::max_Bessel_bridge_sampler: time of maximum tau < s");
+    } else if (tau > t) {
+      stop("layeredBB::max_Bessel_bridge_sampler: time of maximum tau > t");
+    }
+    // if tau == s or tau == t
+    // check that they are consistent with the given points for m, x, y
+    if (tau == s) {
+      if (m != x) {
+        stop("layeredBB::max_Bessel_bridge_sampler: tau == s and maximum point m != x");
+      } 
+    } else if (tau == t) {
+      if (m != y) {
+        stop("layeredBB::max_Bessel_bridge_sampler:: tau == t and maximum point m != y");
+      }
+    }
+    // check m >= max(x,y)
+    if (m < std::max(x,y)) {
+      stop("layeredBB::max_Bessel_bridge_sampler: m < max(x,y). Must have m >= max(x,y)");
+    }
   }
   // reflect the problem to simulate a Bessel bridge with a given minimum point
   // reflect on x-axis
-  return -min_Bessel_bridge_sampler(-x, -y, s, t, -m, tau, q);
+  return -min_Bessel_bridge_sampler(-x, -y, s, t, -m, tau, q, false);
 }
 
 //' Bessel Bridge path sampler given maximum
@@ -739,6 +787,11 @@ double max_Bessel_bridge_sampler(const double &x,
 //' @param m maxumum point 
 //' @param tau time of maximum point
 //' @param times vector of real numbers to simulate Bessel bridge
+//' @param checks logical value to determine if arguments that are passed into 
+//'        the function are checked. Things that are checked include that 
+//'        s < t, that requested simulation times are in [s,t], that if 
+//'        tau == s or tau == t, then m == x or m == y, respectively, and 
+//'        that m >= max(x,y)
 //' 
 //' @return A list with the following components
 //' \describe{
@@ -811,41 +864,58 @@ Rcpp::List max_Bessel_bridge_path_sampler(const double &x,
                                           const double &t,
                                           const double &m,
                                           const double &tau,
-                                          const Rcpp::NumericVector &times)
+                                          const Rcpp::NumericVector &times,
+                                          const bool &checks = true)
 {
-  // check that s < t
-  if (t <= s) {
-    stop("layeredBB::max_Bessel_bridge_path_sampler: t <= s. Must have s < t");
-  }
-  // check requested simulation times are in [s,t]
-  if (Rcpp::min(times) < s) {
-    stop("layeredBB::max_Bessel_bridge_path_sampler: minimum of specified times is less than s");
-  } else if (Rcpp::max(times) > t) {
-    stop("layeredBB::max_Bessel_bridge_path_sampler: maximum of specified times is greater than t");
-  } 
-  // check tau is between [s,t]
-  if (tau < s) {
-    stop("layeredBB::max_Bessel_bridge_path_sampler: time of maximum tau < s");
-  } else if (tau > t) {
-    stop("layeredBB::max_Bessel_bridge_path_sampler: time of maximum tau > t");
-  }
-  // if tau == s or tau == t
-  // check that they are consistent with the given points for m, x, y
-  if (tau == s) {
-    if (m != x) {
-      stop("layeredBB::max_Bessel_bridge_path_sampler: tau == s and maximum point m != x");
+  if (checks) {
+    // check that s < t
+    if (t <= s) {
+      stop("layeredBB::max_Bessel_bridge_path_sampler: t <= s. Must have s < t");
+    }
+    // check requested simulation times are in [s,t]
+    if (Rcpp::min(times) < s) {
+      stop("layeredBB::max_Bessel_bridge_path_sampler: minimum of specified times is less than s");
+    } else if (Rcpp::max(times) > t) {
+      stop("layeredBB::max_Bessel_bridge_path_sampler: maximum of specified times is greater than t");
     } 
-  } else if (tau == t) {
-    if (m != y) {
-      stop("layeredBB::max_Bessel_bridge_path_sampler:: tau == t and maximum point m != y");
+    // check tau is between [s,t]
+    if (tau < s) {
+      stop("layeredBB::max_Bessel_bridge_path_sampler: time of maximum tau < s");
+    } else if (tau > t) {
+      stop("layeredBB::max_Bessel_bridge_path_sampler: time of maximum tau > t");
+    }
+    // if tau == s or tau == t
+    // check that they are consistent with the given points for m, x, y
+    if (tau == s) {
+      Rcout << "x: " << x << "\n";
+      Rcout << "y: " << y << "\n";
+      Rcout << "s: " << s << "\n";
+      Rcout << "t: " << t << "\n";
+      Rcout << "m: " << m << "\n";
+      Rcout << "tau: " << tau << "\n";
+      if (m != x) {
+        Rcout << "m != x \n";
+        stop("layeredBB::max_Bessel_bridge_path_sampler: tau == s and maximum point m != x");
+      } 
+    } else if (tau == t) {
+      Rcout << "x: " << x << "\n";
+      Rcout << "y: " << y << "\n";
+      Rcout << "s: " << s << "\n";
+      Rcout << "t: " << t << "\n";
+      Rcout << "m: " << m << "\n";
+      Rcout << "tau: " << tau << "\n";
+      if (m != y) {
+        Rcout << "m != y \n";
+        stop("layeredBB::max_Bessel_bridge_path_sampler:: tau == t and maximum point m != y");
+      }
+    }
+    // check m >= max(x,y)
+    if (m < std::max(x,y)) {
+      stop("layeredBB::max_Bessel_bridge_path_sampler: m < max(x,y). Must have m >= max(x,y)");
     }
   }
-  // check m >= max(x,y)
-  if (m < std::max(x,y)) {
-    stop("layeredBB::max_Bessel_bridge_path_sampler: m < max(x,y). Must have m >= max(x,y)");
-  }
   // reflect the problem to simulate a Bessel bright path with a given minimum point
-  Rcpp::List minimim_BB = min_Bessel_bridge_path_sampler(-x, -y, s, t, -m, tau, times);
+  Rcpp::List minimim_BB = min_Bessel_bridge_path_sampler(-x, -y, s, t, -m, tau, times, false);
   Rcpp::NumericMatrix full_path = minimim_BB["full_path"];
   Rcpp::NumericMatrix simulated_path = minimim_BB["simulated_path"];
   Rcpp::NumericMatrix remove_m_path = minimim_BB["remove_m_path"];
