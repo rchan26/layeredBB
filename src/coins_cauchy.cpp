@@ -375,7 +375,7 @@ bool delta_coin_intervals(const double &u,
 //   if (X.size() != times.size()) {
 //     stop("layeredBB::gamma_coin_intervals: vector lengths are not equal");
 //   }
-//   double u = Rcpp::runif(1, 0.0, 1.0)[0];
+//   double u = R::runif(0, 1);
 //   int n = X.size()-1;
 //   Rcpp::NumericVector left(n), right(n);
 //   for (int i=0; i < n; ++i) {

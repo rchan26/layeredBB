@@ -137,10 +137,10 @@ Rcpp::List layered_brownian_bridge(const double &x,
   while (true) {
     // add in line to abort C++ if user has pressed Ctrl/Cmd+C or Escape in R
     Rcpp::checkUserInterrupt();
-    const Rcpp::NumericVector u = Rcpp::runif(2, 0.0, 1.0);
+    const double u1 = R::runif(0, 1);
     double l1, l2, v1, v2;
     Rcpp::List simulated_BB;
-    if (u[0] < 0.5) {
+    if (u1 < 0.5) {
       Rcpp::NumericVector sim_m = min_sampler(x, y, s, t, bessel_layer["L"], bessel_layer["l"], true);
       l1 = sim_m["min"], l2 = sim_m["min"], v1 = bessel_layer["u"], v2 = bessel_layer["U"];
       // simulate Bessel bridge conditional on the simulated minimum at intermediate points
@@ -156,32 +156,33 @@ Rcpp::List layered_brownian_bridge(const double &x,
     double d1 = fabs(v1-l1);
     int j = ceil(sqrt(t-s + d1*d1) / (2*d1));
     // decide whether or not to accept simmulated Brownian bridge
-    if (u[0] < 0.5) {
+    const double u2 = R::runif(0, 1);
+    if (u1 < 0.5) {
       // flip delta coin #1
-      if (delta_coin_intervals(u[1], j, full_path.row(0), full_path.row(1), l1, v1)) {
+      if (delta_coin_intervals(u2, j, full_path.row(0), full_path.row(1), l1, v1)) {
         return simulated_BB;
       } else {
         // checking if BB remains in [l2, v2]
         double d2 = fabs(v2-l2);
         int k = ceil(sqrt(t-s + d2*d2) / (2*d2));
         // flip detla coin #2
-        if (delta_coin_intervals(u[1], k, full_path.row(0), full_path.row(1), l2, v2)) {
-          if (Rcpp::runif(1, 0.0, 1.0)[0] < 0.5) {
+        if (delta_coin_intervals(u2, k, full_path.row(0), full_path.row(1), l2, v2)) {
+          if (R::runif(0, 1) < 0.5) {
             return simulated_BB;
           }
         }
       }
     } else {
       // flip delta coin #1
-      if (delta_coin_intervals(u[1], j, -full_path.row(0), full_path.row(1), -v1, -l1)) {
+      if (delta_coin_intervals(u2, j, -full_path.row(0), full_path.row(1), -v1, -l1)) {
         return simulated_BB;
       } else {
         // checking if BB remains in [l2, v2]
         double d2 = fabs(v2-l2);
         int k = ceil(sqrt(t-s + d2*d2) / (2*d2));
         // flip detla coin #2
-        if (delta_coin_intervals(u[1], k, -full_path.row(0), full_path.row(1), -v2, -l2)) {
-          if (Rcpp::runif(1, 0.0, 1.0)[0] < 0.5) {
+        if (delta_coin_intervals(u2, k, -full_path.row(0), full_path.row(1), -v2, -l2)) {
+          if (R::runif(0, 1) < 0.5) {
             return simulated_BB;
           }
         }

@@ -245,8 +245,8 @@ min_sampler <- function(x, y, s, t, low_bound, up_bound, checks = TRUE) {
 #' @param q time of simulation
 #' @param checks logical value to determine if arguments that are passed into 
 #'        the function are checked. Things that are checked include that
-#'        s < t, that q is in [s,t], that tau is in [s,t], that if tau == s
-#'        or tau == t, then m == x or m == y, respectively, and that m <= min(x,y)
+#'        s < t, that q is in [s,t], that tau is in [s,t], that m <= min(x,y) 
+#'        and that if tau == s or tau == t, then m == x or m == y, respectively
 #'
 #' @return simulated point of the Bessel bridge at time q
 #'
@@ -279,9 +279,8 @@ min_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q, checks = TRUE) {
 #' @param times vector of real numbers to simulate Bessel bridge
 #' @param checks logical value to determine if arguments that are passed into 
 #'        the function are checked. Things that are checked include that 
-#'        s < t, that requested simulation times are in [s,t], that if 
-#'        tau == s or tau == t, then m == x or m == y, respectively, and 
-#'        that m <= min(x,y)
+#'        s < t, that requested simulation times are in [s,t], that m <= min(x,y)
+#'        and that if tau == s or tau == t, then m == x or m == y, respectively
 #'
 #' @return A list with the following components
 #' \describe{
@@ -397,8 +396,8 @@ max_sampler <- function(x, y, s, t, low_bound, up_bound, checks = TRUE) {
 #' @param q time of simulation
 #' @param checks logical value to determine if arguments that are passed into 
 #'        the function are checked. Things that are checked include that
-#'        s < t, that q is in [s,t], that tau is in [s,t], that if tau == s
-#'        or tau == t, then m == x or m == y, respectively, and that m >= min(x,y)
+#'        s < t, that q is in [s,t], that tau is in [s,t], that m >= min(x,y) 
+#'        and that if tau == s or tau == t, then m == x or m == y, respectively
 #' 
 #' @return simulated point of the Bessel bridge at time q
 #'
@@ -431,10 +430,9 @@ max_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q, checks = TRUE) {
 #' @param times vector of real numbers to simulate Bessel bridge
 #' @param checks logical value to determine if arguments that are passed into 
 #'        the function are checked. Things that are checked include that 
-#'        s < t, that requested simulation times are in [s,t], that if 
-#'        tau == s or tau == t, then m == x or m == y, respectively, and 
-#'        that m >= max(x,y)
-#' 
+#'        s < t, that requested simulation times are in [s,t], that m >= max(x,y)
+#'        and that if tau == s or tau == t, then m == x or m == y, respectivelys
+#'
 #' @return A list with the following components
 #' \describe{
 #'   \item{full_path}{Matrix of the simulated Bessel bridge path at all 

@@ -23,8 +23,8 @@ min_Bessel_bridge_sampler(x, y, s, t, m, tau, q, checks = TRUE)
 
 \item{checks}{logical value to determine if arguments that are passed into 
 the function are checked. Things that are checked include that
-s < t, that q is in [s,t], that tau is in [s,t], that if tau == s
-or tau == t, then m == x or m == y, respectively, and that m <= min(x,y)}
+s < t, that q is in [s,t], that tau is in [s,t], that m <= min(x,y) 
+and that if tau == s or tau == t, then m == x or m == y, respectively}
 }
 \value{
 simulated point of the Bessel bridge at time q

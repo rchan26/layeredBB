@@ -17,6 +17,7 @@ test_that("Brownian bridge minimum point sampler returns expected results", {
   expect_equal(length(returned), 2)
   expect_equal(names(returned), c("min", "tau"))
   expect_false(any(is.na(returned), is.nan(returned), is.infinite(returned)))
+  expect_true(returned['min'] <= min(x,y))
   expect_true(returned['min'] >= low_bound & returned['min'] <= up_bound)
   expect_true(returned['tau'] >= times[1] & returned['tau'] <= times[2])
   # if low_bound < up_bound == min(x,y)

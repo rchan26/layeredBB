@@ -46,7 +46,7 @@ Rcpp::List bessel_layer_simulation(const double &x,
     stop("layeredBB::bessel_layer_simulation: mult <= 0. Must have mult > 0");
   }
   int l = 1;
-  const double u = Rcpp::runif(1, 0.0, 1.0)[0];
+  const double u = R::runif(0, 1);
   const double xandy = std::min(x, y);
   const double xoy = std::max(x, y);
   const double layer_size = sqrt(t-s)*mult;

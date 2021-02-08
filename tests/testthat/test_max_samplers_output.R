@@ -17,6 +17,7 @@ test_that("Brownian bridge maximum point sampler returns expected results", {
   expect_equal(length(returned), 2)
   expect_equal(names(returned), c("max", "tau"))
   expect_false(any(is.na(returned), is.nan(returned), is.infinite(returned)))
+  expect_true(returned['max'] >= max(x,y))
   expect_true(returned['max'] >= low_bound & returned['max'] <= up_bound)
   expect_true(returned['tau'] >= times[1] & returned['tau'] <= times[2])
   # if max(x,y) == low_bound < up_bound
