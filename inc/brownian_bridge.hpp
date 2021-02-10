@@ -11,7 +11,7 @@ using namespace Rcpp;
 // forward declaration for Brownian bridge path samplers
 Rcpp::List Brownian_bridge_path_sampler(const double &x,
                                         const double &y,
-                                        const double &s, 
+                                        const double &s,
                                         const double &t,
                                         const Rcpp::NumericVector &times);
 

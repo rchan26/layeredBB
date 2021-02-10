@@ -81,7 +81,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 Rcpp::List Brownian_bridge_path_sampler(const double &x,
                                         const double &y,
-                                        const double &s, 
+                                        const double &s,
                                         const double &t,
                                         const Rcpp::NumericVector &times)
 {
@@ -313,11 +313,11 @@ Rcpp::NumericVector min_sampler(const double &x,
   }
   const double tau = (s*V+t)/(1.0+V);
   if (tau == s || (isnan(tau))) {
-    // if s == tau (within small precison), just return (x, m)
+    // if s == tau, just return (x, m)
     // tau is NaN if V is inf
     return Rcpp::NumericVector::create(Named("min", x), Named("tau", s));
   } else if (tau == t) {
-    // if t == tau (within small precision), just return (y, m)
+    // if t == tau, just return (y, m)
     return Rcpp::NumericVector::create(Named("min", y), Named("tau", t));
   } else {
     return Rcpp::NumericVector::create(Named("min", m), Named("tau", tau));
@@ -374,7 +374,7 @@ double min_Bessel_bridge_sampler(const double &x,
       stop("layeredBB::min_Bessel_bridge_sampler: requested simulation time q < s");
     } else if (q > t) {
       stop("layeredBB::min_Bessel_bridge_sampler: requested simulation time q > t");
-    } 
+    }
     // check tau is between [s,t]
     if (tau < s) {
       stop("layeredBB::min_Bessel_bridge_sampler: time of minimum tau < s");
@@ -390,7 +390,7 @@ double min_Bessel_bridge_sampler(const double &x,
     if (tau == s) {
       if (m != x) {
         stop("layeredBB::min_Bessel_bridge_sampler: tau == s and minimum point m != x (within reasonable precision)");
-      } 
+      }
     } else if (tau == t) {
       if (m != y) {
         stop("layeredBB::min_Bessel_bridge_sampler: tau == t and minimum point m != y (within reasonable precision)");
@@ -523,7 +523,7 @@ Rcpp::List min_Bessel_bridge_path_sampler(const double &x,
       stop("layeredBB::min_Bessel_bridge_path_sampler: minimum of specified times is less than s");
     } else if (Rcpp::max(times) > t) {
       stop("layeredBB::min_Bessel_bridge_path_sampler: maximum of specified times is greater than t");
-    } 
+    }
     // check tau is between [s,t]
     if (tau < s) {
       stop("layeredBB::min_Bessel_bridge_path_sampler: time of minimum tau < s");
@@ -539,7 +539,7 @@ Rcpp::List min_Bessel_bridge_path_sampler(const double &x,
     if (tau == s) {
       if (m != x) {
         stop("layeredBB::min_Bessel_bridge_path_sampler: tau == s and minimum point m != x");
-      } 
+      }
     } else if (tau == t) {
       if (y != m) {
         stop("layeredBB::min_Bessel_bridge_path_sampler:: tau == t and minimum point m != y");
@@ -757,7 +757,7 @@ double max_Bessel_bridge_sampler(const double &x,
       stop("layeredBB::max_Bessel_bridge_sampler: requested simulation time q < s");
     } else if (q > t) {
       stop("layeredBB::max_Bessel_bridge_sampler: requested simulation time q > t");
-    } 
+    }
     // check tau is between [s,t]
     if (tau < s) {
       stop("layeredBB::max_Bessel_bridge_sampler: time of maximum tau < s");
@@ -773,7 +773,7 @@ double max_Bessel_bridge_sampler(const double &x,
     if (tau == s) {
       if (m != x) {
         stop("layeredBB::max_Bessel_bridge_sampler: tau == s and maximum point m != x");
-      } 
+      }
     } else if (tau == t) {
       if (m != y) {
         stop("layeredBB::max_Bessel_bridge_sampler:: tau == t and maximum point m != y");
@@ -885,7 +885,7 @@ Rcpp::List max_Bessel_bridge_path_sampler(const double &x,
       stop("layeredBB::max_Bessel_bridge_path_sampler: minimum of specified times is less than s");
     } else if (Rcpp::max(times) > t) {
       stop("layeredBB::max_Bessel_bridge_path_sampler: maximum of specified times is greater than t");
-    } 
+    }
     // check tau is between [s,t]
     if (tau < s) {
       stop("layeredBB::max_Bessel_bridge_path_sampler: time of maximum tau < s");
@@ -901,7 +901,7 @@ Rcpp::List max_Bessel_bridge_path_sampler(const double &x,
     if (tau == s) {
       if (m != x) {
         stop("layeredBB::max_Bessel_bridge_path_sampler: tau == s and maximum point m != x");
-      } 
+      }
     } else if (tau == t) {
       if (m != y) {
         stop("layeredBB::max_Bessel_bridge_path_sampler:: tau == t and maximum point m != y");

@@ -341,7 +341,7 @@ double eadelta2(const int &n,
     } else {
       return 1 - (eapsi(1,xoy,s,t,min,v) / denom);
     }
-  } 
+  }
 }
 
 //' Delta (Corollary 3 and 4 in ST329)
