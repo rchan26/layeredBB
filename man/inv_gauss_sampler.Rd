@@ -23,5 +23,4 @@ distribution with mean mu and shape lambda
 curve(statmod::dinvgauss(x, mean = 1, shape = 1), 0, 4)
 samples <- sapply(1:10000, function(i) inv_gauss_sampler(mu = 1, lambda = 1))
 lines(density(x = samples, adjust = 0.5), col = 'blue')
-
 }

@@ -31,5 +31,4 @@ This function calculates the interval [S^{delta,2}_{2k+1}, S^{delta, 2}_{2k}]
 \examples{
 K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
 eadelta2_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
-
 }

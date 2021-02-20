@@ -35,5 +35,4 @@ eadelta1(n = 1, x = 0, y = 0.8, s = 0, t = 1, min = -2, v = 2)
 # example where min(x,y) == min
 eadelta(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
 eadelta2(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
-
 }

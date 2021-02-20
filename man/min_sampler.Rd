@@ -40,5 +40,4 @@ minimums <- sapply(1:5000, function(i) {
 })
 plot(x = minimums[2,], y = minimums[1,], pch = 20, lwd = 0.1,
      xlab = 'Time', ylab = 'X')
-
 }

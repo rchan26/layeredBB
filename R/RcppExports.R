@@ -27,9 +27,7 @@
 #'   \item{U}{Hard upper bound}
 #' }
 #' where the Bessel layer is [L, U] and either the minimum occurs in [L, l] or
-#' the maximum occurs in [u, U] 
-#'
-#' @export
+#' the maximum occurs in [u, U]
 bessel_layer_simulation <- function(x, y, s, t, mult = 1) {
     .Call(`_layeredBB_bessel_layer_simulation`, x, y, s, t, mult)
 }
@@ -66,8 +64,6 @@ bessel_layer_simulation <- function(x, y, s, t, mult = 1) {
 #' }
 #' where the Bessel layer for compnent i is [L, U] and either the minimum 
 #' occurs in [L, l] or the maximum occurs in [u, U] 
-#' 
-#' @export
 multi_bessel_layer_simulation <- function(dim, x, y, s, t, mult = 1) {
     .Call(`_layeredBB_multi_bessel_layer_simulation`, dim, x, y, s, t, mult)
 }
@@ -144,8 +140,6 @@ multi_bessel_layer_simulation <- function(dim, x, y, s, t, mult = 1) {
 #' # plot distribution of the simulated points and the theoretical distribution
 #' plot(density(simulated_points))
 #' curve(dnorm(x, theoretical_mean, theoretical_sd), add = T, col = 'red')
-#'
-#' @export
 Brownian_bridge_path_sampler <- function(x, y, s, t, times) {
     .Call(`_layeredBB_Brownian_bridge_path_sampler`, x, y, s, t, times)
 }
@@ -193,8 +187,6 @@ Brownian_bridge_path_sampler <- function(x, y, s, t, times) {
 #'                       s = 0,
 #'                       t = 1,
 #'                       times = c(0.1, 0.2, 0.4, 0.6, 0.6, 0.8, 0.1))
-#'
-#' @export
 multi_brownian_bridge <- function(dim, x, y, s, t, times) {
     .Call(`_layeredBB_multi_brownian_bridge`, dim, x, y, s, t, times)
 }
@@ -226,8 +218,6 @@ multi_brownian_bridge <- function(dim, x, y, s, t, times) {
 #' })
 #' plot(x = minimums[2,], y = minimums[1,], pch = 20, lwd = 0.1,
 #'      xlab = 'Time', ylab = 'X')
-#'
-#' @export
 min_sampler <- function(x, y, s, t, low_bound, up_bound, checks = TRUE) {
     .Call(`_layeredBB_min_sampler`, x, y, s, t, low_bound, up_bound, checks)
 }
@@ -260,8 +250,6 @@ min_sampler <- function(x, y, s, t, low_bound, up_bound, checks = TRUE) {
 #'                           m = -0.4,
 #'                           tau = 0.6,
 #'                           q = 0.2)
-#'
-#' @export
 min_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q, checks = TRUE) {
     .Call(`_layeredBB_min_Bessel_bridge_sampler`, x, y, s, t, m, tau, q, checks)
 }
@@ -344,8 +332,6 @@ min_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q, checks = TRUE) {
 #' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 #' lines(x = path['time',], y = path['X',])
 #' points(x = min['tau'], y = min['min'], col = 'red', pch = 20)
-#'
-#' @export
 min_Bessel_bridge_path_sampler <- function(x, y, s, t, m, tau, times, checks = TRUE) {
     .Call(`_layeredBB_min_Bessel_bridge_path_sampler`, x, y, s, t, m, tau, times, checks)
 }
@@ -377,8 +363,6 @@ min_Bessel_bridge_path_sampler <- function(x, y, s, t, m, tau, times, checks = T
 #' })
 #' plot(x = maximums[2,], y = maximums[1,], pch = 20, lwd = 0.1,
 #'      xlab = 'Time', ylab = 'X')
-#'
-#' @export
 max_sampler <- function(x, y, s, t, low_bound, up_bound, checks = TRUE) {
     .Call(`_layeredBB_max_sampler`, x, y, s, t, low_bound, up_bound, checks)
 }
@@ -411,8 +395,6 @@ max_sampler <- function(x, y, s, t, low_bound, up_bound, checks = TRUE) {
 #'                           m = 0.4,
 #'                           tau = 0.6,
 #'                           q = 0.2)
-#'
-#' @export
 max_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q, checks = TRUE) {
     .Call(`_layeredBB_max_Bessel_bridge_sampler`, x, y, s, t, m, tau, q, checks)
 }
@@ -495,8 +477,6 @@ max_Bessel_bridge_sampler <- function(x, y, s, t, m, tau, q, checks = TRUE) {
 #' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 #' lines(x = path['time',], y = path['X',])
 #' points(x = max['tau'], y = max['max'], col = 'red', pch = 20)
-#'
-#' @export
 max_Bessel_bridge_path_sampler <- function(x, y, s, t, m, tau, times, checks = TRUE) {
     .Call(`_layeredBB_max_Bessel_bridge_path_sampler`, x, y, s, t, m, tau, times, checks)
 }
@@ -517,8 +497,6 @@ max_Bessel_bridge_path_sampler <- function(x, y, s, t, m, tau, times, checks = T
 #'
 #' @examples
 #' easigma_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-#'
-#' @export
 easigma_bar <- function(j, x, y, s, t, l, v) {
     .Call(`_layeredBB_easigma_bar`, j, x, y, s, t, l, v)
 }
@@ -539,8 +517,6 @@ easigma_bar <- function(j, x, y, s, t, l, v) {
 #'
 #' @examples
 #' easigma(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-#'
-#' @export
 easigma <- function(j, x, y, s, t, l, v) {
     .Call(`_layeredBB_easigma`, j, x, y, s, t, l, v)
 }
@@ -561,8 +537,6 @@ easigma <- function(j, x, y, s, t, l, v) {
 #'
 #' @examples
 #' eaphi_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-#'
-#' @export
 eaphi_bar <- function(j, x, y, s, t, l, v) {
     .Call(`_layeredBB_eaphi_bar`, j, x, y, s, t, l, v)
 }
@@ -583,8 +557,6 @@ eaphi_bar <- function(j, x, y, s, t, l, v) {
 #'
 #' @examples
 #' eaphi(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-#' 
-#' @export
 eaphi <- function(j, x, y, s, t, l, v) {
     .Call(`_layeredBB_eaphi`, j, x, y, s, t, l, v)
 }
@@ -604,8 +576,6 @@ eaphi <- function(j, x, y, s, t, l, v) {
 #'
 #' @examples
 #' eapsi(j = 1, xoy = 0, s = 0, t = 1, min = -2, v = 1)
-#' 
-#' @export
 eapsi <- function(j, xoy, s, t, min, v) {
     .Call(`_layeredBB_eapsi`, j, xoy, s, t, min, v)
 }
@@ -625,8 +595,6 @@ eapsi <- function(j, xoy, s, t, min, v) {
 #'
 #' @examples
 #' eachi(j = 1, xoy = 0, s = 0, t = 1, min = -2, v = 1)
-#'
-#' @export
 eachi <- function(j, xoy, s, t, min, v) {
     .Call(`_layeredBB_eachi`, j, xoy, s, t, min, v)
 }
@@ -648,8 +616,6 @@ eachi <- function(j, xoy, s, t, min, v) {
 #'
 #' @examples
 #' eagamma(n = 1, x = 0, y = 0, s = 0, t = 1, l = -0.4, v = 0.8)
-#'
-#' @export
 eagamma <- function(n, x, y, s, t, l, v) {
     .Call(`_layeredBB_eagamma`, n, x, y, s, t, l, v)
 }
@@ -671,8 +637,6 @@ eagamma <- function(n, x, y, s, t, l, v) {
 #'
 #' @examples
 #' eadelta1(n = 1, x = 0, y = 0.8, s = 0, t = 1, min = -2, v = 2)
-#'
-#' @export
 eadelta1 <- function(n, x, y, s, t, min, v) {
     .Call(`_layeredBB_eadelta1`, n, x, y, s, t, min, v)
 }
@@ -694,8 +658,6 @@ eadelta1 <- function(n, x, y, s, t, min, v) {
 #'
 #' @examples
 #' eadelta2(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
-#'
-#' @export
 eadelta2 <- function(n, x, y, s, t, min, v) {
     .Call(`_layeredBB_eadelta2`, n, x, y, s, t, min, v)
 }
@@ -722,8 +684,6 @@ eadelta2 <- function(n, x, y, s, t, min, v) {
 #' # example where min(x,y) == min
 #' eadelta(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
 #' eadelta2(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
-#'
-#' @export
 eadelta <- function(n, x, y, s, t, min, v) {
     .Call(`_layeredBB_eadelta`, n, x, y, s, t, min, v)
 }
@@ -744,8 +704,6 @@ eadelta <- function(n, x, y, s, t, min, v) {
 #'
 #' @examples
 #' eagamma_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-#'
-#' @export
 eagamma_intervals <- function(k, x, y, s, t, l, v) {
     .Call(`_layeredBB_eagamma_intervals`, k, x, y, s, t, l, v)
 }
@@ -767,8 +725,6 @@ eagamma_intervals <- function(k, x, y, s, t, l, v) {
 #'
 #' @examples
 #' eadelta1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
-#'
-#' @export
 eadelta1_intervals <- function(k, x, y, s, t, min, v) {
     .Call(`_layeredBB_eadelta1_intervals`, k, x, y, s, t, min, v)
 }
@@ -791,8 +747,6 @@ eadelta1_intervals <- function(k, x, y, s, t, min, v) {
 #' @examples
 #' K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
 #' eadelta2_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
-#'
-#' @export
 eadelta2_intervals <- function(k, x, y, s, t, min, v) {
     .Call(`_layeredBB_eadelta2_intervals`, k, x, y, s, t, min, v)
 }
@@ -819,8 +773,6 @@ eadelta2_intervals <- function(k, x, y, s, t, min, v) {
 #' # case where min(x,y) == min
 #' K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
 #' eadelta_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
-#'
-#' @export
 eadelta_intervals <- function(k, x, y, s, t, min, v) {
     .Call(`_layeredBB_eadelta_intervals`, k, x, y, s, t, min, v)
 }
@@ -835,9 +787,7 @@ eadelta_intervals <- function(k, x, y, s, t, min, v) {
 #'
 #' @examples
 #' # returns 120
-#' find_max(c(1,2,3,4,5)) 
-#'
-#' @export
+#' product_vector(c(1,2,3,4,5)) 
 product_vector <- function(vect) {
     .Call(`_layeredBB_product_vector`, vect)
 }
@@ -869,8 +819,6 @@ product_vector <- function(vect) {
 #'
 #' @return boolean value: if T, accept probability that Brownian bridge remains 
 #'         in [l,v], otherwise reject
-#'
-#' @export
 gamma_coin <- function(u, k, x, y, s, t, l, v) {
     .Call(`_layeredBB_gamma_coin`, u, k, x, y, s, t, l, v)
 }
@@ -902,8 +850,6 @@ gamma_coin <- function(u, k, x, y, s, t, l, v) {
 #'
 #' @return boolean value: if T, accept probability that Brownian bridge remains 
 #'         in [l,v], otherwise reject
-#'
-#' @export
 gamma_coin_intervals <- function(u, k, X, times, l, v) {
     .Call(`_layeredBB_gamma_coin_intervals`, u, k, X, times, l, v)
 }
@@ -935,8 +881,6 @@ gamma_coin_intervals <- function(u, k, X, times, l, v) {
 #'                      
 #' @return boolean value: if T, accept probability that Brownian bridge with 
 #'         minimum, min, remains in [l,v], otherwise reject
-#'
-#' @export
 delta_coin <- function(u, k, x, y, s, t, min, v) {
     .Call(`_layeredBB_delta_coin`, u, k, x, y, s, t, min, v)
 }
@@ -970,8 +914,6 @@ delta_coin <- function(u, k, x, y, s, t, min, v) {
 #'
 #' @return boolean value: if T, accept probability that Brownian bridge with 
 #'         minimum, min, remains in [min,v], otherwise reject
-#'
-#' @export
 delta_coin_intervals <- function(u, k, X, times, min, v) {
     .Call(`_layeredBB_delta_coin_intervals`, u, k, X, times, min, v)
 }
@@ -991,8 +933,6 @@ delta_coin_intervals <- function(u, k, X, times, min, v) {
 #' curve(statmod::dinvgauss(x, mean = 1, shape = 1), 0, 4)
 #' samples <- sapply(1:10000, function(i) inv_gauss_sampler(mu = 1, lambda = 1))
 #' lines(density(x = samples, adjust = 0.5), col = 'blue')
-#'
-#' @export
 inv_gauss_sampler <- function(mu, lambda) {
     .Call(`_layeredBB_inv_gauss_sampler`, mu, lambda)
 }
@@ -1107,8 +1047,6 @@ inv_gauss_sampler <- function(mu, lambda) {
 #' # plot distribution of the simulated points and the theoretical distribution
 #' plot(density(simulated_points))
 #' curve(dnorm(x, theoretical_mean, theoretical_sd), add = T, col = 'red')
-#' 
-#' @export
 layered_brownian_bridge <- function(x, y, s, t, bessel_layer, times) {
     .Call(`_layeredBB_layered_brownian_bridge`, x, y, s, t, bessel_layer, times)
 }
@@ -1168,8 +1106,6 @@ layered_brownian_bridge <- function(x, y, s, t, bessel_layer, times) {
 #'                               t = 1,
 #'                               bessel_layers = bes_layers,
 #'                               times = c(0.2, 0.4, 0.6, 0.8, 0.4, 0.6))
-#'
-#' @export
 multi_layered_brownian_bridge <- function(dim, x, y, s, t, bessel_layers, times) {
     .Call(`_layeredBB_multi_layered_brownian_bridge`, dim, x, y, s, t, bessel_layers, times)
 }

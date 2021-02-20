@@ -117,8 +117,6 @@ using namespace Rcpp;
 //' # plot distribution of the simulated points and the theoretical distribution
 //' plot(density(simulated_points))
 //' curve(dnorm(x, theoretical_mean, theoretical_sd), add = T, col = 'red')
-//' 
-//' @export
 // [[Rcpp::export]]
 Rcpp::List layered_brownian_bridge(const double &x,
                                    const double &y,
@@ -246,8 +244,6 @@ Rcpp::List layered_brownian_bridge(const double &x,
 //'                               t = 1,
 //'                               bessel_layers = bes_layers,
 //'                               times = c(0.2, 0.4, 0.6, 0.8, 0.4, 0.6))
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::List multi_layered_brownian_bridge(const int &dim,
                                          const arma::vec &x,

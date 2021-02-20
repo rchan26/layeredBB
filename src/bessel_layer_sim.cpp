@@ -30,9 +30,7 @@ using namespace Rcpp;
 //'   \item{U}{Hard upper bound}
 //' }
 //' where the Bessel layer is [L, U] and either the minimum occurs in [L, l] or
-//' the maximum occurs in [u, U] 
-//'
-//' @export
+//' the maximum occurs in [u, U]
 // [[Rcpp::export]]
 Rcpp::List bessel_layer_simulation(const double &x,
                                    const double &y,
@@ -96,8 +94,6 @@ Rcpp::List bessel_layer_simulation(const double &x,
 //' }
 //' where the Bessel layer for compnent i is [L, U] and either the minimum 
 //' occurs in [L, l] or the maximum occurs in [u, U] 
-//' 
-//' @export
 // [[Rcpp::export]]
 Rcpp::List multi_bessel_layer_simulation(const int &dim,
                                          const arma::vec &x,

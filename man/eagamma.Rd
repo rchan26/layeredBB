@@ -30,5 +30,4 @@ used to simulate Bessel Layers in the infinite sums
 }
 \examples{
 eagamma(n = 1, x = 0, y = 0, s = 0, t = 1, l = -0.4, v = 0.8)
-
 }

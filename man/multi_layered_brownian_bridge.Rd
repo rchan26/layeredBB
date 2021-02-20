@@ -68,5 +68,4 @@ multi_layered_brownian_bridge(dim = 2,
                               t = 1,
                               bessel_layers = bes_layers,
                               times = c(0.2, 0.4, 0.6, 0.8, 0.4, 0.6))
-
 }

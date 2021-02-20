@@ -29,5 +29,4 @@ This function evaluates the sigma_bar function used to simulate Bessel Layers in
 }
 \examples{
 easigma_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-
 }

@@ -18,8 +18,6 @@ using namespace Rcpp;
 //'
 //' @examples
 //' easigma_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-//'
-//' @export
 // [[Rcpp::export]]
 double easigma_bar(const double &j,
                    const double &x,
@@ -51,8 +49,6 @@ double easigma_bar(const double &j,
 //'
 //' @examples
 //' easigma(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-//'
-//' @export
 // [[Rcpp::export]]
 double easigma(const double &j,
                const double &x,
@@ -81,8 +77,6 @@ double easigma(const double &j,
 //'
 //' @examples
 //' eaphi_bar(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-//'
-//' @export
 // [[Rcpp::export]]
 double eaphi_bar(const double &j,
                  const double &x,
@@ -113,8 +107,6 @@ double eaphi_bar(const double &j,
 //'
 //' @examples
 //' eaphi(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-//' 
-//' @export
 // [[Rcpp::export]] 
 double eaphi(const double &j,
              const double &x,
@@ -142,8 +134,6 @@ double eaphi(const double &j,
 //'
 //' @examples
 //' eapsi(j = 1, xoy = 0, s = 0, t = 1, min = -2, v = 1)
-//' 
-//' @export
 // [[Rcpp::export]] 
 double eapsi(const double &j,
              const double &xoy,
@@ -171,8 +161,6 @@ double eapsi(const double &j,
 //'
 //' @examples
 //' eachi(j = 1, xoy = 0, s = 0, t = 1, min = -2, v = 1)
-//'
-//' @export
 // [[Rcpp::export]]
 double eachi(const double &j,
              const double &xoy,
@@ -204,8 +192,6 @@ double eachi(const double &j,
 //'
 //' @examples
 //' eagamma(n = 1, x = 0, y = 0, s = 0, t = 1, l = -0.4, v = 0.8)
-//'
-//' @export
 // [[Rcpp::export]]
 double eagamma(const int &n,
                const double &x,
@@ -259,8 +245,6 @@ double eagamma(const int &n,
 //'
 //' @examples
 //' eadelta1(n = 1, x = 0, y = 0.8, s = 0, t = 1, min = -2, v = 2)
-//'
-//' @export
 // [[Rcpp::export]]
 double eadelta1(const int &n,
                 const double &x,
@@ -300,8 +284,6 @@ double eadelta1(const int &n,
 //'
 //' @examples
 //' eadelta2(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
-//'
-//' @export
 // [[Rcpp::export]]
 double eadelta2(const int &n,
                 const double &x,
@@ -366,8 +348,6 @@ double eadelta2(const int &n,
 //' # example where min(x,y) == min
 //' eadelta(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
 //' eadelta2(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
-//'
-//' @export
 // [[Rcpp::export]]
 double eadelta(const int &n,
                const double &x,
@@ -409,8 +389,6 @@ double eadelta(const int &n,
 //'
 //' @examples
 //' eagamma_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector eagamma_intervals(const int &k,
                                       const double &x,
@@ -456,8 +434,6 @@ Rcpp::NumericVector eagamma_intervals(const int &k,
 //'
 //' @examples
 //' eadelta1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector eadelta1_intervals(const int &k,
                                        const double &x,
@@ -500,8 +476,6 @@ Rcpp::NumericVector eadelta1_intervals(const int &k,
 //' @examples
 //' K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
 //' eadelta2_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector eadelta2_intervals(const int &k,
                                        const double &x,
@@ -560,8 +534,6 @@ Rcpp::NumericVector eadelta2_intervals(const int &k,
 //' # case where min(x,y) == min
 //' K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
 //' eadelta_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector eadelta_intervals(const int &k,
                                       const double &x,

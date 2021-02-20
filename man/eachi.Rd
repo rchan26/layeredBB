@@ -27,5 +27,4 @@ This function evaluates the chi function used to simulate Bessel Layers in the i
 }
 \examples{
 eachi(j = 1, xoy = 0, s = 0, t = 1, min = -2, v = 1)
-
 }

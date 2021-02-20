@@ -76,8 +76,6 @@ using namespace Rcpp;
 //' # plot distribution of the simulated points and the theoretical distribution
 //' plot(density(simulated_points))
 //' curve(dnorm(x, theoretical_mean, theoretical_sd), add = T, col = 'red')
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::List Brownian_bridge_path_sampler(const double &x,
                                         const double &y,
@@ -178,8 +176,6 @@ Rcpp::List Brownian_bridge_path_sampler(const double &x,
 //'                       s = 0,
 //'                       t = 1,
 //'                       times = c(0.1, 0.2, 0.4, 0.6, 0.6, 0.8, 0.1))
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::List multi_brownian_bridge(const int &dim,
                                  const Rcpp::NumericVector &x,
@@ -264,8 +260,6 @@ double M_func(const double &a,
 //' })
 //' plot(x = minimums[2,], y = minimums[1,], pch = 20, lwd = 0.1,
 //'      xlab = 'Time', ylab = 'X')
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector min_sampler(const double &x,
                                 const double &y,
@@ -352,8 +346,6 @@ Rcpp::NumericVector min_sampler(const double &x,
 //'                           m = -0.4,
 //'                           tau = 0.6,
 //'                           q = 0.2)
-//'
-//' @export
 // [[Rcpp::export]]
 double min_Bessel_bridge_sampler(const double &x,
                                  const double &y,
@@ -501,8 +493,6 @@ double min_Bessel_bridge_sampler(const double &x,
 //' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 //' lines(x = path['time',], y = path['X',])
 //' points(x = min['tau'], y = min['min'], col = 'red', pch = 20)
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::List min_Bessel_bridge_path_sampler(const double &x,
                                           const double &y,
@@ -680,8 +670,6 @@ Rcpp::List min_Bessel_bridge_path_sampler(const double &x,
 //' })
 //' plot(x = maximums[2,], y = maximums[1,], pch = 20, lwd = 0.1,
 //'      xlab = 'Time', ylab = 'X')
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector max_sampler(const double &x,
                                 const double &y,
@@ -735,8 +723,6 @@ Rcpp::NumericVector max_sampler(const double &x,
 //'                           m = 0.4,
 //'                           tau = 0.6,
 //'                           q = 0.2)
-//'
-//' @export
 // [[Rcpp::export]]
 double max_Bessel_bridge_sampler(const double &x,
                                  const double &y,
@@ -863,8 +849,6 @@ double max_Bessel_bridge_sampler(const double &x,
 //' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 //' lines(x = path['time',], y = path['X',])
 //' points(x = max['tau'], y = max['max'], col = 'red', pch = 20)
-//'
-//' @export
 // [[Rcpp::export]]
 Rcpp::List max_Bessel_bridge_path_sampler(const double &x,
                                           const double &y,

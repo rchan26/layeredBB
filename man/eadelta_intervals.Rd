@@ -35,5 +35,4 @@ eadelta1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
 # case where min(x,y) == min
 K = ceiling(sqrt((1)+(abs(1-(-2))*abs(1-(-2))))/(2*abs(1-(-2))))
 eadelta_intervals(k = K, x = -2, y = 0, s = 0, t = 0, min = -2, v = 1)
-
 }

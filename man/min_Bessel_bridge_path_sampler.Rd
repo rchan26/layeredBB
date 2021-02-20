@@ -92,5 +92,4 @@ path <- min_Bessel_bridge_path_sampler(x = start,
 plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 lines(x = path['time',], y = path['X',])
 points(x = min['tau'], y = min['min'], col = 'red', pch = 20)
-
 }

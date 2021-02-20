@@ -17,6 +17,5 @@ This function product of the elements of a numerical vector
 }
 \examples{
 # returns 120
-find_max(c(1,2,3,4,5)) 
-
+product_vector(c(1,2,3,4,5)) 
 }

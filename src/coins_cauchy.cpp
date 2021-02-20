@@ -13,9 +13,7 @@ using namespace Rcpp;
 //'
 //' @examples
 //' # returns 120
-//' find_max(c(1,2,3,4,5)) 
-//'
-//' @export
+//' product_vector(c(1,2,3,4,5)) 
 // [[Rcpp::export]]
 double product_vector(const Rcpp::NumericVector &vect) {
   double product = 1;
@@ -52,8 +50,6 @@ double product_vector(const Rcpp::NumericVector &vect) {
 //'
 //' @return boolean value: if T, accept probability that Brownian bridge remains 
 //'         in [l,v], otherwise reject
-//'
-//' @export
 // [[Rcpp::export]]
 bool gamma_coin(const double &u,
                 int k,
@@ -122,8 +118,6 @@ bool gamma_coin(const double &u,
 //'
 //' @return boolean value: if T, accept probability that Brownian bridge remains 
 //'         in [l,v], otherwise reject
-//'
-//' @export
 // [[Rcpp::export]]
 bool gamma_coin_intervals(const double &u,
                           int k,
@@ -200,8 +194,6 @@ bool gamma_coin_intervals(const double &u,
 //'                      
 //' @return boolean value: if T, accept probability that Brownian bridge with 
 //'         minimum, min, remains in [l,v], otherwise reject
-//'
-//' @export
 // [[Rcpp::export]]
 bool delta_coin(const double &u,
                 int k,
@@ -290,8 +282,6 @@ bool delta_coin(const double &u,
 //'
 //' @return boolean value: if T, accept probability that Brownian bridge with 
 //'         minimum, min, remains in [min,v], otherwise reject
-//'
-//' @export
 // [[Rcpp::export]]
 bool delta_coin_intervals(const double &u,
                           int k,

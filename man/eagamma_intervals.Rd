@@ -29,5 +29,4 @@ This function calculates the interval [S^{gamma}_{2k+1}, S^{gamma}_{2k}] for giv
 }
 \examples{
 eagamma_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-
 }

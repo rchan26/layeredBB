@@ -30,5 +30,4 @@ This function calculates the interval [S^{delta,1}_{2k+1}, S^{delta, 1}_{2k}]
 }
 \examples{
 eadelta1_intervals(k = 1, x = 0, y = 0, s = 0, t = 1, min = -2, v = 1)
-
 }

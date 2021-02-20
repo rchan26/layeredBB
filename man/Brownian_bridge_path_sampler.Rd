@@ -83,5 +83,4 @@ theoretical_sd <- sqrt((t-q)*(q-s)/(t-s))
 # plot distribution of the simulated points and the theoretical distribution
 plot(density(simulated_points))
 curve(dnorm(x, theoretical_mean, theoretical_sd), add = T, col = 'red')
-
 }

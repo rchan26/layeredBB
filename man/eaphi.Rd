@@ -29,5 +29,4 @@ This function evaluates the eaphi function used to simulate Bessel Layers in the
 }
 \examples{
 eaphi(j = 1, x = 0, y = 0, s = 0, t = 1, l = -2, v = 1)
-
 }

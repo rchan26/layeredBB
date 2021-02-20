@@ -30,5 +30,4 @@ used to simulate Bessel Layers in the infinite sums
 }
 \examples{
 eadelta2(n = 1, x = -2, y = 0.8, s = 0, t = 1, min = -2, v = 2)
-
 }

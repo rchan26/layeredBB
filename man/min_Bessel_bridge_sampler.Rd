@@ -42,5 +42,4 @@ min_Bessel_bridge_sampler(x = 0,
                           m = -0.4,
                           tau = 0.6,
                           q = 0.2)
-
 }
