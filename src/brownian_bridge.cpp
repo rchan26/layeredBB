@@ -306,7 +306,7 @@ Rcpp::NumericVector min_sampler(const double &x,
     V = 1.0 / inv_gauss_sampler(mu, lambda);
   }
   const double tau = (s*V+t)/(1.0+V);
-  if (tau == s || (isnan(tau))) {
+  if (tau == s || (std::isnan(tau))) {
     // if s == tau, just return (x, m)
     // tau is NaN if V is inf
     return Rcpp::NumericVector::create(Named("min", x), Named("tau", s));
