@@ -11,11 +11,11 @@ min_Bessel_bridge_sampler(x, y, s, t, m, tau, q, checks = TRUE)
 
 \item{y}{end value of Bessel bridge}
 
-\item{s}{start value of Bessel bridge}
+\item{s}{start time of Bessel bridge}
 
-\item{t}{end value of Bessel bridge}
+\item{t}{end time of Bessel bridge}
 
-\item{m}{minumum point}
+\item{m}{minimum point}
 
 \item{tau}{time of minimum point}
 

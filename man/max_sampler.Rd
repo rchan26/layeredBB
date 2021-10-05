@@ -11,9 +11,9 @@ max_sampler(x, y, s, t, low_bound, up_bound, checks = TRUE)
 
 \item{y}{end value of Brownian bridge}
 
-\item{s}{start value of Brownian bridge}
+\item{s}{start time of Brownian bridge}
 
-\item{t}{end value of Brownian bridge}
+\item{t}{end time of Brownian bridge}
 
 \item{low_bound}{Lower bound of maximum point (max(x,y) <= low_bound < up_bound)}
 

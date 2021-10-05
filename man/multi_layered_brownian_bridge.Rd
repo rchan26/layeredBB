@@ -13,9 +13,9 @@ multi_layered_brownian_bridge(dim, x, y, s, t, bessel_layers, times)
 
 \item{y}{end value of Brownian bridge}
 
-\item{s}{start value of Brownian bridge}
+\item{s}{start time of Brownian bridge}
 
-\item{t}{end value of Brownian bridge}
+\item{t}{end time of Brownian bridge}
 
 \item{bessel_layers}{a list of length dim where list[i] is the Bessel layer for component i}
 

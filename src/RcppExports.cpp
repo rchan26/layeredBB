@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // bessel_layer_simulation
 Rcpp::List bessel_layer_simulation(const double& x, const double& y, const double& s, const double& t, const double& mult);
 RcppExport SEXP _layeredBB_bessel_layer_simulation(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP multSEXP) {

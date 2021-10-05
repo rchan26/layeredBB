@@ -13,8 +13,8 @@ using namespace Rcpp;
 //'
 //' @param x start value of Brownian bridge
 //' @param y end value of Brownian bridge
-//' @param s start value of Brownian bridge
-//' @param t end value of Brownian bridge
+//' @param s start time of Brownian bridge
+//' @param t end time of Brownian bridge
 //' @param a vector/sequence of numbers
 //' @param l integer number denoting Bessel layer, i.e. Brownian bridge 
 //'        is contained in [min(x,y)-a[l], max(x,y)+a[l]]
@@ -26,7 +26,7 @@ using namespace Rcpp;
 //'                    all included time points, i.e. s, t and times. The times
 //'                    are sorted and duplicates are removed. The first row
 //'                    are the points of the Brownian bridge (named 'X') 
-//'                    second row are corresponding times (named 'times')}
+//'                    second row are corresponding times (named 'time')}
 //'   \item{simulated_path}{Matrix of the simulated layered Brownian bridge path 
 //'                         only at the specified times passed into the function, 
 //'                         i.e. the times vector. The times are not sorted and 
@@ -39,7 +39,7 @@ using namespace Rcpp;
 //'                        times are sorted and duplicates are removed. The first
 //'                        row are the points of the layered Brownian bridge 
 //'                        (named 'X') second row are corresponding times 
-//'                        (named 'times')}
+//'                        (named 'time')}
 //' }
 //'
 //' @examples
@@ -197,8 +197,8 @@ Rcpp::List layered_brownian_bridge(const double &x,
 //' @param dim dimension of Brownian bridge
 //' @param x start value of Brownian bridge
 //' @param y end value of Brownian bridge
-//' @param s start value of Brownian bridge
-//' @param t end value of Brownian bridge
+//' @param s start time of Brownian bridge
+//' @param t end time of Brownian bridge
 //' @param bessel_layers a list of length dim where list[i] is the Bessel layer for component i
 //' @param times vector of real numbers to simulate Bessel bridge
 //' 

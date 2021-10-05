@@ -13,9 +13,9 @@ multi_brownian_bridge(dim, x, y, s, t, times)
 
 \item{y}{end value of Brownian bridge}
 
-\item{s}{start value of Brownian bridge}
+\item{s}{start time of Brownian bridge}
 
-\item{t}{end value of Brownian bridge}
+\item{t}{end time of Brownian bridge}
 
 \item{times}{vector of real numbers to simulate Brownian bridge}
 }

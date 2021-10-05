@@ -10,8 +10,8 @@ using namespace Rcpp;
 //'
 //' @param x start value of Brownian bridge
 //' @param y end value of Brownian bridge
-//' @param s start value of Brownian bridge
-//' @param t end value of Brownian bridge
+//' @param s start time of Brownian bridge
+//' @param t end time of Brownian bridge
 //' @param times vector of real numbers to simulate Brownian bridge
 //'
 //' @return A list with the following components
@@ -20,13 +20,13 @@ using namespace Rcpp;
 //'                    included time points, i.e. s, t and times. The times
 //'                    are sorted and duplicates are removed. The first row
 //'                    are the points of the Brownian bridge (named 'X') 
-//'                    second row are corresponding times (named 'times')}
+//'                    second row are corresponding times (named 'time')}
 //'   \item{simulated_path}{Matrix of the simulated Brownian bridge path only at 
 //'                         the specified times passed into the function, i.e. 
 //'                         the times vector. The times are not sorted and
 //'                         duplicates are not removed. The first row
 //'                         are the points of the Brownian bridge (named 'X') 
-//'                         second row are corresponding times (named 'times')}
+//'                         second row are corresponding times (named 'time')}
 //' }
 //'
 //' @examples 
@@ -140,8 +140,8 @@ Rcpp::List Brownian_bridge_path_sampler(const double &x,
 //' @param dim dimension of Brownian bridge
 //' @param x start value of Brownian bridge
 //' @param y end value of Brownian bridge
-//' @param s start value of Brownian bridge
-//' @param t end value of Brownian bridge
+//' @param s start time of Brownian bridge
+//' @param t end time of Brownian bridge
 //' @param times vector of real numbers to simulate Brownian bridge
 //' 
 //' @return A list with the following components
@@ -239,8 +239,8 @@ double M_func(const double &a,
 //'
 //' @param x start value of Brownian bridge
 //' @param y end value of Brownian bridge
-//' @param s start value of Brownian bridge
-//' @param t end value of Brownian bridge
+//' @param s start time of Brownian bridge
+//' @param t end time of Brownian bridge
 //' @param low_bound Lower bound of minimum point (low_bound < up_bound <= min(x,y))
 //' @param up_bound Upper bound of minimum point (low_bound < up_bound <= min(x,y))
 //' @param checks logical value to determine if arguments that are passed into 
@@ -324,9 +324,9 @@ Rcpp::NumericVector min_sampler(const double &x,
 //'
 //' @param x start value of Bessel bridge
 //' @param y end value of Bessel bridge
-//' @param s start value of Bessel bridge
-//' @param t end value of Bessel bridge
-//' @param m minumum point
+//' @param s start time of Bessel bridge
+//' @param t end time of Bessel bridge
+//' @param m minimum point
 //' @param tau time of minimum point
 //' @param q time of simulation
 //' @param checks logical value to determine if arguments that are passed into 
@@ -421,9 +421,9 @@ double min_Bessel_bridge_sampler(const double &x,
 //'
 //' @param x start value of Bessel bridge
 //' @param y end value of Bessel bridge
-//' @param s start value of Bessel bridge
-//' @param t end value of Bessel bridge
-//' @param m minumum point
+//' @param s start time of Bessel bridge
+//' @param t end time of Bessel bridge
+//' @param m minimum point
 //' @param tau time of minimum point
 //' @param times vector of real numbers to simulate Bessel bridge
 //' @param checks logical value to determine if arguments that are passed into 
@@ -437,18 +437,18 @@ double min_Bessel_bridge_sampler(const double &x,
 //'                    included time points, i.e. s, t and times. The times
 //'                    are sorted and duplicates are removed. The first row
 //'                    are the points of the Brownian bridge (named 'X') 
-//'                    second row are corresponding times (named 'times')}
+//'                    second row are corresponding times (named 'time')}
 //'   \item{simulated_path}{Matrix of the simulated Bessel bridge path only at 
 //'                         the specified times passed into the function, i.e. 
 //'                         the times vector. The times are not sorted and
 //'                         duplicates are not removed. The first row
 //'                         are the points of the Bessel bridge (named 'X') 
-//'                         second row are corresponding times (named 'times')}
+//'                         second row are corresponding times (named 'time')}
 //'   \item{remove_m_path}{Matrix of the simulated Bessel bridge path only at 
 //'                        all included times points excluding tau. These times
 //'                        are sorted and duplicates are removed. The first row
 //'                        are the points of the Bessel bridge (named 'X') 
-//'                        second row are corresponding times (named 'times'). 
+//'                        second row are corresponding times (named 'time'). 
 //'                        Note that the minimum point is included if it is 
 //'                        passed into the times vector}
 //' }
@@ -649,8 +649,8 @@ Rcpp::List min_Bessel_bridge_path_sampler(const double &x,
 //'
 //' @param x start value of Brownian bridge
 //' @param y end value of Brownian bridge
-//' @param s start value of Brownian bridge
-//' @param t end value of Brownian bridge
+//' @param s start time of Brownian bridge
+//' @param t end time of Brownian bridge
 //' @param low_bound Lower bound of maximum point (max(x,y) <= low_bound < up_bound)
 //' @param up_bound Upper bound of maximum point (max(x,y) <= low_bound < up_bound)
 //' @param checks logical value to determine if arguments that are passed into 
@@ -701,9 +701,9 @@ Rcpp::NumericVector max_sampler(const double &x,
 //'
 //' @param x start value of Bessel bridge
 //' @param y end value of Bessel bridge
-//' @param s start value of Bessel bridge
-//' @param t end value of Bessel bridge
-//' @param m maxumum point 
+//' @param s start time of Bessel bridge
+//' @param t end time of Bessel bridge
+//' @param m maximum point 
 //' @param tau time of maximum point
 //' @param q time of simulation
 //' @param checks logical value to determine if arguments that are passed into 
@@ -777,9 +777,9 @@ double max_Bessel_bridge_sampler(const double &x,
 //'
 //' @param x start value of Bessel bridge
 //' @param y end value of Bessel bridge
-//' @param s start value of Bessel bridge
-//' @param t end value of Bessel bridge
-//' @param m maxumum point 
+//' @param s start time of Bessel bridge
+//' @param t end time of Bessel bridge
+//' @param m maximum point 
 //' @param tau time of maximum point
 //' @param times vector of real numbers to simulate Bessel bridge
 //' @param checks logical value to determine if arguments that are passed into 
@@ -793,18 +793,18 @@ double max_Bessel_bridge_sampler(const double &x,
 //'                    included time points, i.e. s, t and times. The times
 //'                    are sorted and duplicates are removed. The first row
 //'                    are the points of the Brownian bridge (named 'X') 
-//'                    second row are corresponding times (named 'times')}
+//'                    second row are corresponding times (named 'time')}
 //'   \item{simulated_path}{Matrix of the simulated Bessel bridge path only at 
 //'                         the specified times passed into the function, i.e. 
 //'                         the times vector. The times are not sorted and
 //'                         duplicates are not removed. The first row
 //'                         are the points of the Bessel bridge (named 'X') 
-//'                         second row are corresponding times (named 'times')}
+//'                         second row are corresponding times (named 'time')}
 //'   \item{remove_m_path}{Matrix of the simulated Bessel bridge path only at 
 //'                        all included times points excluding tau. These times
 //'                        are sorted and duplicates are removed. The first row
 //'                        are the points of the Bessel bridge (named 'X') 
-//'                        second row are corresponding times (named 'times'). 
+//'                        second row are corresponding times (named 'time'). 
 //'                        Note that the maximum point is included if it is 
 //'                        passed into the times vector}
 //' }

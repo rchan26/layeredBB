@@ -11,11 +11,11 @@ min_Bessel_bridge_path_sampler(x, y, s, t, m, tau, times, checks = TRUE)
 
 \item{y}{end value of Bessel bridge}
 
-\item{s}{start value of Bessel bridge}
+\item{s}{start time of Bessel bridge}
 
-\item{t}{end value of Bessel bridge}
+\item{t}{end time of Bessel bridge}
 
-\item{m}{minumum point}
+\item{m}{minimum point}
 
 \item{tau}{time of minimum point}
 
@@ -33,18 +33,18 @@ A list with the following components
                    included time points, i.e. s, t and times. The times
                    are sorted and duplicates are removed. The first row
                    are the points of the Brownian bridge (named 'X') 
-                   second row are corresponding times (named 'times')}
+                   second row are corresponding times (named 'time')}
   \item{simulated_path}{Matrix of the simulated Bessel bridge path only at 
                         the specified times passed into the function, i.e. 
                         the times vector. The times are not sorted and
                         duplicates are not removed. The first row
                         are the points of the Bessel bridge (named 'X') 
-                        second row are corresponding times (named 'times')}
+                        second row are corresponding times (named 'time')}
   \item{remove_m_path}{Matrix of the simulated Bessel bridge path only at 
                        all included times points excluding tau. These times
                        are sorted and duplicates are removed. The first row
                        are the points of the Bessel bridge (named 'X') 
-                       second row are corresponding times (named 'times'). 
+                       second row are corresponding times (named 'time'). 
                        Note that the minimum point is included if it is 
                        passed into the times vector}
 }

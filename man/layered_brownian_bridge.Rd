@@ -11,9 +11,9 @@ layered_brownian_bridge(x, y, s, t, bessel_layer, times)
 
 \item{y}{end value of Brownian bridge}
 
-\item{s}{start value of Brownian bridge}
+\item{s}{start time of Brownian bridge}
 
-\item{t}{end value of Brownian bridge}
+\item{t}{end time of Brownian bridge}
 
 \item{times}{vector of real numbers to simulate Bessel bridge}
 
@@ -29,7 +29,7 @@ A list with the following components
                    all included time points, i.e. s, t and times. The times
                    are sorted and duplicates are removed. The first row
                    are the points of the Brownian bridge (named 'X') 
-                   second row are corresponding times (named 'times')}
+                   second row are corresponding times (named 'time')}
   \item{simulated_path}{Matrix of the simulated layered Brownian bridge path 
                         only at the specified times passed into the function, 
                         i.e. the times vector. The times are not sorted and 
@@ -42,7 +42,7 @@ A list with the following components
                        times are sorted and duplicates are removed. The first
                        row are the points of the layered Brownian bridge 
                        (named 'X') second row are corresponding times 
-                       (named 'times')}
+                       (named 'time')}
 }
 }
 \description{
