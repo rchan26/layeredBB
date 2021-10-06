@@ -11,6 +11,7 @@ lines(x = bm_paths[[3]]['time',], y = bm_paths[[3]]['X',], lwd = 3, lty = 3)
 mtext('Time', 1, 2.75, font = 2, cex = 1.5)
 mtext('W', 2, 2.75, font = 2, cex = 1.5)
 axis(1, at=seq(0, 1, 0.2), labels=c("0.0", seq(0.2, 0.8, 0.2), "1.0"), font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.1), labels=rep("", 11), lwd.ticks = 0.5)
 axis(2, at=seq(-2, 2, 1), labels=seq(-2, 2, 1), font = 2, cex = 1.5)
 axis(2, at=seq(-2, 2, 0.5), labels=rep("", 9), lwd.ticks = 0.5)
 
