@@ -1,6 +1,7 @@
 # layeredBB
 
 Code to implement methods for simulating Brownian motion, Brownian bridges and layered Brownian bridge skeletons.
+Please see function documentation for example usage.
 
 ## Installation
 
