@@ -8,11 +8,11 @@ Simply run: `devtools::install_github('rchan26/layeredBB')`
 
 ## Using with `parallel`
 
-Here is an example to use in a cluster using `parallel`:
+Here is an example to use in a cluster using [`parallel`](https://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf):
 
 ```
-# load in package
 library(layeredBB)
+library(parallel)
 
 # creating parallel cluster with maximum number of cores available
 n_cores <- parallel::detectCores()
@@ -38,11 +38,7 @@ devtools::document()
 devtools::install()
 ```
 
-Then can test the package by calling:
-
-```
-devtools::test()
-```
+Then can test the package by calling: `devtools::test()`
 
 ## Resources
 
