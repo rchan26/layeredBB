@@ -92,7 +92,7 @@ Rcpp::List bessel_layer_simulation(const double &x,
 //'   \item{u}{Soft upper bound}
 //'   \item{U}{Hard upper bound}
 //' }
-//' where the Bessel layer for compnent i is [L, U] and either the minimum 
+//' where the Bessel layer for component i is [L, U] and either the minimum 
 //' occurs in [L, l] or the maximum occurs in [u, U] 
 // [[Rcpp::export]]
 Rcpp::List multi_bessel_layer_simulation(const int &dim,
