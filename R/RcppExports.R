@@ -62,7 +62,7 @@ bessel_layer_simulation <- function(x, y, s, t, mult = 1) {
 #'   \item{u}{Soft upper bound}
 #'   \item{U}{Hard upper bound}
 #' }
-#' where the Bessel layer for compnent i is [L, U] and either the minimum 
+#' where the Bessel layer for component i is [L, U] and either the minimum 
 #' occurs in [L, l] or the maximum occurs in [u, U] 
 multi_bessel_layer_simulation <- function(dim, x, y, s, t, mult = 1) {
     .Call(`_layeredBB_multi_bessel_layer_simulation`, dim, x, y, s, t, mult)
