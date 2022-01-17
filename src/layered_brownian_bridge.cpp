@@ -272,8 +272,8 @@ Rcpp::List multi_layered_brownian_bridge(const int &dim,
   Rcpp::NumericVector full_times = times;
   full_times.push_front(s);
   full_times.push_back(t);
-  full_times = Rcpp::sort_unique(full_times);
   full_times = Rcpp::unique(full_times);
+  full_times = Rcpp::sort_unique(full_times);
   // for component, we simulate a layered Brownian bridge
   // ----- for each component, we simulate a Brownian bridge
   // BB at all times included

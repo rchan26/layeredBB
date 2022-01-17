@@ -1,5 +1,5 @@
 ---
-title: "layered_brownian_bridges"
+title: "Simulating layered Brownian bridges"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{layered_brownian_bridges}
@@ -36,7 +36,7 @@ y <- 0.2
 s <- 0
 t <- 1
 bes_layer <- bessel_layer_simulation(x = x, y = y, s = s, t = t, mult = 0.2)
-
+# plot simulated Bessel layer information
 plot(x = c(s,t), y = c(x,y), ylim = c(-1, 1), pch = 20, lwd = 4,
      xlab = '', ylab = '', xaxt = 'n', yaxt = 'n')
 mtext('Time', 1, 2.75, font = 2, cex = 1.5)
@@ -49,9 +49,14 @@ abline(h=c(bes_layer$L, bes_layer$U), lwd = 3)
 abline(h=c(bes_layer$l, bes_layer$u), lwd = 3, lty = 2)
 ```
 
-In this above plot, the solid lines denote the interval in space where the Brownian bridge is definitely constrained, so the sample path falls entirely between these lower and upper lines at $L=-1$ and $U=0.8$. The dashed lines indicate the interval which does not constrain the path, as at some point, the path can will outside these dotted lines.
+In this above plot, the solid lines denote the interval in space where the Brownian bridge is definitely constrained, so the sample path falls entirely between these lower and upper lines at $L=-1$ and $U=0.8$. The dashed lines indicate the interval which does not constrain the path, as at some point, the path can will outside these dotted lines. Having a look at what this function returns:
+```{r}
+print(bes_layer)
+```
 
-We can then simulate a Brownian bridge conditional on the Bessel layer information using the `layered_brownian_bridge` function by passing in a simulated bessel layer into the `bessel_layer` argument and the times to which we want to simulate in the `times` argument.
+Here `bes_layer$L` and `bes_layer$U` returns the 'hard' bounds for the Bessel layer (i.e. the path is completely constrained between these two points) whereas `bes_layer$l` and `bes_layer$u` return the 'soft' bounds for the Bessel layer (i.e. the path can fall outside these bounds).
+
+We can then simulate a Brownian bridge conditional on the Bessel layer information using the `layered_brownian_bridge` function by passing in a simulated Bessel layer into the `bessel_layer` argument and the times to which we want to simulate in the `times` argument.
 
 ## Simulating layered Brownian bridges
 
@@ -62,7 +67,7 @@ layered_bb <- layered_brownian_bridge(x = x,
                                       t = t,
                                       bessel_layer = bes_layer,
                                       times = seq(s, t, 0.01))
-
+# plot simulated layered Brownian bridge
 plot(x = c(s,t), y = c(x,y), ylim = c(-1, 1), pch = 20, lwd = 4,
      xlab = '', ylab = '', xaxt = 'n', yaxt = 'n')
 lines(x = layered_bb$full_path['time',], y = layered_bb$full_path['X',], lwd = 3)
@@ -77,9 +82,131 @@ abline(h=c(bes_layer$l, bes_layer$u), lwd = 3, lty = 2)
 ```
 We can see that our sample path is indeed constrained between the two solid lines but has exceeded the dashed lines.
 
+## Multidimensional layered Brownian bridges
+
+The `multi_bessel_layer_simulation` and `multi_layered_brownian_bridge` functions implement the above functions recursively for each dimension of the space. The difference here is that we must pass in vectors for the arguments `x` and `y`. To simulate the Bessel layer information for a two-dimensional Brownian bridge from $x=(0,0)$ to $y=(1,1)$ in time $[0,1]$ we can use the following code:
+
+```{r}
+set.seed(2021)
+x <- c(0,0)
+y <- c(1,1)
+s <- 0
+t <- 1
+multi_bes_layer <- multi_bessel_layer_simulation(dim = 2,
+                                                 x = x,
+                                                 y = y,
+                                                 s = s,
+                                                 t = t,
+                                                 mult = 0.2)
+print(multi_bes_layer)
+```
+
+We can now see that this function now returns a list of length 2, where each item in the list is the Bessel layer for the corresponding dimension.
+
+```{r, fig.align='center', fig.dim=c(6,10)}
+par(mfrow=c(2,1))
+# dimension 1
+plot(x = c(s,t), y = c(x[1],y[1]), ylim = c(-1, 2), pch = 20, lwd = 4,
+     xlab = '', ylab = '', xaxt = 'n', yaxt = 'n', main = 'Dimension 1')
+mtext('Time', 1, 2.75, font = 2, cex = 1.5)
+mtext('W', 2, 2.75, font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.2), labels=c("0.0", seq(0.2, 0.8, 0.2), "1.0"), font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.1), labels=rep("", 11), lwd.ticks = 0.5)
+axis(2, at=seq(-1, 2, 0.5), labels=seq(-1, 2, 0.5), font = 2, cex = 1.5)
+axis(2, at=seq(-1, 2, 0.1), labels=rep("", 31), lwd.ticks = 0.5)
+abline(h=c(multi_bes_layer[[1]]$L, multi_bes_layer[[1]]$U), lwd = 3)
+abline(h=c(multi_bes_layer[[1]]$l, multi_bes_layer[[1]]$u), lwd = 3, lty = 2)
+# dimension 2
+plot(x = c(s,t), y = c(x[2],y[2]), ylim = c(-1, 2), pch = 20, lwd = 4,
+     xlab = '', ylab = '', xaxt = 'n', yaxt = 'n', main = 'Dimension 2')
+mtext('Time', 1, 2.75, font = 2, cex = 1.5)
+mtext('W', 2, 2.75, font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.2), labels=c("0.0", seq(0.2, 0.8, 0.2), "1.0"), font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.1), labels=rep("", 11), lwd.ticks = 0.5)
+axis(2, at=seq(-1, 2, 0.5), labels=seq(-1, 2, 0.5), font = 2, cex = 1.5)
+axis(2, at=seq(-1, 2, 0.1), labels=rep("", 31), lwd.ticks = 0.5)
+abline(h=c(multi_bes_layer[[2]]$L, multi_bes_layer[[2]]$U), lwd = 3)
+abline(h=c(multi_bes_layer[[2]]$l, multi_bes_layer[[2]]$u), lwd = 3, lty = 2)
+```
+Similarly, we can pass in the multidimensional Bessel layer information into the `bessel_layer` argument in the `multi_layered_brownian_bridge` function to simulate a Brownian bridge conditonal on the Bessel layer:
+
+```{r, fig.align='center', fig.dim=c(6,10)}
+multi_layered_bb <- multi_layered_brownian_bridge(dim = 2,
+                                                  x = x,
+                                                  y = y,
+                                                  s = s,
+                                                  t = t,
+                                                  bessel_layers = multi_bes_layer,
+                                                  times = seq(s, t, 0.01))
+par(mfrow=c(2,1))
+# dimension 1
+plot(x = c(s,t), y = c(x[1],y[1]), ylim = c(-1, 2), pch = 20, lwd = 4,
+     xlab = '', ylab = '', xaxt = 'n', yaxt = 'n', main = 'Dimension 1')
+lines(x = multi_layered_bb$full_path[3,], y = multi_layered_bb$full_path[1,], lwd = 3)
+mtext('Time', 1, 2.75, font = 2, cex = 1.5)
+mtext('W', 2, 2.75, font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.2), labels=c("0.0", seq(0.2, 0.8, 0.2), "1.0"), font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.1), labels=rep("", 11), lwd.ticks = 0.5)
+axis(2, at=seq(-1, 2, 0.5), labels=seq(-1, 2, 0.5), font = 2, cex = 1.5)
+axis(2, at=seq(-1, 2, 0.1), labels=rep("", 31), lwd.ticks = 0.5)
+abline(h=c(multi_bes_layer[[1]]$L, multi_bes_layer[[1]]$U), lwd = 3)
+abline(h=c(multi_bes_layer[[1]]$l, multi_bes_layer[[1]]$u), lwd = 3, lty = 2)
+# dimension 2
+plot(x = c(s,t), y = c(x[2],y[2]), ylim = c(-1, 2), pch = 20, lwd = 4,
+     xlab = '', ylab = '', xaxt = 'n', yaxt = 'n', main = 'Dimension 2')
+lines(x = multi_layered_bb$full_path[3,], y = multi_layered_bb$full_path[2,], lwd = 3)
+mtext('Time', 1, 2.75, font = 2, cex = 1.5)
+mtext('W', 2, 2.75, font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.2), labels=c("0.0", seq(0.2, 0.8, 0.2), "1.0"), font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.1), labels=rep("", 11), lwd.ticks = 0.5)
+axis(2, at=seq(-1, 2, 0.5), labels=seq(-1, 2, 0.5), font = 2, cex = 1.5)
+axis(2, at=seq(-1, 2, 0.1), labels=rep("", 31), lwd.ticks = 0.5)
+abline(h=c(multi_bes_layer[[2]]$L, multi_bes_layer[[2]]$U), lwd = 3)
+abline(h=c(multi_bes_layer[[2]]$l, multi_bes_layer[[2]]$u), lwd = 3, lty = 2)
+```
+We can just plot this with a two-dimensional plot (where time would be the third axis, but not plotted):
+
+```{r, fig.align='center', fig.dim=c(6,6)}
+plot(x = c(x[1], y[1]), y = c(x[2], y[2]), ylim = c(-1, 2), xlim = c(-1, 2), pch = 20, lwd = 4,
+     xlab = '', ylab = '', xaxt = 'n', yaxt = 'n')
+lines(x = multi_layered_bb$full_path[1,], y = multi_layered_bb$full_path[2,], lwd = 3)
+mtext(expression(bold(X[1])), 1, 2.75, font = 2, cex = 1.5)
+mtext(expression(bold(X[2])), 2, 2.75, font = 2, cex = 1.5)
+axis(1, at=seq(-1, 2, 0.5), labels=seq(-1, 2, 0.5), font = 2, cex = 1.5)
+axis(1, at=seq(-1, 2, 0.1), labels=rep("", 31), lwd.ticks = 0.5)
+axis(2, at=seq(-1, 2, 0.5), labels=seq(-1, 2, 0.5), font = 2, cex = 1.5)
+axis(2, at=seq(-1, 2, 0.1), labels=rep("", 31), lwd.ticks = 0.5)
+abline(v=c(multi_bes_layer[[1]]$L, multi_bes_layer[[1]]$U), lwd = 3)
+abline(v=c(multi_bes_layer[[1]]$l, multi_bes_layer[[1]]$u), lwd = 3, lty = 2)
+abline(h=c(multi_bes_layer[[2]]$L, multi_bes_layer[[2]]$U), lwd = 3)
+abline(h=c(multi_bes_layer[[2]]$l, multi_bes_layer[[2]]$u), lwd = 3, lty = 2)
+```
+
 ### Remark
 
-#### References
+In the package, there are various functions that are created to implement the algorithm for simulating Bessel layer information and layered Brownian bridges conditional on Bessel layers, for instance:
+
+* delta_coin
+* delta_coin_intervals
+* eachi
+* eadelta
+* eadelta_intervals
+* eadelta1
+* eadelta1_intervals
+* eadelta2
+* eadelta2_intervals
+* eagamma
+* eaphi
+* eaphi_bar
+* eapsi
+* easigma
+* easigma_bar
+* gamma_coin
+* gamma_coin_intervals
+
+Each of these functions have documentation to explain how to use them, but unless you are using these to implement other layered Brownian bridge methods, they are not of much interest for you. 
+
+### References
 
 * Beskos, A., O. Papaspiliopoulos, and G. O. Roberts. 2008. “A factorisation of diffusion measure and finite sample path constructions.” Methodology and Computing in Applied Probability 10: 85–104.
 * Pollock, M., A. M. Johansen, and G. O. Roberts. 2016. “On the exact and ε-strong simulation of (jump) diffusions.” Bernoulli 22 (2): 794–856.
