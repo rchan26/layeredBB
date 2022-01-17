@@ -1,0 +1,85 @@
+---
+title: "layered_brownian_bridges"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{layered_brownian_bridges}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(layeredBB)
+```
+
+## Simulating layer information
+
+In many settings, we want to simulate Brownian motion together with *layer information*. Layer information determines a compact spatial interval which constrains the path over a given time interval. There are several different layer information available, but in this package, we only implement the *Bessel layer* approach outlined in (Beskos, Papaspiliopoulos, and Roberts 2008) and in Algorithm 14 of (Pollock, Johansen, and Roberts 2016).
+
+The general idea of constructing layer information for Brownian bridge sample paths is that finite dimensional subsets of Brownian bridge sample paths can be simulated jointly with information regarding the interval in which its constrained by partitioning the path space with an arbitrary increasing sequence $\{a_{i}\}_{i \geq 0}, a_{0} = 0$, which radiates outwards from the interval $[(x \land y), (x \lor y)]$. We term this particular layer construction, the \emph{Bessel layer} - the $i$th Bessel layer is defined as
+$$
+\mathcal{I}_{i} = [(x \land y) - a_{i}, (x \lor y) + a_{i}].
+$$
+
+To simulate a Bessel layer, we use the `bessel_layer_simulation` function, where we must pass in the usual start and end points of the Brownian bridge with `x`, `y`, `s` and `t` denoting the start point, end point, start time, end time of the bridge respectively. The size of layers is given by $\sqrt{t-s}*mult$, where $mult$ is the multiplier passed into the `mult` argument (which is $1$ by default). For instance, we can simulate a Bessel layer between $x=-0.4$ to $y=0.2$ in time $[0,1]$ using the following code:
+
+```{r, fig.align='center', fig.dim=c(6,4)}
+set.seed(2021)
+x <- -0.4
+y <- 0.2
+s <- 0
+t <- 1
+bes_layer <- bessel_layer_simulation(x = x, y = y, s = s, t = t, mult = 0.2)
+
+plot(x = c(s,t), y = c(x,y), ylim = c(-1, 1), pch = 20, lwd = 4,
+     xlab = '', ylab = '', xaxt = 'n', yaxt = 'n')
+mtext('Time', 1, 2.75, font = 2, cex = 1.5)
+mtext('W', 2, 2.75, font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.2), labels=c("0.0", seq(0.2, 0.8, 0.2), "1.0"), font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.1), labels=rep("", 11), lwd.ticks = 0.5)
+axis(2, at=seq(-1, 1, 0.5), labels=seq(-1, 1, 0.5), font = 2, cex = 1.5)
+axis(2, at=seq(-1, 1, 0.1), labels=rep("", 21), lwd.ticks = 0.5)
+abline(h=c(bes_layer$L, bes_layer$U), lwd = 3)
+abline(h=c(bes_layer$l, bes_layer$u), lwd = 3, lty = 2)
+```
+
+In this above plot, the solid lines denote the interval in space where the Brownian bridge is definitely constrained, so the sample path falls entirely between these lower and upper lines at $L=-1$ and $U=0.8$. The dashed lines indicate the interval which does not constrain the path, as at some point, the path can will outside these dotted lines.
+
+We can then simulate a Brownian bridge conditional on the Bessel layer information using the `layered_brownian_bridge` function by passing in a simulated bessel layer into the `bessel_layer` argument and the times to which we want to simulate in the `times` argument.
+
+## Simulating layered Brownian bridges
+
+```{r, fig.align='center', fig.dim=c(6,4)}
+layered_bb <- layered_brownian_bridge(x = x,
+                                      y = y,
+                                      s = s,
+                                      t = t,
+                                      bessel_layer = bes_layer,
+                                      times = seq(s, t, 0.01))
+
+plot(x = c(s,t), y = c(x,y), ylim = c(-1, 1), pch = 20, lwd = 4,
+     xlab = '', ylab = '', xaxt = 'n', yaxt = 'n')
+lines(x = layered_bb$full_path['time',], y = layered_bb$full_path['X',], lwd = 3)
+mtext('Time', 1, 2.75, font = 2, cex = 1.5)
+mtext('W', 2, 2.75, font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.2), labels=c("0.0", seq(0.2, 0.8, 0.2), "1.0"), font = 2, cex = 1.5)
+axis(1, at=seq(0, 1, 0.1), labels=rep("", 11), lwd.ticks = 0.5)
+axis(2, at=seq(-1, 1, 0.5), labels=seq(-1, 1, 0.5), font = 2, cex = 1.5)
+axis(2, at=seq(-1, 1, 0.1), labels=rep("", 21), lwd.ticks = 0.5)
+abline(h=c(bes_layer$L, bes_layer$U), lwd = 3)
+abline(h=c(bes_layer$l, bes_layer$u), lwd = 3, lty = 2)
+```
+We can see that our sample path is indeed constrained between the two solid lines but has exceeded the dashed lines.
+
+### Remark
+
+#### References
+
+* Beskos, A., O. Papaspiliopoulos, and G. O. Roberts. 2008. “A factorisation of diffusion measure and finite sample path constructions.” Methodology and Computing in Applied Probability 10: 85–104.
+* Pollock, M., A. M. Johansen, and G. O. Roberts. 2016. “On the exact and ε-strong simulation of (jump) diffusions.” Bernoulli 22 (2): 794–856.
