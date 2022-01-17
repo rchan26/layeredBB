@@ -5,7 +5,9 @@ Please see function documentation for example usage.
 
 ## Installation
 
-Simply run: `devtools::install_github('rchan26/layeredBB')`
+Simply run: `devtools::install_github('rchan26/layeredBB')`.
+
+Note that there are vignettes available, but by default `devtools::install_github()` does not build them since they are time consuming. To force building, use `devtools::install_github('rchan26/layeredBB', build_vignettes = TRUE)`.
 
 ## Using with `parallel`
 
@@ -38,6 +40,17 @@ pkgbuild::compile_dll()
 devtools::document()
 devtools::install()
 ```
+
+To build vignettes use:
+```
+devtools::build_vignettes()
+```
+
+Or, you can use
+```
+devtools::build()
+```
+to create a package bundle with the vignettes included.
 
 Then can test the package by calling: `devtools::test()`
 
