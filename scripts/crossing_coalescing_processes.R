@@ -19,8 +19,7 @@ lines(x = bridge2$full_path['time',], y = bridge2$full_path['X',], type = 'l',
 abline(v=c(s,t))
 points(x=c(s,s,t,t), y=c(x1,x2,y1,y2), pch = 20, lwd = 3)
 axis(1, at=c(s,t), labels=c('0', 'T'), font = 2, cex = 1.5)
-axis(2, at=c(x1,x2), labels=c(expression(x^"(1)"), expression(x^"(2)")), font = 2, cex = 1.5, las = 2)
-# axis(4, at=c(y1,y2), labels=c(expression(y^"(1)"), expression(y^"(2)")), font = 2, cex = 1.5, las = 2)
+axis(2, at=c(x1,x2), labels=c(expression(bold(x^"(1)")), expression(bold(x^"(2)"))), las = 2)
 mtext('Time', 1, 2.75, font = 2, cex = 1.5)
 mtext('X', 2, 2.75, font = 2, cex = 1.5)
 
@@ -43,13 +42,12 @@ for (c in 2:C) {
 abline(v=c(s,t))
 points(x=c(rep(s,5), t), y=c(x,y), pch = 20, lwd = 3)
 axis(1, at=c(s,t), labels=c('0', 'T'), font = 2, cex = 1.5)
-axis(2, at=c(x), labels=c(expression(x^"(1)"),
-                          expression(x^"(2)"),
-                          expression(x^"(3)"),
-                          expression(x^"(4)"),
-                          expression(x^"(5)")),
-     font = 2, cex = 1.5, las = 2)
-axis(4, at=y, labels=expression(y), font = 2, cex = 1.5, las = 2)
+axis(2, at=c(x), labels=c(expression(bold(x^"(1)")),
+                          expression(bold(x^"(2)")),
+                          expression(bold(x^"(3)")),
+                          expression(bold(x^"(4)")),
+                          expression(bold(x^"(5)"))), las = 2)
+axis(4, at=y, labels=expression(bold(y)), las = 2)
 mtext('Time', 1, 2.75, font = 2, cex = 1.5)
 mtext('X', 2, 2.75, font = 2, cex = 1.5)
 
@@ -77,12 +75,12 @@ axis(1, at=c(s,t), labels=c(expression(t[0]), expression(t[n])), font = 2, cex =
 axis(1, at=c(temporal_partition[2:4], temporal_partition[length(temporal_partition)-1]),
      labels=c(expression(t[1]), expression(t[2]), '...', expression(t[n-1])), font = 2, cex = 2, lwd.ticks = 0)
 axis(1, at=temporal_partition, labels=rep("", length(temporal_partition)), font = 2, cex = 1, lwd.ticks = 0.5)
-axis(2, at=c(x), labels=c(expression(x[0]^"(1)"),
-                          expression(x[0]^"(2)"),
-                          expression(x[0]^"(3)"),
-                          expression(x[0]^"(4)"),
-                          expression(x[0]^"(5)")),
-     font = 2, cex = 1.5, las = 2)
-axis(4, at=y, labels=expression(y), font = 2, cex = 1.5, las = 2)
+axis(2, at=c(x), labels=c(expression(bold(x[0]^"(1)")),
+                          expression(bold(x[0]^"(2)")),
+                          expression(bold(x[0]^"(3)")),
+                          expression(bold(x[0]^"(4)")),
+                          expression(bold(x[0]^"(5)"))),
+     las = 2)
+axis(4, at=y, labels=expression(bold(y)), las = 2)
 mtext('Time', 1, 2.75, font = 2, cex = 1.5)
 mtext('X', 2, 2.75, font = 2, cex = 1.5)
