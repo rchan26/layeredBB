@@ -8,6 +8,10 @@
 
 using namespace Rcpp;
 
+// forward declaration for Brownian motion path samplers
+Rcpp::NumericMatrix Brownian_motion_path_sampler(const double &x,
+                                                 const Rcpp::NumericVector &times);
+
 // forward declaration for Brownian bridge path samplers
 Rcpp::List Brownian_bridge_path_sampler(const double &x,
                                         const double &y,
