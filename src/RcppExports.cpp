@@ -54,6 +54,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// multi_brownian_motion
+Rcpp::NumericMatrix multi_brownian_motion(const int& dim, const Rcpp::NumericVector& x, const Rcpp::NumericVector& times);
+RcppExport SEXP _layeredBB_multi_brownian_motion(SEXP dimSEXP, SEXP xSEXP, SEXP timesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int& >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type times(timesSEXP);
+    rcpp_result_gen = Rcpp::wrap(multi_brownian_motion(dim, x, times));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Brownian_bridge_path_sampler
 Rcpp::List Brownian_bridge_path_sampler(const double& x, const double& y, const double& s, const double& t, const Rcpp::NumericVector& times);
 RcppExport SEXP _layeredBB_Brownian_bridge_path_sampler(SEXP xSEXP, SEXP ySEXP, SEXP sSEXP, SEXP tSEXP, SEXP timesSEXP) {
@@ -556,6 +569,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_layeredBB_bessel_layer_simulation", (DL_FUNC) &_layeredBB_bessel_layer_simulation, 5},
     {"_layeredBB_multi_bessel_layer_simulation", (DL_FUNC) &_layeredBB_multi_bessel_layer_simulation, 6},
     {"_layeredBB_Brownian_motion_path_sampler", (DL_FUNC) &_layeredBB_Brownian_motion_path_sampler, 2},
+    {"_layeredBB_multi_brownian_motion", (DL_FUNC) &_layeredBB_multi_brownian_motion, 3},
     {"_layeredBB_Brownian_bridge_path_sampler", (DL_FUNC) &_layeredBB_Brownian_bridge_path_sampler, 5},
     {"_layeredBB_multi_brownian_bridge", (DL_FUNC) &_layeredBB_multi_brownian_bridge, 6},
     {"_layeredBB_min_sampler", (DL_FUNC) &_layeredBB_min_sampler, 7},

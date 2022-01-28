@@ -113,6 +113,34 @@ Brownian_motion_path_sampler <- function(x, times) {
     .Call(`_layeredBB_Brownian_motion_path_sampler`, x, times)
 }
 
+#' Multi-dimensional Brownian Motion path sampler
+#'
+#' Simulation of a multi-dimensional Brownian Motion, at given times
+#'
+#' @param dim dimension of Brownian motion
+#' @param x start value of Brownian motion
+#' @param times vector of real numbers to simulate Brownian motion
+#' 
+#' @return Matrix of the simulated Brownian motion path at all
+#'         included time points. The times are sorted. 
+#'         The first dim rows are the points of the Brownian motion
+#'         dim+1 row are corresponding times
+#'
+#' @examples
+#' # simulate two-dimensional Brownian bridge starting and ending 
+#' # at (0,0) in time [0,1]
+#' multi_brownian_motion(dim = 2,
+#'                       x = c(0,0),
+#'                       times = c(0.1, 0.2, 0.4, 0.6, 0.8))
+#'                       
+#' # note that the times are sorted and duplicates are removed
+#' multi_brownian_motion(dim = 2,
+#'                       x = c(0.5,1),
+#'                       times = c(0.1, 0.2, 0.4, 0.6, 0.6, 0.8, 0.1))
+multi_brownian_motion <- function(dim, x, times) {
+    .Call(`_layeredBB_multi_brownian_motion`, dim, x, times)
+}
+
 #' Brownian Bridge path sampler (Algorithm 13 in ST329)
 #'
 #' Simulation of a path of a Brownian bridge at given times

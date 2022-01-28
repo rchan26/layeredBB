@@ -47,7 +47,8 @@ using namespace Rcpp;
 //' print(paste('Theoretical variance is', end_time-start_time, 'and sample variance is', var(simulated_points)))
 // [[Rcpp::export]]
 Rcpp::NumericMatrix Brownian_motion_path_sampler(const double &x,
-                                                 const Rcpp::NumericVector &times) {
+                                                 const Rcpp::NumericVector &times)
+{
   if (times.size() < 2) {
     stop("layeredBB::Brownian_motion_path_sampler: times must be a vector of length at least 2");
   }
@@ -67,6 +68,55 @@ Rcpp::NumericMatrix Brownian_motion_path_sampler(const double &x,
   }
   return(bm);
 }
+
+//' Multi-dimensional Brownian Motion path sampler
+//'
+//' Simulation of a multi-dimensional Brownian Motion, at given times
+//'
+//' @param dim dimension of Brownian motion
+//' @param x start value of Brownian motion
+//' @param times vector of real numbers to simulate Brownian motion
+//' 
+//' @return Matrix of the simulated Brownian motion path at all
+//'         included time points. The times are sorted. 
+//'         The first dim rows are the points of the Brownian motion
+//'         dim+1 row are corresponding times
+//'
+//' @examples
+//' # simulate two-dimensional Brownian bridge starting and ending 
+//' # at (0,0) in time [0,1]
+//' multi_brownian_motion(dim = 2,
+//'                       x = c(0,0),
+//'                       times = c(0.1, 0.2, 0.4, 0.6, 0.8))
+//'                       
+//' # note that the times are sorted and duplicates are removed
+//' multi_brownian_motion(dim = 2,
+//'                       x = c(0.5,1),
+//'                       times = c(0.1, 0.2, 0.4, 0.6, 0.6, 0.8, 0.1))
+// [[Rcpp::export]]
+Rcpp::NumericMatrix multi_brownian_motion(const int &dim,
+                                          const Rcpp::NumericVector &x,
+                                          const Rcpp::NumericVector &times)
+{
+  if (times.size() < 2) {
+    stop("layeredBB::Brownian_motion_path_sampler: times must be a vector of length at least 2");
+  }
+  // ----- sort times
+  Rcpp::NumericVector sorted_times = Rcpp::sort_unique(times);
+  if (sorted_times.size() < 2) {
+    stop("layeredBB::Brownian_motion_path_sampler: times must be a vector with at least 2 unique values in");
+  }
+  // ----- create matrix variable to store Brownian motion
+  Rcpp::NumericMatrix bm(dim+1, sorted_times.size());
+  bm.row(dim) = sorted_times;
+  // loop through the components and simulate a Brownian bridge
+  for (int d=0; d < dim; ++d) {
+    Rcpp::NumericMatrix component_BM = Brownian_motion_path_sampler(x.at(d), times);
+    bm.row(d) = component_BM.row(0);
+  }
+  return(bm);
+}
+
 
 //' Brownian Bridge path sampler (Algorithm 13 in ST329)
 //'
