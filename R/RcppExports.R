@@ -81,7 +81,7 @@ multi_bessel_layer_simulation <- function(dim, x, y, s, t, mult = 1) {
 #'         second row are corresponding times (named 'times')
 #'
 #' @examples
-#' # simulating path for Brownian motion starting at (0,0) between [0,1]
+#' # simulating path for Brownian motion starting at 0 between [0,1]
 #' path <- Brownian_motion_path_sampler(x = 0, times = seq(0, 1, 0.01))
 #' plot(x = path['time',], y = path['X',], pch = 20, xlab = 'Time', ylab = 'X')
 #' lines(x = path['time',], y = path['X',])
@@ -96,8 +96,7 @@ multi_bessel_layer_simulation <- function(dim, x, y, s, t, mult = 1) {
 #' paths <- list()
 #' # repeatedly simulate Brownian bridge 
 #' for (i in 1:replicates) {
-#'   paths[[i]] <- Brownian_motion_path_sampler(x = x,
-#'                                              times = seq(start_time, end_time, 0.01))
+#'   paths[[i]] <- Brownian_motion_path_sampler(x = x, times = seq(start_time, end_time, 0.01))
 #' }
 #' # select the points at the specified time q
 #' index <- which(seq(start_time, end_time, 0.01)==end_time)

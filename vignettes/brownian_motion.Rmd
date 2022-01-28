@@ -86,6 +86,23 @@ legend('topleft',
        lwd = c(2, 2))
 ```
 
+## Multivariate Brownian Motion (dimension = 2)
+
+```{r, fig.align = 'center', fig.dim=c(5,5)}
+set.seed(2021)
+multi_bm_path <- multi_brownian_motion(dim = 2, x = c(0,0), times = seq(0, 1, 0.01))
+plot(x = multi_bm_path[1,], y = multi_bm_path[2,], type = 'l',
+     xlim = c(-2,2), ylim = c(-2,2), xlab = '', ylab = '', lwd = 3)
+mtext(expression(X[1]), 1, 2.75, font = 2, cex = 1.5)
+mtext(expression(X[2]), 2, 2.75, font = 2, cex = 1.5)
+axis(1, at=seq(-2, 2, 1), labels=seq(-2, 2, 1), font = 2, cex = 1.5)
+axis(1, at=seq(-2, 2, 0.5), labels=rep("", 9), lwd.ticks = 0.5)
+axis(2, at=seq(-2, 2, 1), labels=seq(-2, 2, 1), font = 2, cex = 1.5)
+axis(2, at=seq(-2, 2, 0.5), labels=rep("", 9), lwd.ticks = 0.5)
+points(x = c(multi_bm_path[1,1], multi_bm_path[1,ncol(multi_bm_path)]),
+       y = c(multi_bm_path[2,1], multi_bm_path[2,ncol(multi_bm_path)]), pch = 19, cex = 1)
+```
+
 ## Simualting Brownian Bridges
 
 To simulate Brownian bridge sample paths (which are simply Brownian motion paths conditioned on an end point), we use the `Brownian_bridge_path_sampler` function. We need to pass in the start and end points into `x` and `y` respectively and the start and end times of the bridge at `s` and `t` respectively. Lastly, we need to pass in the times for which to simulate the path for into the `times` argument. For instance, we can simulate a Brownian bridge path starting from $x=0$ at time $s=0$, to $y=0$ and time $t=1$ at times $t={0,0.01,0.02,\dots,0.98,0.99,1}$ using the following code:
