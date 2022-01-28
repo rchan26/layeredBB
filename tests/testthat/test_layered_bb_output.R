@@ -1,4 +1,4 @@
-context("Input checking for Brownian bridge path samplers")
+context("Output checking for Layered Brownian bridge path samplers")
 
 test_that("Brownian bridge path sampler returns expected results", {
   x <- rnorm(1, 0, 10)

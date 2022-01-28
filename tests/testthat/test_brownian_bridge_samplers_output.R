@@ -1,4 +1,4 @@
-context("Input checking for Brownian bridge path samplers")
+context("Output checking for Brownian bridge path samplers")
 
 test_that("Brownian bridge path sampler returns expected results", {
   # should return a list of length 2
