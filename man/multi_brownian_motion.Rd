@@ -11,7 +11,10 @@ multi_brownian_motion(dim, x, times)
 
 \item{x}{start value of Brownian motion}
 
-\item{times}{vector of real numbers to simulate Brownian motion}
+\item{times}{vector of real numbers to simulate Brownian motion
+(must be a vector of at least length two, where times[1]
+ is the start time of the Brownian motion, and times[2:length(times)]
+ are the times you wish to further simulate)}
 }
 \value{
 Matrix of the simulated Brownian motion path at all

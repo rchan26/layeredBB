@@ -10,6 +10,9 @@ using namespace Rcpp;
 //'
 //' @param x start value of Brownian motion
 //' @param times vector of real numbers to simulate Brownian motion
+//'              (must be a vector of at least length two, where times[1]
+//'               is the start time of the Brownian motion, and times[2:length(times)]
+//'               are the times you wish to further simulate)
 //'
 //' @return Matrix of the simulated Brownian motion path at all
 //'         included time points. The times are sorted. 
@@ -75,6 +78,9 @@ Rcpp::NumericMatrix Brownian_motion_path_sampler(const double &x,
 //' @param dim dimension of Brownian motion
 //' @param x start value of Brownian motion
 //' @param times vector of real numbers to simulate Brownian motion
+//'              (must be a vector of at least length two, where times[1]
+//'               is the start time of the Brownian motion, and times[2:length(times)]
+//'               are the times you wish to further simulate)
 //' 
 //' @return Matrix of the simulated Brownian motion path at all
 //'         included time points. The times are sorted. 
@@ -108,7 +114,7 @@ Rcpp::NumericMatrix multi_brownian_motion(const int &dim,
   // ----- create matrix variable to store Brownian motion
   Rcpp::NumericMatrix bm(dim+1, sorted_times.size());
   bm.row(dim) = sorted_times;
-  // loop through the components and simulate a Brownian bridge
+  // loop through the components and simulate a Brownian motion
   for (int d=0; d < dim; ++d) {
     Rcpp::NumericMatrix component_BM = Brownian_motion_path_sampler(x.at(d), times);
     bm.row(d) = component_BM.row(0);

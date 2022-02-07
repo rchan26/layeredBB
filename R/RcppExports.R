@@ -74,6 +74,9 @@ multi_bessel_layer_simulation <- function(dim, x, y, s, t, mult = 1) {
 #'
 #' @param x start value of Brownian motion
 #' @param times vector of real numbers to simulate Brownian motion
+#'              (must be a vector of at least length two, where times[1]
+#'               is the start time of the Brownian motion, and times[2:length(times)]
+#'               are the times you wish to further simulate)
 #'
 #' @return Matrix of the simulated Brownian motion path at all
 #'         included time points. The times are sorted. 
@@ -119,6 +122,9 @@ Brownian_motion_path_sampler <- function(x, times) {
 #' @param dim dimension of Brownian motion
 #' @param x start value of Brownian motion
 #' @param times vector of real numbers to simulate Brownian motion
+#'              (must be a vector of at least length two, where times[1]
+#'               is the start time of the Brownian motion, and times[2:length(times)]
+#'               are the times you wish to further simulate)
 #' 
 #' @return Matrix of the simulated Brownian motion path at all
 #'         included time points. The times are sorted. 
