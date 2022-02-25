@@ -400,7 +400,7 @@ Rcpp::NumericVector min_sampler(const double &x,
   const double u1 = R::runif(M_func(low_bound,x,y,s,t), M_func(up_bound,x,y,s,t));
   // if u1 == 1, then m = min(x,y) as log(u1) = 0
   // when u1 very close to 1, causes numerical precision issues
-  if (almostEqual(u1, 1, 1e-07)) {
+  if (almostEqual(u1, 1, 1e-06)) {
     if (x <= y) {
       // if x <= y, return (x, s)
       return Rcpp::NumericVector::create(Named("min", x), Named("tau", s));
